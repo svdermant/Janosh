@@ -1,0 +1,183 @@
+alias Module.Money {
+  if (!$readini(Bank.ini,$1,Balance)) {
+    set %Interest $calc($readini(Players.ini,$1,Level) * 150)
+    notice $1 $left You have Recieved15 %Interest 14 $+ %MoneyName on Module Load, Into your Bank Account. $Right
+    writeini Bank.ini $1 Balance %Interest
+    writeini Bank.ini $1 Hand 0
+    writeini Bank.ini $1 Lottery No
+  }
+}
+on *:LOAD:{
+  if (!%MoneyName) { set %MoneyName $$?="Enter Name for Money" }
+  if (!%LogChan) { set %LogChan $$?="Enter Log Channel Name" | join %LogChan }
+}
+on *:TEXT:`Bank*:%MainChannel:{
+  notice $Nick $Left All `Bank Options are Done Via PM Window. /query $me `Bank $right
+}
+on *:TEXT:`Bank*:?:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $nick $Left You are not Registered. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) != Yes) { notice $nick $Left You are not Logged In. $Right | halt }
+  if ($readini(Players.ini,$nick,Fighting) != No) { notice $nick $Left Please Leave The Battle arena First. $Right | halt }
+  if (!$readini(Bank.ini,$nick,Balance)) { Module.Money $nick }
+  if (!$2) {
+    .msg $Nick $Left Welcome to MegaRPG Bank. Your Options Are: $Right
+    .msg $Nick $Left `Bank Balance -- Displays Your Balance in Bank $Right
+    .msg $Nick $Left `Bank Withdraw <Amount> -- Withdraws Some %MoneyName into your Hand. $Right
+    .msg $Nick $Left `Bank Deposit <Amount> -- Deposit some %MoneyName into your Bank Account. $Right
+    .msg $Nick $Left `Bank Total -- Displays Your Total Amount of Money (Hand + Bank) $Right
+    .msg %LogChan $Left 15 $+ $Nick 14is Viewing the Bank. $Right
+  }
+  if ($2 == Balance) { .msg $Nick $Left Your Current Bank Balance Is:15 $readini(Bank.ini,$nick,Balance) 14 $+ %MoneyName $Right | .msg %LogChan $left Balance Check:15 $nick $right }
+  if ($2 == Withdraw) {
+    if (!$3) { .msg $Nick $Left Syntax:15 `Bank Withdraw <AMOUNT> $right | halt }
+    if ($readini(Bank.ini,$nick,Balance) < $3) { .msg $Nick $Left You do not have that much in your Bank. $Right | halt }
+    writeini Bank.ini $nick Hand $calc($readini(Bank.ini,$nick,Hand) + $3)
+    writeini Bank.ini $nick Balance $calc($readini(Bank.ini,$nick,Balance) - $3)
+    .msg $Nick $Left You have Withdrawn15 $3 14 $+ %MoneyName from your Account $Right
+    .msg %LogChan $Left Withdraw:15 $nick 14--15 $3 14 $+ %MoneyName $Right
+  }
+  if ($2 == Deposit) {
+    if (!$3) { .msg $Nick $Left Syntax:15 `Bank Deposit <AMOUNT> $right | halt }
+    if ($readini(Bank.ini,$nick,Hand) < $3) { .msg $Nick $Left You do not have that much in your Hand. $Right | halt }
+    writeini Bank.ini $nick Balance $calc($readini(Bank.ini,$nick,Balance) + $3)
+    writeini Bank.ini $nick Hand $calc($readini(Bank.ini,$nick,Hand) - $3)
+    .msg $Nick $Left You have Deposited15 $3 14 $+ %MoneyName from your Account $Right
+    .msg %LogChan $Left Deposit:15 $nick 14--15 $3 14 $+ %MoneyName $Right
+  }
+  if ($2 == Total) { 
+    .msg $Nick $Left You Have15 $readini(Bank.ini,$Nick,Balance) 14 $+ %MoneyName In the Bank,15 $readini(Bank.ini,$nick,Hand) 14 $+ %MoneyName in your Hand and a Total of15 $calc($readini(Bank.ini,$nick,Balance) + $readini(Bank.ini,$nick,Hand)) $right 
+    .msg %LogChan $Left Total Check:15 $nick $Right
+  }
+}
+on *:TEXT:`Money:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $nick $Left You are not Registered. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) != Yes) { notice $nick $Left You are not Logged In. $Right | halt }
+  if (!$readini(Bank.ini,$nick,Balance)) { Module.Money $nick }
+  notice $nick $Left You have15 $readini(Bank.ini,$nick,Hand) 14 $+ %MoneyName in your Hand. $Right
+}
+alias deathMoney {
+  if (!$1) || (!$2) { halt }
+  if (!$istok(%NPC.Names,$2,32)) {
+    set %MoneyGained $calc($readini(Bank.ini,$2,Hand) * 0.5)
+    if (%MoneyGained < 10) { set %MoneyGained 10 }
+    writeini Bank.ini $2 Hand $calc($readini(Bank.ini,$2,Hand) - %MoneyGained)
+    if ($readini(Bank.ini,$2,Hand) < 0) { writeini Bank.ini $2 Hand 0 }
+  }
+  if ($istok(%NPC.Names,$2,32)) {
+    set %MoneyGained $Calc($readini(NPC.ini,$2,Lvl) * 0.5)
+    if (%MoneyGained >= 10) {
+      set %MoneyGained $rand(10,%MoneyGained)
+    }
+    if (%MoneyGained < 10) { set %MoneyGained 10 }
+  }
+  notice $1 $Left You have Recieved15 %MoneyGained 14 $+ %MoneyName for your Kill. $Right
+  writeini Bank.ini $1 Hand $calc($readini(Bank.ini,$1,Hand) + %MoneyGained)
+}
+on *:TEXT:`Lottery*:%MainChannel:{
+  notice $nick $Left For Privacy Please Access the Lottery Via PM. $Right
+}
+on *:TEXT:`Lottery*:?:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $nick $Left You are not Registered. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) != Yes) { notice $nick $Left You are not Logged In. $Right | halt }
+  if ($readini(Players.ini,$nick,Fighting) != No) { notice $nick $Left Please Leave The Battle arena First. $Right | halt }
+  if (!$readini(Bank.ini,$nick,Balance)) { Module.Money $nick }
+  if (!$2) {
+    .msg $Nick $Left `Lottery Buy <Number 1-49> -- Buys a Ticket. You may only have 1 ticket per draw. Tickets cost 200 %MoneyName Each. $Right
+    .msg $Nick $Left `Lottery Number -- Tells you your Lottery Ticket Number. $Right
+    .msg $Nick $Left `Lottery Time -- Time Untill Next Draw $Right
+    .msg $nick $left `Lottery Prize -- Current Prize Money (200 for each ticket + 1000) $Right
+    .msg %LogChan $Left 15 $+ $Nick 14is Viewing the Lottery. $Right
+  }
+  if ($2 == Prize) {
+    .msg %LogChan $Left Prize View:15 $Nick $right 
+    .msg $Nick $Left The Current Prize Is:14 %LotteryPrize %MoneyName $Right
+  }
+  if ($2 == Time) { 
+    .msg %LogChan $Left Lottery Time Checker:15 $nick $right
+    .msg $Nick $Left Time Untill Lottery Draws:15 $duration($timer(LotteryDraw).secs) $right
+  }
+  if ($2 == Number) { 
+    .msg %LogChan $Left Number Check:15 $Nick $+ 14(15 $+ $readini(Bank.ini,$Nick,Lottery) $+ 14) $Right
+    .msg $Nick $Left Your Lottery Number Is:15 $readini(Bank.ini,$nick,Lottery) $Right
+  }
+  if ($2 == Buy) {
+    if (!$3) { .msg $Nick $Left `Lottery Buy <Number 1-49> $Right | halt }
+    if ($readini(Bank.ini,$nick,Hand) < 200) { notice $Nick $Left You do not Have enough %MoneyName to buy this. Get more out the bank or get lost! $Right | Halt }
+    if ($3 < 1) || ($3 > 49) { notice $nick $Left Choose a number between 1 and 49. $right | halt }
+    if (!$Timer(LotteryDraw)) { notice $Nick $Left No Lottery Active. $Right }
+    .msg %LogChan $Left Ticket Bought:15 $Nick 14--15 $3 $Right
+    .msg $Nick $Left Your Ticket has been Bough. $Right
+    writeini Bank.ini $Nick Lottery $3
+    set %TicketsBought $addtok(%TicketsBought,$3,32)
+    set %BoughtTickets $addtok(%BoughtTickets,$nick,32)
+    set %LotteryPrize $calc(%LotteryPrize + 200)
+    inc %TotalTickets
+    writeini Bank.ini $nick Hand $calc($readini(Bank.ini,$nick,Hand) - 200)
+  }    
+}
+alias Lottery {
+  set %LotteryPrize 1000
+  unset %BoughtTickets %TicketsBought
+  timerLotteryDraw 1 86400 LotteryDraw
+  msg %MainChannel $Left The Draw for Lottery Timer Has Begun. It will be drawn in 24hrs. $Right
+  msg %MainChannel $Left Type /msg $me `Lottery for info $Right
+  unset %Lottery
+  set %TotalTickets 0
+}
+alias LotteryCont {
+  unset %BoughtTickets %TicketsBought
+  timerLotteryDraw 1 86400 LotteryDraw
+  msg %MainChannel $Left The Draw for Lottery Timer Has Begun. It will be drawn in 24hrs. $Right
+  msg %MainChannel $Left Type /msg $me `Lottery for info $Right
+  unset %Lottery
+  set %TotalTickets 0
+  set %LotteryPrize $calc(%LotteryPrize + 1000)
+}
+alias LotteryDraw {
+  set %Lottery $rand(1,49)
+  msg %MainChannel $Left The Lottery Is Now Being Drawn! $Right
+  msg %MainChannel $Left Todays Lottery Number is: %Lottery $Right
+  if ($istok(%TicketsBought,%Lottery,32)) { 
+    msg %MainChannel $Left We Have a Winner Today! Please Wait a few Minutes While We Check Everyones Tickets. $Right
+    checkTickets
+    Lottery
+  }
+  if (!$istok(%TicketsBought,%Lottery,32)) { 
+    msg %MainChannel $Left We Have No Winner today. Jackpot Will Continue Onto Next Draw with another 1000 %MoneyName being added now. $Right
+    LotteryCont
+  }
+}
+alias checkTickets {
+  var %Total = $numtok(%BoughtTickets,32)
+  var %Count = 0
+  while (%Count < %Total) {
+    inc %Count
+    if ($readini(Bank.ini,$gettok(%BoughtTickets,%Count,32),Lottery) == %Lottery) {
+      .msg %LogChan $Left Lottery Winner: $gettok(%BoughtTickets,%Count,32) $Right
+      msg %MainChannel $Left 15 $+ $gettok(%BoughtTickets,%Count,32) 14 is one of our Winners Today! $Right
+      writeini Bank.ini $gettok(%BoughtTickets,%Count,32) Balance $calc($readini(Bank.ini,$gettok(%BoughtTickets,%Count,32),Balance) + %LotteryPrize)
+    }
+    writeini Bank.ini $gettok(%BoughtTickets,%Count,32) Lottery No
+  }
+}
+on 400:TEXT:*:%LogChan:{
+  if ($1 == `TotalTickets) { msg %LogChan $Left Number of Tickets Bought for the Next Draw:15 %TotalTickets $Right }
+  if ($1 == `StartLotteryTimer) && (!$Timer(LotteryDraw)) { msg %LogChan $Left Lottery Timer Started By:15 $Nick $Right | Lottery }
+  if ($1 == `TakeMoney) {
+    if (!$2) || (!$3) || (!$4) { notice $nick $Left Syntax:15 `TakeMoney <Balance|Hand> <Player> <Amound> $Right | halt }
+    if (!$readini(Players.ini,$3,Registered)) { notice $nick $Left $3 Is not Registered. $Right | halt }
+    if (!$readini(Bank.ini,$3,Balance)) { notice $nick $Left $3 Has not got a bank account. $Right | halt }
+    if ($readini(Bank.ini,$3,$2) < $4) { notice $nick $Left $3 Does not have that Much in their Bank! | halt }
+    writeini Bank.ini $3 $2 $calc($readini(Bank.ini,$3,$2) - $4)
+    if ($3 ison %MainChannel) { notice $3 $Left You have been Fined15 $4 14 $+ %MoneyName by an Admin. $Right }
+    msg %LogChan $Left 15 $+ $Nick 14has Fined15 $3 14for15 $4 14 $+ %MoneyName $+ . Location:15 $2 $Right
+  }
+  if ($1 == `GiveMoney) {
+    if (!$2) || (!$3) || (!$4) { notice $nick $Left Syntax:15 `GiveMoney <Balance|Hand> <Player> <Amound> $Right | halt }
+    if (!$readini(Players.ini,$3,Registered)) { notice $nick $Left $3 Is not Registered. $Right | halt }
+    if (!$readini(Bank.ini,$3,Balance)) { notice $nick $Left $3 Has not got a bank account. $Right | halt }
+    writeini Bank.ini $3 $2 $calc($readini(Bank.ini,$3,$2) + $4)
+    if ($3 ison %MainChannel) { notice $3 $Left You have been Given15 $4 14 $+ %MoneyName by an Admin. $Right }
+    msg %LogChan $Left 15 $+ $Nick 14has Given15 $3 14Amount15 $4 14 $+ %MoneyName $+ . Location:15 $2 $Right
+  }
+}

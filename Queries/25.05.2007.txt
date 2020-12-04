@@ -1,0 +1,5 @@
+[Fri May 25 16:27:36 2007] :: Paul: 12,0Hi4 James 12du hast4 1 12Nachricht/en.
+[Fri May 25 16:27:36 2007] :: Paul: 12,0Gib4 !message read 12hier im Fenster ein um sie abzurufen.
+[Fri May 25 16:28:18 2007] :: Paul: 12,0Identitätsprüfung läuft!
+[Fri May 25 16:28:23 2007] :: Paul: 4,0 1 12Nachricht:7 Testmeldung ( Pegasos ) 25/May/2007 16:27
+[Fri May 25 16:28:23 2007] :: Paul: 12,0Ende der Nachrichten!

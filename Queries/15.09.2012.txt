@@ -1,0 +1,7 @@
+[Sat Sep 15 21:40:22 2012] :: bAAm: !m baam testttttttttttttttt und so
+[Sat Sep 15 21:40:54 2012] :: bAAm: !ja
+[Sat Sep 15 21:41:02 2012] :: bAAm: !ja
+[Sat Sep 15 23:00:07 2012] :: bAAm: !m dragon o_O
+[Sat Sep 15 23:00:24 2012] :: bAAm: !m send
+[Sat Sep 15 23:00:28 2012] :: bAAm: !ja
+[Sat Sep 15 23:00:33 2012] :: bAAm: !ja

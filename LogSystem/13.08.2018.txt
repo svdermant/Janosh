@@ -1,0 +1,5 @@
+[Mon Aug 13 11:23:52 2018] :: [SYSTEM] Connecting...
+[Mon Aug 13 11:23:56 2018] :: [SYSTEM] Join Protected-Channel
+[Mon Aug 13 11:24:16 2018] :: [SYSTEM] Check Autop/Voice Status
+[Mon Aug 13 11:24:23 2018] :: [SYSTEM] Ready To Work..
+[Mon Aug 13 20:42:39 2018] :: [SYSTEM] Spamattack on #Battledome detected.

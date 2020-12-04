@@ -1,0 +1,8 @@
+[Thu Aug 16 11:48:41 2018] :: [SYSTEM] Connecting...
+[Thu Aug 16 11:48:45 2018] :: [SYSTEM] Join Protected-Channel
+[Thu Aug 16 11:49:05 2018] :: [SYSTEM] Check Autop/Voice Status
+[Thu Aug 16 11:49:12 2018] :: [SYSTEM] Ready To Work..
+[Thu Aug 16 21:49:25 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Aug 16 21:59:34 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Aug 16 22:33:56 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Thu Aug 16 23:53:59 2018] :: [SYSTEM] Spamattack on #Battledome detected.

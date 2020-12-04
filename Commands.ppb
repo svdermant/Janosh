@@ -1,0 +1,1335 @@
+alias restart {   
+  .echo -a Restart IRC in 5 seconds.
+  .timer 1 5 run mirc.exe
+  .timer 1 5 exit -y
+}
+alias setting.change { hadd -m $replace($1,$chr(124),$chr(176)) $+(Settings.,$2) $3- | save.hashtables }
+on *:NOTICE:*:*:{ 
+  if ($nick == Q) && ($1-2 == AUTH'd successfully.) { mode $me +x | log Qauth Auth Successfully. }
+  if ($nick == Q) || ($nick == L) { if ($hget(chanlev,chan)) { msg $hget(chanlev,chan) $styles($iif($nick == Q,Q,L) - $1-) | hfree chanlev } }
+  if ($nick == R) { if $hget(Qrequest,chan) { msg $hget(Qrequest,chan) $styles(R) - $1- } }
+  if ($1 === lag) && ($nick == $me) { if (!%connecting) { msg $hget(lagchan,chan) $styles(Lag: ( $calc($ticks - $2) $+ ms ))) | hfree lagchan } }
+  if ($1 == say) { if (!%connecting) { if ($access($2,$nick) >= 50) { if (!%usersay) { set -u5 %usersay 1 | msg $2 $3- } } } }
+}
+on *:text:*:#:{ 
+  if (!%connecting) { 
+    if ($checkcmd($chan,$1)) || ($1 == !prefix) { 
+      if (!%textflood. [ $+ [ $chan ] ]) {
+        set -u2 %textflood. [ $+ [ $chan ] ] 1 
+        signal cmd $chan $nick $1-
+      } 
+    } 
+  } 
+}
+on *:text:*:?:{
+  if (!%connecting) {
+    if ($checkcmd($2,$1)) || ($1 == !prefix) {
+      if (!%textflood. [ $+ [ $2 ] ]) {
+        set -u2 %textflood. [ $+ [ $2 ] ] 1 
+        signal cmd $2 $nick $1 $3- 
+      } 
+    } 
+  } 
+}
+on *:signal:cmd:{
+  if ($1 != $3) {
+    if ($cmd($1,$3,help)) || ($cmd($1,$3,commands)) || ($cmd($1,$3,cmds)) { msg $1 Hilfe ? hmm hier: www.psh-com.ath.cx/bef.html }    
+    elseif ($cmd($1,$3,Qrequest)) || ($cmd($1,$3,requestQ)) { if ($access($1,$2) >= 25) { hadd -m Qrequest chan $1 | msg r requestq $1 | msg $hget(Qrequest,chan) $styles(Request anforderung für Q läuft in $hget(Qrequest,chan)) } } 
+    elseif ($cmd($1,$3,invite)) { if ($access($1,$2) >= 25) { invite $4 $1 | msg $1 $styles($4 Will das du $1 betrittst) } }    
+    elseif ($cmd($1,$3,uptime)) { if (!$4) { msg $1 $styles(Uptime mIRC: $uptime(mirc,2) ; Server(Connected): $uptime(server,2) ; System(OS): $uptime(system,2)) } | elseif ($4 == mirc) || ($4 == system) || ($4 == server) { msg $1 $styles($iif($4 == mirc,mIRC,$iif($4 == server,Server,$iif($4 == system,System)))) $+ : $uptime($4,2)) } }   
+    elseif ($cmd($1,$3,chanbot)) { msg $1 $styles(Channel-Bot: $iif($item($1,chanbot),$item($1,chanbot),-none-)) }   
+    elseif ($cmd($1,$3,power)) {
+      var %a = $scon(0),%b = 0,%c = 0,%i = 0,%j = 0,%x = $cid
+      while (%a) { 
+        %b = $calc(%b + $chan(0)) 
+        scid $scid($scon(%a))
+        var %o = $chan(0)
+        while (%o) {
+          if ($me isop $chan(%o)) { 
+            inc %i $nick($chan(%o),0) 
+            inc %c 
+          } 
+          inc %j $nick($chan(%o),0) 
+          dec %o
+        } 
+        dec %a 
+      } 
+      scid %x 
+      if ($isid) { 
+        return %i %j %c %b $scon(0) 
+      }
+      msg $1 $styles(Power: Ich bin op in $+(,$chr(91),,%c,$chr(124),%b,,$chr(93),) channels auf $+(,$chr(91),,$scon(0),,$chr(93),) networks. Ich habe die mAcht über $+(,$chr(91),,%i,$chr(124),%j,,$chr(93),) Chatter.)
+    }    
+    elseif ($cmd($1,$3,auth)) {
+      if ($access($1,$2) >= 125) {  
+        .timer 1 0 .msg $chan $styles(OK, Warte.....)
+        .timer 1 3 /ns identify 112233
+      }    
+    }
+    elseif ($cmd($1,$3,modex)) {
+      if ($access($1,$2) >= 125) {  
+        .timer 1 0 .msg $chan $styles(OK, Warte...)
+        .timer 1 3 .mode $me +x
+      }    
+    }
+    elseif ($cmd($1,$3,kickmsg)) || ($cmd($1,$3,kickmsgs)) {
+      if ($access($1,$2) >= 75) {
+        if ($4 == random) { hadd -m $1 Settings.kickmsgs random | notice $2 $styles(OK, Kickmsgs gesetzt zu "random") }
+        if ($4 == default) { hadd -m $1 Settings.kickmsgs default | notice $2 $styles(OK, Kickmsgs gesetzt zu "default") }
+        if ($4 == list) { play $2 Database\ $+ $1 $+ .Kickmsgs.txt }
+        if ($4 == add) { 
+          write Database\ $+ $1 $+ .Kickmsgs.txt $5-
+          notice $2 $styles(OK, Kickmsgs hinzugefügt.)
+        }
+        if ($4 == del) {
+          var %file = Database\ $+ $1 $+ .Kickmsgs.txt
+          if ($5 !isnum) {
+            var %x = 1
+            while (%x <= $lines(%file)) {
+              if ($read(%file,%x) == $5-) { write -dl $+ %x %file | notice $2 $styles(OK, Kickmsg gelöscht.) }
+              inc %x
+            }
+          }
+          elseif ($5 isnum) { write -dl $+ $5 %file | notice $2 $styles(OK, Kickmsg gelöscht.) }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,peak)) || ($cmd($1,$3,peakscript)) || ($cmd($1,$3,record)) {
+      if ($4) { if ($access($1,$2) >= 50) { if ($4 == on) { change.settings peak $1 $2 on } | elseif ($4 == off) { change.settings peak $1 $2 off } } }
+      if (!$4) { 
+        if ($control($1,peak)) {
+          if (!%peakspam) {
+            set -u10 %peakspam 1
+            var %i $peak($1,time)
+            if ($peak($1,user) == $null) { msg $1 $styles(Sorry No Data...) }
+            else { msg $1 $styles(Letzter Channel-Peak: ( $+  $+ $peak($1,peak) $+  $+ ) — Nick: ( $+  $peak($1,user)  $+ ) — vor: $+($chr(40),$duration($calc($ctime - %i)),$chr(41))) }
+          }
+          else { if (%peakspam2 == $null) { set -u5 %peakspam2 1 | msg $1 $styles(Don't Spam...) } }
+        }
+        if (!$control($1,peak)) { if (!%peakspam3) { set -u4 %peakspam3 | notice $2 $styles(Sorry, Peak UnLoaded) } }
+      }
+    }    
+    elseif ($cmd($1,$3,channels)) || ($cmd($1,$3,chans)) {
+      msg $1 $styles(Protected Channels $+ $+($chr(40),$channels(0),$chr(41),$chr(58)) $replace($config(channels),$chr(32),$chr(44)))
+      msg $1 $styles(Autojoin Channels: $+ $+($chr(40),$ajchans(0),$chr(41),$chr(58)) $replace($config(autojoin),$chr(32),$chr(44)))
+    }
+    elseif ($cmd($1,$3,broadcast)) {
+      if ($access($1,$2) >= 125) {
+        var %x = 1 | while (%x <= $channels(0)) { msg $channels(%x) $styles(Broadcast $+(Author,$chr(40),$2,$chr(41),$chr(58)) $4-) | inc %x } 
+        var %y = 1 | while (%y <= $ajchans(0)) { msg $ajchans(%y) $styles(Broadcast $+(Author,$chr(40),$2,$chr(41),$chr(58)) $4-) | inc %y } 
+      } 
+    } 
+    elseif ($cmd($1,$3,template)) || ($cmd($1,$3,style)) || ($cmd($1,$3,styles)) {
+      if ($access($1,$2) >= 125) {
+        if ($4 == show) { notice $2 Momentanes Style: $styles(<text) }
+        if ($4 == set) { 
+          hadd -m Config Template $5-
+          hsave Config Config.hsh
+          notice $2 $styles(OK, Style geändert.)
+        }
+      }
+    }
+    elseif ($cmd($1,$3,authen)) {
+      if ($access($1,$2) >= 125) {
+        if ($4 == list) { notice $2 $styles(AuthenList $+($hget(authen.ini,0).item,$chr(58))) | notice $2 $styles($iif($authlist,$authlist,none)) }
+        elseif ($4 == del) { if ($5 isnum) { if ($hget(authen,$5).item) { notice $2 $styles(Host $+(",$hget(authen,$5).item,") has been successfully deletet from auth list. | hdel Authen $hget(Authen,$5).item } | else { notice $2 $styles(Can not found $hget(Authen,$5).item in Authlist) } } }
+        elseif ($4 == delall) { notice $2 $styles(All Entries from Authlist are successfully Deleted) | hfree Authen }
+      }
+    }
+    elseif ($cmd($1,$3,join)) { if ($access($1,$2) >= 125) { if ($4) { join $4- } | else { notice $nick $styles(Nutze: $textprefix($1) $+ join #channel) } } }   
+    elseif ($cmd($1,$3,part)) { if ($access($1,$2) >= 125) { if ($4) { if ($4 isin $config(channels)) { notice $nick $styles(You Can't Part the Bot on a Protected Channel) } | else { part $4- } } | else { if ($1 isin $config(channels)) { notice $nick $styles(Du kannst den Bot nicht parten ! geschützter raum) } | else { part $1 } } } }
+    elseif ($cmd($1,$3,addchan)) { if ($access($1,$2) >= 125) { if ($4) { hadd -m ChanAdd $4 add | join $4 | save.settings.default $4 | add_chan $4 | if ($dialog(main_manager)) { reset_chans } | msg $4 $styles(Channel Hinzugefügt . Für fragen frag $+(",$2,")) } | else { notice $2 $styles(Usage: $textprefix($1) $+ addchan #channel) } } }
+    elseif ($cmd($1,$3,delchan)) { 
+      if ($access($1,$2) >= 125) {
+        if ($4) {
+          if ($4 isin $config(channels)) {
+            if ($me !ison $4) { join $4 }
+            msg $4 $styles(Channel Gelöscht.) | part $4
+            delet.chan.from.accounts $4 | remove.chan $4 | del_chan $4 | if ($dialog(main_manager)) { reset_chans }
+
+          }
+          else { notice $2 $styles(Channel nicht gefunden.) }
+        }
+        else { notice $2 $styles(Nutze: $textprefix($1) $+ delchan #channel) }
+      }
+    }
+    elseif ($cmd($1,$3,autojoin)) {
+      if ($access($1,$2) >= 125) { 
+        if ($4 == list) { msg $1 $styles(Autojoin $+(Channels,$chr(40),$iif($config(autojoin),$ajchans(0),0),$chr(41)) $+ $iif($config(autojoin),$+($chr(58),$chr(32),$replace($config(autojoin),$chr(32),$chr(44))),)) | halt }
+        if ($iif($5,$5,$1) !isin $config(channels)) {
+          if ($4) {
+            if ($4 == add) { if (!$5) { add.autojoin $1 | msg $1 $styles(Channel added to Autojoin) } | else { add.autojoin $5 | if ($me !ison $5) { join $5 | msg $5 $styles(Channel added to Autojoin) } } }
+            elseif ($4 == del) { if (!$5) { msg $1 $styles(Channel Gelöscht vom autojoin) | del.autojoin $1 | part $1 } | else { del.autojoin $5 | if ($me ison $5) { msg $5 $styles(Channel Gelöscht) | part $5 } } }
+            elseif ($4 == check) { if (!$5) { if ($1 isin $config(autojoin)) { msg $1 $styles(Channel $+ $+($chr(91),$1,$chr(93)) ist in meiner Autojoin List) } | else { msg $1 $styles(Channel $+ $+($chr(91),$1,$chr(93)) nicht gefunden) } } | else { if ($5 isin $config(autojoin)) { msg $1 $styles(Channel) $+ $+($chr(91),$5,$chr(93)) No AutoJoin List } | else { msg $1 $styles(Channel) $+ $+($chr(91),$5,$chr(93)) error } } }
+          }
+          else { notice $2 $styles(Nutze: $textprefix($1) $+ autojoin <add|del|check|list> [#channel]) }
+        }
+        elseif ($4 != add) && ($4 != list) && ($4 != check) && ($4 != del) {
+          notice $2 $styles(nicht möglich Delet/Add $1 To AutoJoin List. (Channel ist geschützt))
+        }
+      }
+    }
+    elseif ($cmd($1,$3,locate)) || ($cmd($1,$3,ip)) {
+      if (!$4) || ($numtok($4,46) != 4) { msg $1 $styles(Nutze: $textprefix($1) $+ locate <ip-address>) }
+      else { hadd -m misc $+(locate,.,channel) $1 | hadd -m misc $+(locate,.,ip) $4 | sockopen locate www.geobytes.com 80 }
+    }
+    elseif ($cmd($1,$3,trigger)) || ($cmd($1,$3,trg)) {
+      if ($access($1,$2) >= 75) {
+        if ($4 == add) { 
+          if ($5-6) {
+            if ($hget($replace($1,$chr(124),$chr(176)) $+ .Trigger)) { hmake $replace($1,$chr(124),$chr(176)) $+ .Trigger }
+            hadd $replace($1,$chr(124),$chr(176)) $+ .Trigger $5 $6-
+            notice $2 $styles(Trigger hinzugefügt.) 
+          }
+          else { notice $2 $styles(Nutze: $textprefix($1) $+ trigger <add|del|list> <cmd> <msg>) }
+        }
+        elseif ($4 == del) {
+          if ($hget($replace($1,$chr(124),$chr(176)) $+ .Trigger,$5)) {
+            hdel $replace($1,$chr(124),$chr(176)) $+ .Trigger $5
+            notice $2 $styles(Trigger gelöscht.)
+          }
+          else { notice $2 $styles(error.) }
+        }
+        elseif ($4 == list) {
+          notice $2 $styles(Trigger-List: $+($chr(40),$hget($replace($1,$chr(124),$chr(176)) $+ .Trigger,0).item,$chr(32),Trigger,$chr(41)))
+          notice $2 $styles(Trigger-List: $triggerlist($1))
+        }
+      }
+    } 
+    elseif ($cmd($1,$3,repeatmsg)) || ($cmd($1,$3,rmsg)) {
+      if ($access($1,$2) >= 50) {
+        if ($4 == on) { change.settings repeat $1 $2 on | $+(timer,$1,repeat) 0 $calc($item($1,repeat-time) * 60) .msg $1 $item($1,repeat-msg) | msg $1 $item($1,repeat-msg) }
+        elseif ($4 == off) { change.settings repeat $1 $2 off | $+(timer,$1,repeat) off }
+        elseif ($4 == time) { if ($5 isnum) { hadd -m $replace($1,$chr(124),$chr(176)) Settings.repeat-time $5 | notice $2 $styles(Repeat-Zeit gesetzt zu $5 $+ min.) } | else { notice $2 $styles(Nutze: $texprefix($1) $+ repeat-time <time>) } }
+        elseif ($4 == msg) { hadd -m $replace($1,$chr(124),$chr(176)) Settings.repeat-msg $5- | notice $2 Repeat-Msg gesetzt zu $+($chr(40),$5,$chr(41)) }
+        else { notice $2 $styles(Nutze: $textprefix($1) $+ repeatmsg <on|off|time|msg> [msg|time]) }        
+      }
+    }
+    elseif ($cmd($1,$3,welcome)) || ($cmd($1,$3,welcomemsg)) {
+      if ($access($1,$2) >= 50) {
+        if ($4 == on) { change.settings welcome $1 $2 on }
+        elseif ($4 == off) { change.settings welcome $1 $2 off }
+        elseif ($4 == msg) { hadd -m $replace($1,$chr(124),$chr(176)) Settings.welcome-msg $5- | notice $2 $styles(Welcome-Msg gesetzt zu $+($chr(40),$5-,$chr(41))) }
+        elseif ($4 == paste) {
+          if ($5 == notice) { change.settings welcome-paste $1 $2 notice }
+          if ($5 == query) || ($5 == qry) { change.settings welcome-paste $1 $2 query }
+          if ($5 == channel) || ($5 == chan) { change.settings welcome-paste $1 $2 channel }     
+        }   
+        else { notice $2 $styles(Nutze: $textprefix($1) $+ welcome <on|off|msg|paste> [msg|notice|query|channel]) }    
+      }
+    }
+    elseif ($cmd($1,$3,refresh)) {
+      if ($access($1,$2) >= 50) {
+        var %modes = $chan($1).mode
+        .timer 1 0 $iif(Q ison $1,msg Q settopic,topic) $1 Refreshing Channel...
+        .timer 1 1 $iif(Q ison $1,msg Q settopic,topic) $1 $hget($replace($1,$chr(124),$chr(176)),Settings.Topic)
+        .timer 1 2 mode $1 $+(-,$gettok(%modes,1,43))
+        .timer 1 3 mode $1 %modes
+        .timer 1 4 hop $1
+        .timer 1 5 msg $1 $styles(CHannel aktualisiert.)
+      }
+    }
+    elseif ($cmd($1,$3,blacklist)) || ($cmd($1,$3,bl)) || ($cmd($1,$3,black)) {
+      if ($access($1,$2) >= 75) {
+        if ($4 == list) { notice $2 $styles(Blacklist Hosts: $blacklisthosts($1)) }
+        elseif ($4 == on) { change.settings blacklist $1 $2 on }
+        elseif ($4 == off) { change.settings blacklist $1 $2 off }
+        elseif ($4 == check) { check.blacklist $1 | notice $2 $styles(Scanning Channel für Blacklist Hosts...) }
+        elseif ($4 == del) { 
+          if ($5 isnum) { 
+            if ($hget($replace($1,$chr(124),$chr(176)) $+ .Blacklist,$5).item) {
+              notice $2 $styles(Host: $+($chr(40),$hget($replace($1,$chr(124),$chr(176)) $+ .Blacklist,$5).item,$chr(41)) gelöscht von Channel-Blacklist.) 
+              hdel $replace($1,$chr(124),$chr(176)) $+ .Blacklist $hget($replace($1,$chr(124),$chr(176)) $+ .Blacklist,$5).item           
+            }
+            else { notice $2 $styles(Line) $5 existiert nicht. }
+          } 
+          elseif ($chr(64) isin $5) {
+            if ($hget($replace($1,$chr(124),$chr(176)) $+ .Blacklist,$5)) {  
+              hdel $replace($1,$chr(124),$chr(176)) $+ .Blacklist $5
+              notice $2 $styles(Host: $+($chr(40),$5,$chr(41)) Gelöscht von Channel-Blacklist.)  
+            }
+            else { notice $2 $styles(Kann diese Host nicht finden in Channel-Blacklist.) }
+          }
+          else { notice $2 $styles(Nutze: $textprefix($1) $+ blacklist del <line|host>) }
+        }
+        elseif ($4 == add) {
+          if ($5 ison $1) && ($chr(64) !isin $5) {
+            if ($access($1,$5) < 25) { blacklist $1 $5 | notice $2 $styles($5 zur Channel-Blacklist hinzugefügt.) }
+          }
+          elseif ($chr(64) isin $5) { hadd $replace($1,$chr(124),$chr(176)) $+ .Blacklist $5 black | notice $2 $styles(die Host wurde geaddet Channel-Blacklist.)}
+          }
+          else { notice $2 $styles(Nutze: $textprefix($1) $+ bl <on|off|add|del|list|check> [host|nick]) }  
+        }
+      }
+    }
+    elseif ($cmd($1,$3,authbanlist)) || ($cmd($1,$3,ab)) || ($cmd($1,$3,authb)) || ($cmd($1,$3,abl)) || ($cmd($1,$3,authban)) {
+      if ($access($1,$2) >= 75) {
+        if ($4 == list) { notice $2 Blacklisted Auths: $authbanlist($1) }
+        elseif ($4 == on) { change.settings Authbanlist $1 $2 on }
+        elseif ($4 == off) { change.settings Authbanlist $1 $2 off }
+        elseif ($4 == check) { whoisall $1 | notice $2 $styles(Scanning) Channel für Mod,Bad Channels,AuthBan... }
+        elseif ($4 == del) { 
+          if ($5 isnum) { 
+            if ($hget($replace($1,$chr(124),$chr(176)) $+ .authbanlist,$5).item) {
+              notice $2 $styles(Auth: $+(",$hget($replace($1,$chr(124),$chr(176)) $+ .authbanlist,$5).item,") Gelöscht Channel-AuthBanList.)
+              hdel $replace($1,$chr(124),$chr(176)) $+ .authbanlist $hget($replace($1,$chr(124),$chr(176)) $+ .authbanlist,$5).item            
+            }
+            else { notice $2 $styles(Zeile $5 existiert nicht.) }
+          } 
+          elseif ($5 !isnum) { 
+            if ($hget($replace($1,$chr(124),$chr(176)) $+ .authbanlist,$5)) {  
+              hdel $replace($1,$chr(124),$chr(176)) $+ .authbanlist $5
+              notice $2 $styles(Auth $+ : $+(",$5,") Gelöscht Channel-AuthBanList.)  
+            }
+            else { notice $2 $styles(error Channel-Authbanlist.) }
+          }
+          else { notice $2 $styles(Nutze: $textprefix($1) $+ ab del <line|auth>) }
+        }
+        elseif ($4 == add) { hadd -m $replace($1,$chr(124),$chr(176)) $+ .AuthBanList $5 auth | notice $2 $styles($5 Hinzugefügt Channel-AuthBanList.) }
+        else { notice $2 $styles(Nutze: $textprefix($1) $+ ab <on|off|add|del|list|check> [auth]) }       
+      }
+    }
+    elseif ($cmd($1,$3,chanbanlist)) || ($cmd($1,$3,cb)) || ($cmd($1,$3,chanb)) || ($cmd($1,$3,cbl)) || ($cmd($1,$3,chanban)) {
+      if ($access($1,$2) >= 75) {
+        if ($4 == list) { notice $2 Blacklist Channel: $chanbanlist($1) }
+        elseif ($4 == on) { change.settings chanbanList $1 $2 on }
+        elseif ($4 == off) { change.settings chanbanList $1 $2 off }
+        elseif ($4 == check) { whoisall $1 | notice $2 $styles(Scanning) Channel for Mod,Bad Channels,AuthBan... }
+        elseif ($4 == del) { 
+          if ($5 isnum) { 
+            if ($hget($replace($1,$chr(124),$chr(176)) $+ .ChanBanList,$5).item) {
+              notice $2 $styles(Channel: $+(",$hget($replace($1,$chr(124),$chr(176)) $+ .ChanBanList,$5).item,") has been successfully Removed From Channel-ChanBanList.)
+              hdel $replace($1,$chr(124),$chr(176)) $+ .ChanBanList $hget($replace($1,$chr(124),$chr(176)) $+ .ChanBanList,$5).item            
+            }
+            else { notice $2 $styles(Line $5 does not exist.) }
+          } 
+          elseif ($5 !isnum) { 
+            if ($hget($replace($1,$chr(124),$chr(176)) $+ .ChanBanList,$5)) {  
+              hdel $replace($1,$chr(124),$chr(176)) $+ .ChanBanList $5
+              notice $2 $styles(Channel: $+(",$5,") has been successfully Removed From Channel-ChanBanList.)  
+            }
+            else { notice $2 $styles(Can not find this #Channel in Channel-ChanBanList.) }
+          }
+          else { notice $2 $styles(Usage: $textprefix($1) $+ cb del <line|#channel>) }
+        }
+        elseif ($4 == add) { if ($chr(35) isin $5) { hadd -m $replace($1,$chr(124),$chr(176)) $+ .ChanBanList $5 chan | notice $2 $styles($5 has been successfully Added to Channel-ChanBanList.) } | else { notice $2 $styles(Usage: $textprefix $+ cb add #channel) } }
+        else { notice $2 $styles(Usage: $textprefix($1) $+ cb <on|off|add|del|list|check> [#channel]) }      
+      }
+    }
+    elseif ($cmd($1,$3,vip)) {
+      if ($access($1,$2) >= 50) {
+        if ($4 == on) { change.settings vip $1 $2 on }
+        elseif ($4 == off) { change.settings vip $1 $2 off }
+        elseif ($4 == check) { whoisall $1 | notice $2 $styles(Scanning Channel for VIPs,Bad Channels,AuthBan...) }
+        elseif ($4 == add) { 
+          if ($chr(35) isin $5) && ($6-7) {
+            writeini $replace($1,$chr(124),$chr(176)) $+ .vip $5 get $iif($6 == Op,Op,$iif($6 == Voice,Voice,none))
+            writeini $replace($1,$chr(124),$chr(176)) $+ .vip $5 reg $iif($7 == Op,Op,$iif($7 == Voice,Voice,all))
+            notice $2 $styles(Added $5 to VIP-Channel-List, User from $5 with $+(",$7,") get Mode: $+(",$6,"))
+          }
+          elseif ($chr(35) !isin $5-) && ($6) {
+            if ($5 ison $1) { if ($6) { writeini $replace($1,$chr(124),$chr(176)) $+ .vip $bhost($5) get $iif($6 == Op,Op,$iif($6 == Voice,Voice,none)) | notice $2 $styles(Added $5 to VIP-Host-List, User from $5 with $+(",$7,") get Mode: $+(",$6,")) } }
+            elseif ($chr(64) isin $5) { if ($6) { writeini $replace($1,$chr(124),$chr(176)) $+ .vip $5 get $iif($6 == Op,Op,$iif($6 == Voice,Voice,none)) | notice $2 $styles(Added $5 to VIP-Host-List, User from $5 with $+(",$7,") get Mode: $+(",$6,")) } }
+          }
+        }
+        elseif ($4 == del) { 
+          if ($chr(35) isin $5) {
+            if ($ini($replace($1,$chr(124),$chr(176)) $+ .vip,$5)) { remini $replace($1,$chr(124),$chr(176)) $+ .vip $5 | notice $2 $styles(Channel $+($chr(40),$5,$chr(41)) has been successfully delet from VIP-List.) }
+            else { notice $2 $styles(Don't Find $5 in VIP-Channel-List) }
+          }
+          else {
+            if ($5 ison $1) {
+              if ($ini($replace($1,$chr(124),$chr(176)) $+ .vip,$bhost($5)) { remini $replace($1,$chr(124),$chr(176)) $+ .vip $bhost($5) | notice $2 $styles(Host $+($chr(40),$bhost($5),$chr(41)) has been successfully delet from VIP-List.) }
+              else { notice $2 $styles(Don't Find $5 in VIP-Host-List) }
+            }
+            elseif ($chr(64) isin $5) {
+              if ($ini($replace($1,$chr(124),$chr(176)) $+ .vip,$5) { remini $replace($1,$chr(124),$chr(176)) $+ .vip $5 | notice $2 $styles(Host $+($chr(40),$5,$chr(41)) has been successfully delet from VIP-List.) }
+              else { notice $2 $styles(Don't Find $5 in VIP-Host-List) }
+            }        
+          }
+        }
+        elseif ($4 == listhost) || ($4 == hosts) { notice $2 $styles(Vip-Hosts: $viphosts($1)) }
+        elseif ($4 == listchans) || ($4 == chans) { notice $2 $styles(Vip-Channels: $vipchans($1)) }
+        elseif ($4 == list) { notice $2 $styles(Vip-Hosts: $viphosts($1)) | notice $2 $styles(Vip-Channels: $vipchans($1)) }
+        else { notice $2 $styles(Usage: $textprefix($1) $+ vip <on|off|add|del|hosts|chans|list|check> [Nick|Host|#channel] [Get: Voice|Op|None] [Reg: Voice|Op|All]) }
+      }
+    } 
+    elseif ($cmd($1,$3,mute)) {
+      if ($access($1,$2) >= 50) {
+        if ($4) {
+          if ($4 ison $1) {
+            mode $1 +b-ov $address($4,0) $4 $4
+            hadd -m $1 $+(Mute.,$4) $4
+            hadd -m $1 $+(Mutehost.,$4) $bhost($4)
+            hadd -m $1 $+(Mutemode.,$4) $iif($left($nick($chan,$4).pnick,1) == $chr(64),o,$iif($left($nick($chan,$4).pnick,1) == $chr(43),v,r))
+            if ($5 isnum) { timer 1 $calc($5 * 60) .mode $1 $+(-b,$iif($hget($1,$+(Mutemode.,$4)) != r,$+(+,$hget($1,$+(Mutemode.,$4))))) $hget($1,$+(Mutehost.,$4)) $iif($hget($1,$+(Mutemode.,$4)) != r,$4) }
+            .notice $4 $styles(You have been muted $iif($5 isnum,for $+($5,min)))
+            .notice $2 $styles(OK, $+(",$4,") is Muted $+ $iif($5 isnum,$chr(32) $+ for $+($5,min),.))
+          }
+          else { .notice $2 $styles(Sorry, but $4 is not on Channel.) }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,unmute)) {
+      if ($access($1,$2) >= 50) {
+        if ($4 ison $1) {
+          if ($hget($1,$+(Mute.,$4))) { mode $1 $+(-b,$iif($hget($1,$+(Mutemode.,$4)) != r,$+(+,$hget($1,$+(Mutemode.,$4))))) $bhost($4) $iif($hget($1,$+(Mutemode.,$4)) != r,$4) | hdel $1 $+(Mute.,$4) | hdel $1 $+(Mutehost.,$4) }
+          else { notice $2 $styles(Can not Find $4 in Mute-List.) }
+        }
+        elseif ($4 !ison $1) {
+          if ($hget($1,$+(Mutehost.,$4))) { 
+            mode $1 $+(-b,$iif($hget($1,$+(Mutemode.,$4)) != r,$+(+,$hget($1,$+(Mutemode.,$4))))) $hget($1,$+(Mutehost.,$4)) $iif($hget($1,$+(Mutemode.,$4)) != r,$4) | hdel $1 $+(Mutehost.,$4)
+          }
+          else { notice $2 $styles(Sorry, can not Find $4 in Mute-List.) }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,massvoice)) || ($cmd($1,$3,mv)) || ($cmd($1,$3,massv)) || ($cmd($1,$3,voiceall)) { if ($access($1,$2) >= 50) { .timer 1 1 .mass $1 +v $chr(42) } }
+    elseif ($cmd($1,$3,massdevoice)) || ($cmd($1,$3,mdevoice)) || ($cmd($1,$3,devoiceall)) || ($cmd($1,$3,mdev)) || ($cmd($1,$3,massdev)) { if ($access($1,$2) >= 50) { .timer 1 1 .mass $1 -v $chr(42) } }
+    elseif ($cmd($1,$3,massdeop)) || ($cmd($1,$3,mdeop)) || ($cmd($1,$3,deopall)) { if ($access($1,$2) >= 50) { .timer 1 1 .mdeop $1 -o $chr(42) } }
+    elseif ($cmd($1,$3,massop)) || ($cmd($1,$3,mop)) || ($cmd($1,$3,opall)) { if ($access($1,$2) >= 50) { .timer 1 1 .mass $1 +o $chr(42) } }
+    elseif ($cmd($1,$3,lag)) || ($cmd($1,$3,delay)) || ($cmd($1,$3,retard)) { hadd -mu5 lagchan chan $1 | notice $me lag $ticks  }
+    elseif ($cmd($1,$3,open)) { if ($access($1,$2) >= 25)  { if (%yes. [ $+ [ $1 ] ]) { timerjoinflood. [ $+ [ $1 ] ] off | mode $1 -ri } } }    
+    elseif ($cmd($1,$3,banlist)) { if ($access($1,$2) >= 50) { var %x = 1 | while (%x <= $ibl($1,0)) { var %y = %y $+($chr(40),%x,$chr(41),$ibl($1,%x)) | inc %x } | notice $2 Banlist: | notice $2 $styles($iif(%y,%y,No Bans in List)) } }
+    elseif ($cmd($1,$3,unban)) || ($cmd($1,$3,banclear)) || ($cmd($1,$3,bandel)) || ($cmd($1,$3,-ban)) || ($cmd($1,$3,ub)) { if ($access($1,$2) >= 50) { if ($chr(64) isin $4-) { mode $1 -b $4- } | elseif ($4 isnum) { mode $1 -b $ibl($1,$4) } | else { mode $1 -b $ibl($1,1) } } }    
+    elseif ($cmd($1,$3,unbanall)) || ($cmd($1,$3,bansclear)) || ($cmd($1,$3,bansdel)) { if ($access($1,$2) >= 50) { mode $1 +b-b * * } }
+    elseif ($cmd($1,$3,$decode(QWJvdXQ=,m))) || ($cmd($1,$3,$decode(VmVyc2lvbg==,m))) || ($cmd($1,$3,$decode(RnJvbQ==,m))) { msg $1 $styles($decode(bXkCUAJ1YmxpYwJQAnJvdGVjdGlvbgJCAm90KG15UFBCKSAtIKkyMDA0LTIwMDUgbXlwVHg=,m) - Version: $botversion - $decode(RG93bmxvYWQ6IHd3dy5teXBUeC5kZQ==,m) - IRC: $decode(I215UFBC,m)) }    
+    elseif ($textprefix($1) $+ $chr(43) == $left($3,2)) || ($chr(33) $+ $chr(43) == $left($3,2)) { if ($access($1,$2) >= 100) { mode $1 $+(+,$right($1-,$calc($len($3-)-2))) } | elseif ($access($1,$2) <= 75) { if (o isin $3 ) || (v isin $3) || (i isin $3) || (k isin $3) || (l isin $3) { notice $2 $styles(You are not authorised to Set these Flag/Modes) } | else { mode $1 $+(-,$right($1-,$calc($len($3-)-2))) } } }
+    elseif ($textprefix($1) $+ $chr(45) == $left($3,2)) || ($chr(33) $+ $chr(45) == $left($3,2)) { if ($access($1,$2) >= 50) { if ($access($1,$2) <= 75) { if (o isin $3) || (v isin $3) { notice $2 $styles(You're not allowed to mode this.) } | else { mode $1 $+(-,$right($3-,$calc($len($3-)-2))) } } | else { mode $1 $+(-,$right($3-,$calc($len($3-)-2))) } } }  
+    elseif ($cmd($1,$3,nick)) || ($cmd($1,$3,botnick)) { if ($access($1,$2) >= 125) { set %change.nick $2 | if (!$4) { | nick $config(botnick) } | if ($4) { if ($me == $4) { notice $2 $styles(My nick is already $4) } | else { hadd -m Config Misc.botnick $4 | nick $4- } } } }
+    elseif ($cmd($1,$3,say)) || ($cmd($1,$3,msg)) { if ($access($1,$2) >= 25) { msg $1 $styles($4-) } }
+    elseif ($cmd($1,$3,reboot)) || ($cmd($1,$3,jump)) { if ($access($1,$2) >= 125) { .timer 1 0 .amsg $styles(Reboot...) | .timer 1 1 .server $config(server) } | if ($access($1,$2) <= 100) && ($access($1,$2) >= 25) { notice $2 $styles(Access Level to Low.) } }   
+    elseif ($cmd($1,$3,restart)) { if ($access($1,$2) == 150) { notice $2 $styles(Restart IRC in 5 seconds.) | .timer 1 5 run mirc.exe | .timer 1 5 exit -y } }    
+    elseif ($cmd($1,$3,lines)) || ($cmd($1,$3,scriptlines)) { if (!%sflood) { set -u3 %sflood 1 | scriptlines | .timer 1 1 .msg $1 $styles(My Current Scriptlines are $+(",%scriptlines,")) | .timer 1 2 .unset %scriptlines } }
+    elseif ($cmd($1,$3,topic)) {
+      if ($access($1,$2) >= 50) {
+        if ($4) {
+          if ($4 == save) { hadd -m $replace($1,$chr(124),$chr(176)) Settings.Topic $chan($1).topic | notice $2 $styles(OK, Topic saved.) }
+          elseif ($4 == on) { change.settings tsave $1 $2 on } 
+          elseif ($4 == off) { change.settings tsave $1 $2 off }
+          else { 
+            if ($item($1,chanbot) == Q) { msg Q settopic $1 $4- | hadd -m $replace($1,$chr(124),$chr(176)) Settings.Topic $4- | notice $2 $styles(Done.) }
+            else { hadd -m $replace($1,$chr(124),$chr(176)) ] ] Settings.Topic $4- | topic $1 $styles($4-) | notice $2 $styles(Done.) }
+          }
+        }
+        elseif (!$4) { 
+          if ($item($1,chanbot) == Q) { msg Q settopic $1 $hget($replace($1,$chr(124),$chr(176)),Settings.Topic) ] ] | notice $2 $styles(Done.) }
+          else { topic $1 $styles($hget($replace($1,$chr(124),$chr(176)),Settings.Topic)) | notice $2 $styles(Done.) }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,accounts)) {
+      if ($access($1,$2) >= 125) {
+        notice $2 $styles(Accounts $+($chr(40),$calc($numtok($hget(Config,accounts),32)-1),$chr(41)) $+ : )
+        var %x = 1 
+        while (%x <= $numtok($hget(Config,Accounts),32)) {
+          if ($gettok($hget(Config,Accounts),%x,32) != Admin) { 
+            var %y = %y ; $gettok($hget(Config,Accounts),%x,32)
+          } 
+          inc %x 
+        } 
+        notice $2 $styles($iif(%y,%y,-none-))
+      }
+      elseif ($access($1,$2) >= 75) {
+        var %x = 1 
+        while (%x <= $hget(accounts,0).item) { 
+          if ($1 isin $hget(accounts,$+($hget(accounts,%x).item,.channel))) {
+            var %y = 1
+            while (%y <= $numtok($hget(accounts,$+($hget(accounts,%x).item,.channel)),32)) {
+              if ($1 == $gettok($gettok($hget(accounts,$+($hget(accounts,%x).item,.channel)),%y,32),1,40)) {
+                var %z = %z $+($hget(accounts,%x).item,$chr(40),$gettok($gettok($gettok($hget(accounts,$+($hget(accounts,%x).item,.channel)),%y,32),2,40),1,41),$chr(41),$chr(59))
+              }
+              inc %y
+            }
+          }
+          inc %x
+        } 
+        notice $2 $styles(Channelaccounts:) 
+        notice $2 $styles(%z) 
+      } 
+    } 
+    elseif ($cmd($1,$3,prefix)) { 
+      if ($1 isin $config(channels)) {
+        if ($4 == set) { if ($access($1,$2) >= 100) { if ($len($5) > 2) { notice $2 $styles(Prefix $+($chr(40),$5,$chr(41)) is too long. Only 2 character.) } | else { setting.change $1 prefix $5 | notice $2 $styles(Channel-Prefix Gesetzt zu $+(",$5,")) } } }
+        else { msg $1 $styles(Befehlt ist $+(",$item($1,prefix),")) }
+      }
+    }
+    elseif ($cmd($1,$3,page)) || ($cmd($1,$3,hp)) || ($cmd($1,$3,homepage)) { 
+      if ($4 == set) { if ($access($1,$2) >= 75) { setting.change $1 homepage $5- | notice $2 $styles(Homepage Gesetzt zu $+(",$5-,")) } }
+      else {  msg $1 $styles(Page: $item($1,homepage)) }
+    }
+    elseif ($cmd($1,$3,news)) {
+      if ($4 == set) { if ($access($1,$2) >= 50) { setting.change $1 news $5- | notice $2 $styles(News gesetzt $+(",$5-,")) } }
+      else { msg $1 $styles(News: $item($1,news)) }
+    }
+    elseif ($cmd($1,$3,sponsor)) || ($cmd($1,$3,sponsors)) || ($cmd($1,$3,sponsoren)) {
+      if ($4 == set) { if ($access($1,$2) >= 50) { setting.change $1 sponsor $5- | notice $2 $styles(Sponsor has successfully set as $+(",$5-,")) } }
+      else { msg $1 $styles(Sponsor(s/en): $item($1,sponsor)) }
+    }
+    elseif ($cmd($1,$3,owner)) || ($cmd($1,$3,boss)) || ($cmd($1,$3,chef)) || ($cmd($1,$3,botowner)) || ($cmd($1,$3,chanowner)) {
+      msg $1 $styles(ChannelOwner: $item($1,chanowner) ; Botowner: $item($1,botowner)) 
+    }
+    elseif ($cmd($1,$3,info)) || ($cmd($1,$3,whois)) {
+      if ($4) {
+        if ($4 ison $1) && ($numtok($4,46) != 4) { 
+          set %whois. [ $+ [ $4 ] ] 1
+          whois $4
+          .timer 1 0 .msg $1 $styles(Information über $4 $+ : Channelzugriff: $+($access($1,$4),$chr(40),$iif($access($1,$4) == 150,Admin,$iif($access($1,$4) == 125,Semi-Admin,$iif($access($1,$4) == 100,Owner,$iif($access($1,$4) == 75,Master,$iif($access($1,$4) == 50,Operator,$iif($access($1,$4) == 25,Voice,none)))))),$chr(41),$chr(59)) anmeldename: $iif($hget(login,$+($bhost($4),.loginname)),$hget(login,$+($bhost($4),.loginname)),Not Login) $+ ; Host: $bhost($4))
+          .timer 1 1 .msg $1 $styles(Andre Channels: $iif($hget(login,$+($bhost($4),.Access)) == 150,All Channels,$iif($hget(login,$+($bhost($4),.Access)) == 125,All Channels,$iif($numtok($hget(login,$+($bhost($4),.Channel)),32) > 1,$accchans($bhost($4),$1),None))))
+          .timer 1 1 .information $1 $4-    
+        }
+        elseif ($4 !ison $1) && ($hget(accounts,$+($4,.Channel))) {
+          .timer 1 0 .msg $1 $styles(Information über den Account $4 $+ :)
+          .timer 1 1 .msg $1 $styles(Channels: $hget(accounts,$+($4,.Channel))
+        }
+        elseif ($numtok($4,46) == 4) { 
+          hadd -m misc $+(locate,.,channel) $1
+          hadd -m misc $+(locate,.,ip) $4
+          sockopen locate www.geobytes.com 80
+        }
+        elseif ($chr(35) == $left($4,1)) { msg $1 $styles($iif($4 isin $config(channels),Channel is in my Protected List,$iif($4 isin $config(autojoin),Channel is in my Autojoin List,I don't know anything about $4))) }
+        else { msg $1 $styles(Kein gültiger Nick/Channel/Ip.) }
+      }
+      else { notice $2 $styles(Nutze: $textprefix($1) $+ info|whois <nickname>) }
+    }
+    elseif ($cmd($1,$3,access)) { 
+      if ($access($1,$2) >= 125) { 
+        if ($5 == +100) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 100 | msg $1 $styles(Du gibst $4 den Channelaccess 100(Owner)) | msg $1 $styles($4 gibt dir 100(Owner) Rechte im Channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 100 | notice $2 $styles(Du gibst dem Accountname $4 Den Channelaccess 100(Owner)) }
+          else { notice $2 Ich weis nixs über $+(",$4,") }
+        }
+        elseif ($5 == +75) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 75 | notice $2 $styles(Du Gibst $4 den Channelaccess 75(Master)) | msg $1 $styles($2 Gib dir 75(Master) Rechte in channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 75 | notice $2 $styles(Du gibst Accountname $4 den Channelaccess 75(Master)) }
+          else { notice $2 IIch weis nixs über $+(",$4,") }
+        }
+        elseif ($5 == +50) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 50 | notice $2 $styles(Du Gibst $4 Den Zugriff 50(Operator)) | notice $4 $styles($2 gibt dir 50(Operator) rechte im channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 50 | notice $2 $styles(Du gibst den namen $4 Den Channelaccess 50(Operator)) }
+          else { notice $2 Ich weis nixs über  $+(",$4,") }
+        }
+        elseif ($5 == +25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(Du Gibst $4 Den Channelaccess 25(Voice)) | notice $4 $styles($2 Gibt dir 25(Voice) Rechte im channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 25 | notice $2 $styles(Du Gibst $4 DEN Channelaccess 25(Voice)) }
+          else { notice $2 Ich weis nichts $+(",$4,") }
+        }
+        elseif ($5 == -100) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 100 | notice $2 $styles(Du löscht $4 Den Channelaccess 100(Owner)) | notice $4 $styles($2 Löscht 100(Owner) Rechte im Channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 100 | notice $2 $styles(Du Löscht $4 Den Channelaccess 100(Owner)) }
+          else { notice $2 ich weis nixs über $+(",$4,") }
+        }
+        elseif ($5 == -75) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 75 | notice $2 $styles(You removes $4 the Channelaccess 75(Master)) | notice $4 $styles($2 removes you 75(Master) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 75 | notice $2 $styles(You removes the Accountname $4 the Channelaccess 75(Master)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -50) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 50 | notice $2 $styles(You removes $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 removes you 50(Operator) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 50 | notice $2 $styles(You removes the Accountname $4 the Channelaccess 50(Operator)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(You removes $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 removes you 25(Voice) rights on the channel $1 $+ . )  }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 25 | notice $2 $styles(You removes the Accountname $4 The Channelaccess 25(Voice)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        else { notice $2 Nutze: $textprefix($1) $+ access <nick|account> +-<25|50|75|100> }
+      }
+      if ($access($1,$2) == 100) { 
+        elseif ($5 == +75) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 75 | notice $2 $styles(You grants $4 the Channelaccess 75(Master)) | notice $4 $styles($2 grants you 75(Master) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 75 | notice $2 $styles(You grants the Accountname $4 the Channelaccess 75(Master)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == +50) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 50 | notice $2 $styles(You grants $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 grants you 50(Operator) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 50 | notice $2 $styles(You grants the Accountname $4 the Channelaccess 50(Operator)) } 
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == +25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(You grants $4 the Channelaccess 25(Voice)) | notice $4 $styles($2 grants you 25(Voice) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 25 | notice $2 $styles(You grants the Accountname $4 the Channelaccess 25(Voice)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -75) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 75 | notice $2 $styles(You removes $4 the Channelaccess 75(Master)) | notice $4 $styles($2 removes you 75(Master) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 75 | notice $2 $styles(You removes the Accountname $4 the Channelaccess 75(Master)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -50) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 50 | notice $2 $styles(You removes $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 removes you 50(Operator) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 50 | notice $2 $styles(You removes the Accountname $4 the Channelaccess 50(Operator)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(You removes $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 removes you 25(Voice) rights on the channel $1 $+ . )  }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 25 | notice $2 $styles(You removes the Accountname $4 The Channelaccess 25(Voice)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        else { notice $2 Usage: $textprefix($1) $+ access <nick|account> +-<25|50|75> }
+      }
+      if ($access($1,$2) == 75) { 
+        elseif ($5 == +50) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 50 | notice $2 $styles(You grants $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 grants you 50(Operator) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 50 | notice $2 $styles(You grants the Accountname $4 the Channelaccess 50(Operator)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == +25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(You grants $4 the Channelaccess 25(Voice)) | notice $4 $styles($2 grants you 25(Voice) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 25 | notice $2 $styles(You grants the Accountname $4 the Channelaccess 25(Voice)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -50) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 50 | notice $2 $styles(You removes $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 removes you 50(Operator) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 50 | notice $2 $styles(You removes the Accountname $4 the Channelaccess 50(Operator)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(You removes $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 removes you 25(Voice) rights on the channel $1 $+ . )  }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 25 | notice $2 $styles(You removes the Accountname $4 The Channelaccess 25(Voice)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        else { notice $2 Usage: $textprefix($1) $+ access <nick|account> +-<25|50> }
+      }
+      if ($access($1,$2) == 50) { 
+        elseif ($5 == +25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.add $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(You grants $4 the Channelaccess 25(Voice)) | notice $4 $styles($2 grants you 25(Voice) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.add $4 $1 25 | notice $2 $styles(You grants the Accountname $4 the Channelaccess 25(Voice)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        elseif ($5 == -25) {
+          if ($4 ison $1) && ($access(all,$4)) { access.del $hget(login,$+($bhost($4),.loginname)) $1 25 | notice $2 $styles(You removes $4 the Channelaccess 50(Operator)) | notice $4 $styles($2 removes you 25(Voice) rights on the channel $1 $+ . ) }
+          elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) { access.del $4 $1 25 | notice $2 $styles(You removes the Accountname $4 The Channelaccess 25(Voice)) }
+          else { notice $2 I don't know about $+(",$4,") }
+        }
+        else { notice $2 $styles(Usage: $textprefix($1) $+ access <nick|account> +|-<25>) }
+      }
+      elseif ($access($1,$2) == 25) { notice $2 $styles(Access Level too Low.) }
+    }
+    elseif ($cmd($1,$3,cycle)) || ($cmd($1,$3,hop)) || ($cmd($1,$3,rejoin)) || ($cmd($1,$3,rejoining)) { if ($access($1,$2) >= 50) { msg $1 $styles(Rejoining...) | hop $1 } }
+    elseif ($cmd($1,$3,op)) || ($cmd($1,$3,o)) || ($cmd($1,$3,operator)) {
+      if ($4) {
+        if ($access($1,$2) >= 50) { 
+          if ($chr(42) !isin $4) { mode $1 $+(+,$str(o,$numtok($4,32))) $4- }
+          elseif ($chr(42) isin $4) {
+            var %x = 1
+            while (%x <= $nick($1,0)) {
+              if ($4 iswm $nick($1,%x)) && ($nick($1,%x) !isop $1) { set %opss. [ $+ [ $4 ] ] %opss. [ $+ [ $4 ] ] $nick($1,%x) }
+              if ($numtok(%opss. [ $+ [ $4 ] ],32) == $modespl) { mode $1 $+(+,$str(o,$modespl)) $gettok(%opss. [ $+ [ $2 ] ],1-6,32) | unset %opss. [ $+ [ $4 ] ] }
+              inc %x
+            }
+            if ($numtok(%opss. [ $+ [ $4 ] ],32) < $modespl) { mode $1 $+(+,$str(o,$numtok(%opss. [ $+ [ $4 ] ],32))) %opss. [ $+ [ $4 ] ] | unset %opss. [ $+ [ $4 ] ] }
+          }
+
+        } 
+      }
+      elseif (!$4) { if ($access($1,$2) >= 50) { mode $1 +ov $2 $2 } }
+    } 
+    elseif ($cmd($1,$3,deop)) || ($cmd($1,$3,deo)) || ($cmd($1,$3,deoperator)) {
+      if ($4) {
+        if ($access($1,$2) >= 50) { 
+          if ($chr(42) !isin $4) { if ($access($1,$4) < 50) { mode $1 $+(-,$str(o,$numtok($4,32))) $4- } }
+          elseif ($chr(42) isin $4) {
+            var %x = 1
+            while (%x <= $nick($1,0)) {
+              if ($4 iswm $nick($1,%x)) && ($nick($1,%x) isop $1) && ($nick($1,%x) != $me) && ($nick($1,%x) != $item($1,chanbot)) {
+                if ($access($1,$nick($1,%x)) < 50) {
+                  set %deopss. [ $+ [ $4 ] ] %deopss. [ $+ [ $4 ] ] $nick($1,%x) 
+                }
+              }
+              if ($numtok(%deopss. [ $+ [ $4 ] ],32) == $modespl) { mode $1 $+(-,$str(o,$modespl)) $gettok(%deopss. [ $+ [ $2 ] ],1-6,32) | unset %deopss. [ $+ [ $4 ] ] }
+              inc %x
+            }
+            if ($numtok(%deopss. [ $+ [ $4 ] ],32) < $modespl) { mode $1 $+(-,$str(o,$numtok(%deopss. [ $+ [ $4 ] ],32))) %deopss. [ $+ [ $4 ] ] | unset %deopss. [ $+ [ $4 ] ] }
+          }
+        } 
+      }
+      if (!$4) { if ($access($1,$2) >= 25) { mode $1 -o $2 } }
+    }
+    elseif ($cmd($1,$3,voice)) || ($cmd($1,$3,v)) {
+      if ($4) {
+        if ($access($1,$2) >= 50) { 
+          if ($chr(42) !isin $4) { mode $1 +v $4- }
+          elseif ($chr(42) isin $4) {
+            var %x = 1
+            while (%x <= $nick($1,0)) {
+              if ($4 iswm $nick($1,%x)) && ($nick($1,%x) !isop $1) { set %voices. [ $+ [ $4 ] ] %voices. [ $+ [ $4 ] ] $nick($1,%x) }
+              if ($numtok(%voices. [ $+ [ $4 ] ],32) == $modespl) { mode $1 $+(+,$str(v,$modespl)) $gettok(%voices. [ $+ [ $2 ] ],1-6,32) | unset %voices. [ $+ [ $4 ] ] }
+              inc %x
+            }
+            if ($numtok(%voices. [ $+ [ $4 ] ],32) < $modespl) { mode $1 $+(+,$str(v,$numtok(%voices. [ $+ [ $4 ] ],32))) %voices. [ $+ [ $4 ] ] | unset %voices. [ $+ [ $4 ] ] }
+          }
+
+        } 
+      }
+      if (!$4) { if ($access($1,$2) >= 25) { mode $1 +v $2 } }
+    } 
+    elseif ($cmd($1,$3,devoice)) || ($cmd($1,$3,dev)) {
+      if ($4) {
+        if ($access($1,$2) >= 50) { 
+          if ($chr(42) !isin $4) { mode $1 -v $4- }
+          elseif ($chr(42) isin $4) {
+            var %x = 1
+            while (%x <= $nick($1,0)) {
+              if ($4 iswm $nick($1,%x)) && ($nick($1,%x) !isop $1) && ($nick($1,%x) != $me) { set %devoices. [ $+ [ $4 ] ] %devoices. [ $+ [ $4 ] ] $nick($1,%x) }
+              if ($numtok(%devoices. [ $+ [ $4 ] ],32) == $modespl) { mode $1 $+(-,$str(v,$modespl)) $gettok(%devoices. [ $+ [ $2 ] ],1-6,32) | unset %devoices. [ $+ [ $4 ] ] }
+              inc %x
+            }
+            if ($numtok(%devoices. [ $+ [ $4 ] ],32) < $modespl) { mode $1 $+(-,$str(v,$numtok(%devoices. [ $+ [ $4 ] ],32))) %devoices. [ $+ [ $4 ] ] | unset %devoices. [ $+ [ $4 ] ] }
+          }
+
+        } 
+      }
+      if (!$4) { if ($access($1,$2) >= 25) { mode $1 -v $2 } }
+    }
+    elseif ($cmd($1,$3,kickme)) || ($cmd($1,$3,kme)) { PPB_kick $1 $2 $iif($4,$4-,This Kick was Controlled by Yourself) }
+    elseif ($cmd($1,$3,kick)) || ($cmd($1,$3,k)) {
+      if ($4 == me) { PPB_kick $1 $2 $iif($5,$5-,This Kick was Controlled by Yourself) | halt }
+      if ($access($1,$2) >= 125) {
+        if ($access($1,$4) != 150) {
+          if ($chr(42) !isin $4) { PPB_kick $1 $4 $iif($5,$5-,This Kick was a $+(AdminKick,$chr(40),$2,$chr(41))) | halt }
+          elseif ($chr(42) isin $4) {
+            if ($len($4) != 1) && ($left($4,1) != $chr(42)) {
+              var %x = 1
+              while (%x <= $nick($1,0)) {
+                if ($4 iswm $nick($1,%x)) && ($nick($1,%x) != $me) && ($nick($1,%x) != $botadmin) { PPB_kick $1 $nick($1,%x) $iif($5,$5-,This Kick was a $+(AdminKick,$chr(40),$2,$chr(41))) }
+                inc %x
+              }
+            } 
+          }
+        }
+        else { notice $2 $styles(You don't have the access to kick the BOTADMIN.) }
+      }
+      elseif ($access($1,$2) >= 50) {  
+        if ($chr(42) !isin $4) { if ($access($1,$4) < 25) { PPB_kick $1 $4 $iif($5,$5-,This Kick was controlled by $2) } }
+        elseif ($chr(42) isin $4) {
+          if ($len($4) != 1) && ($left($4,1) != $chr(42) {
+            var %x = 1
+            while (%x <= $nick($1,0)) {
+              if ($4 iswm $nick($1,%x)) && ($nick($1,%x) != $me) && ($nick($1,%x) != $botadmin) && ($access($1,$nick($1,%x)) < 25) { PPB_kick $1 $nick($1,%x) $iif($5,$5-,This Kick was controlled by $2) }
+              inc %x
+            }
+          }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,kickban)) || ($cmd($1,$3,kb)) || ($cmd($1,$3,kickb)) {
+      if ($access($1,$2) >= 125) {
+        if ($access($1,$4) != 150) {
+          if ($chr(42) !isin $4) { mode $1 -ov+b $4 $4 $bhost($4) | PPB_kick $1 $4 $iif($5,$5-,This KickBan was a $+(AdminKick,$chr(40),$2,$chr(41))) | halt }
+          elseif ($chr(42) isin $4) {
+            if ($len($4) != 1) && ($left($4,1) != $chr(42) {
+              var %x = 1
+              while (%x <= $nick($1,0)) {
+                if ($4 iswm $nick($1,%x)) && ($nick($1,%x) != $me) && ($nick($1,%x) != $botadmin) { mode $1 -ov+b $nick($1,%x) $nick($1,%x) $bhost($nick($1,%x)) | PPB_kick $1 $nick($1,%x) $iif($5,$5-,This KickBan was a $+(AdminKick,$chr(40),$2,$chr(41))) }
+                inc %x
+              }
+            } 
+          }
+        }
+        else { notice $2 $styles(You don't have the access to kick the BOTADMIN.) }
+      }
+      elseif ($access($1,$2) >= 50) { 
+        if ($chr(42) !isin $4) { if ($access($1,$4) < 25) { mode $1 -ov+b $4 $4 $bhost($4) | PPB_kick $1 $4 $iif($5,$5-,This KickBan was controlled by $2) | halt } }
+        elseif ($chr(42) isin $4) {
+          if ($len($4) != 1) && ($left($4,1) != $chr(42) {
+            var %x = 1
+            while (%x <= $nick($1,0)) {
+              if ($4 iswm $nick($1,%x)) && ($nick($1,%x) != $me) && ($nick($1,%x) != $botadmin) && ($access($1,$nick($1,%x)) < 25) { mode $1 -ov+b $nick($1,%x) $nick($1,%x) $bhost($nick($1,%x)) | PPB_kick $1 $nick($1,%x) $iif($5,$5-,This KickBan was controlled by $2) }
+              inc %x
+            }
+          }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,timeban)) || ($cmd($1,$3,tkb)) || ($cmd($1,$3,tb)) || ($cmd($1,$3,timeb)) || ($cmd($1,$3,timekb)) {
+      if ($access($1,$2) >= 125) { 
+        if ($access($1,$4) != 150) {
+          if ($5 isnum) { ban -u $+ $calc($5 * 60) $1 $bhost($4) | PPB_kick $1 $4 $iif($6,$6-,This TimeKickBan( $+ $5 $+ mins.) was a $+(AdminKick,$chr(40),$2,$chr(41))) | halt }
+        } 
+        else { notice $2 $styles(You don't have the access to Timeban the BOTADMIN.) }
+      }
+      elseif ($access($1,$2) >= 50) { 
+        if ($access($1,$4) < 25) { if ($5 isnum) { ban -u $+ $calc($5 * 60) $1 $bhost($4) | PPB_kick $1 $4 $iif($6,$6-,This TimeKickBan for $5 $+ mins. was controlled by $2) } }
+        else { notice $2 $styles(You can not TimeKickBan any User) }
+      }
+    }
+    elseif ($cmd($1,$3,ban)) || ($cmd($1,$3,b)) {
+      if ($4 == me) { if ($2 != $botadmin) { mode $1 -ov+b $2 $2 $bhost($2) } }
+      if ($access($1,$2) >= 125) { 
+        if ($access($1,$4) != 150) {
+          if ($chr(42) !isin $4) { mode $1 -ov+b $4 $4 $bhost($4) }
+          elseif ($chr(42) isin $4) {
+            if ($len($4) != 1) && ($left($4,1) != $chr(42) {
+              var %x = 1
+              while (%x <= $nick($1,0)) {
+                if ($4 iswm $nick($1,%x)) && ($nick($1,%x) != $me) && ($nick($1,%x) != $botadmin) { mode $1 -ov+b $nick($1,%x) $nick($1,%x) $bhost($nick($1,%x)) }
+                inc %x
+              }
+            } 
+          }
+          else { notice $2 $styles(You don't have the access to ban the Botadmin!) }
+        }
+      }
+      elseif ($access($1,$2) >= 50) {  
+        if ($chr(42) !isin $4) { if ($access($1,$4) < 25) { mode $1 -ov+b $4 $4 $bhost($4) } }
+        elseif ($chr(42) isin $4) {
+          if ($len($4) != 1) && ($left($4,1) != $chr(42) {
+            var %x = 1
+            while (%x <= $nick($1,0)) {
+              if ($4 iswm $nick($1,%x)) && ($nick($1,%x) != $me) && ($nick($1,%x) != $botadmin) && ($access($1,$nick($1,%x)) < 25) { mode $1 -ov+b $nick($1,%x) $nick($1,%x) $bhost($nick($1,%x)) }
+              inc %x
+            }
+          }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,account)) || ($cmd($1,$3,database)) {
+      if ($access($1,$2) >= 125) {
+        if ($4 == del) {
+          if ($5 ison $1) {
+            if ($access($1,$5)) {
+              remove.account $hget(Login,$+($bhost($5),.loginname)) 
+              remove.loginhost $bhost($5) 
+            }
+            else { notice $2 $styles(Sorry, But $5 is not login, Type $textprefix($1) $+ account del <accountname>) }
+          }
+          elseif ($5 !ison $1) && ($hget(accounts,$+($5,.pass))) {
+            remove.account $5
+            remove.login $5
+          }
+        }
+        elseif ($4 == add) { notice $2 $styles(Type $textprefix($1) $+ adduser <nickname> <25|50|75|100|125>) }
+        else { notice $2 $styles(Usage: $textprefix($1) $+ account <add|del> <nickname|accountname>) }
+      }
+      elseif ($access($1,$2) <= 100) && ($access($1,$2) >= 25) { notice $2 $styles(Access Level too Low.) }
+    }
+    elseif ($cmd($1,$3,deluser)) || ($cmd($1,$3,userdel)) || ($cmd($1,$3,remuser)) || ($cmd($1,$3,userrem)) {
+      var %host = $bhost($4)
+      if ($access($1,$2) >= 125) { 
+        if ($4 ison $1) && ($access($1,$4)) {
+          if ($access($1,$4) != 150) {
+            remove.account $hget(login,$+(%host,.loginname))
+            remove.loginhost %host
+            var %x = 1
+            while (%x <= $numtok($hget(Config,Accounts),32)) {
+              if ($gettok($hget(Config,Accounts),%x,32) == $hget(login,$+(%host,.loginname))) {
+                hadd -m config Accounts $deltok($hget(Config,Accounts),%x,32)
+              }
+              inc %x
+            }
+            notice $2 $styles(User $4 is deleted from my database.)
+            notice $4 $styles($2 has Deleted your Access in  $1 $+ .)
+          }
+          else { notice $2 You can't Delet an Botadmin. }
+        }
+        elseif ($4 !ison $1) && ($hget(accounts,$+($4,.Pass))) {
+          if ($hget(accounts,$+($4,.access)) != 150) {
+            user.logout $1 $4     
+            remove.account $4  
+            var %x = 1
+            while (%x <= $numtok($hget(Config,Accounts),32)) {
+              if ($gettok($hget(Config,Accounts),%x,32) == $4) {
+                hadd -m config Accounts $deltok($hget(Config,Accounts),%x,32)
+              }
+              inc %x
+            }  
+            notice $2 $styles(User $4 is deleted from my database.)
+          }
+          else { notice $2 $styles(You can't Delet an Botadmin.) }
+        }
+      }
+      elseif ($access($1,$2) == 100) { 
+        if ($4 ison $1) && ($access($1,$4)) {
+          if ($access($1,$4) <= 75) { 
+            chan.user.del $1 $hget(login,$+(%host,loginname) %host
+            notice $2 $styles(User $4 is deleted from my database.)
+            notice $4 $styles($2 has Deleted your Access in  $1 $+ . )
+            mode $1 -ov $4 $4
+          }
+          else { notice $2 $styles(You can not delet Admins or Owners Access from Database.) }
+        }
+        elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) {
+          if ($hget(accounts,$+($4,.access)) <= 75) {
+            acc.user.del $1 $4         
+            notice $2 $styles(User) $4 in $1 Access is now deleted.
+          }
+
+        }
+      }
+      elseif ($access($1,$2) == 75) { 
+        if ($4 ison $1) && ($access($1,$4)) {
+          if ($access($1,$4) <= 50) { 
+            chan.user.del $1 $hget(login,$+(%host,loginname) %host
+            notice $2 $styles(User $4 is deleted from my database.)
+            notice $4 $styles($2 has Deleted your Access in  $1 $+ . )
+            mode $1 -ov $4 $4
+          }
+          else { notice $2 $styles(You can not delet Admins, Owners or Masters Access from Database.) }
+        }
+        elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) {
+          if ($hget(accounts,$+($4,.access)) <= 50) {
+            acc.user.del $1 $4         
+            notice $2 $styles(User $4 in $1 Access is now deleted.)
+          }
+        }
+      }
+      elseif ($access($1,$2) == 50) { 
+        if ($4 ison $1) && ($access($1,$4)) {
+          if ($access($1,$4) <= 25) { 
+            chan.user.del $1 $hget(login,$+(%host,loginname) %host
+            notice $2 $styles(User $4 is deleted from my database.)
+            notice $4 $styles($2 has Deleted your Access in  $1 $+ . )
+            mode $1 -ov $4 $4
+          }
+          else { notice $2 $styles(You can not delet Admins, Owners,Masters or Operators Access from Database.) }
+        }
+        elseif ($4 !ison $1) && ($hget(accounts,$+($4,.pass))) {
+          if ($hget(accounts,$+($4,.access)) <= 25) {
+            acc.user.del $1 $4         
+            notice $2 $styles(User $4 in $1 Access is now deleted.)
+          }
+        }
+      }
+      elseif ($access($1,$2) == 25) { notice $2 $styles(Access Level too Low.) }
+    }
+    elseif ($cmd($1,$3,addbot)) {
+      if ($access($1,$2) >= 100) {
+        if ($4 isop $1) && ($4 ison $1) {
+          if (!$ini(bot_list.ini,$bhost($4))) {
+            writeini bot_list.ini $bhost($4) nick $4
+            writeini bot_list.ini $bhost($4) channel $1
+            notice $2 $styles(Bot $4 successfully Added to Bot-List from $1 $+ . )          
+          }
+          elseif ($ini(bot_list.ini,$bhost($4))) {
+            if ($4 == $readini(bot_list.ini,$bhost($4),nick)) {
+              if ($1 !isin $readini(bot_list.ini,$bhost($4),channel)) {
+                writeini bot_list.ini $bhost($4) channel $readini(bot_list.ini,$bhost($4),channel) $1
+                notice $2 $styles(Bot $4 successfully Added to Bot-List from $1 $+ . ) 
+              }
+              else { notice $2 $styles(This Bot is already in my Bot-List.) }
+            }
+            else { notice $2 $styles(There is already a Bot with that Hostmask. Nickname: $readini(bot_list.ini,$bhost($4),nick)) }      
+          }
+        }
+        else { notice $2 $styles(Can not add $4 to Bot-List. Reason: Bot isn't Opped, or Not on Channel. ) }
+      }
+    }
+    elseif ($cmd($1,$3,delbot)) {
+      if ($access($1,$2) >= 100) {
+        if ($4 ison $1) {
+          if ($ini(bot_list.ini,$bhost($4))) {
+            delbot $1 $2 $4 $bhost($4)
+          }
+          else { notice $2 $styles(Can not found $4 on my Botlist.) }
+        }
+        else { notice $2 $styles(Bot is not on Channel!) }
+      }
+    }
+    elseif ($cmd($1,$3,botlist)) { if ($access($1,$2) >= 100) { notice $2 $styles(Registered Bots: $botlist($1)) } }
+    elseif ($cmd($1,$3,adduser)) || ($cmd($1,$3,useradd)) {
+      if ($access($1,$2) >= 25) {
+        if (admin == $5) || (125 == $5) {
+          if ($access($1,$2) == 150) {
+            if ($4 ison $1) {
+              who $4
+              hadd -m Authen $bhost($4) $+ .Access 125
+              log Accounts Allow Registration for $4 $+ ; Access: Semi-Admin(125)
+              notice $2 $styles(You grants $4 the Status Semi-Admin(125).)
+              msg $4 $styles(Type "/msg $me HELLO <YourLoginName> <your@email.de> <your@email.de>") 
+            }
+            else { notice $2 $styles($+(",$4,") No Such Nick.) }
+          }
+          else { notice $2 $styles(Access Level too Low.) }
+        }
+        if (owner == $5) || (+amno == $5) || (amno == $5) || (100 == $5) {
+          if ($access($1,$2) >= 125) {
+            if ($4 ison $1) {
+              who $4
+              hadd -m Authen $bhost($4) $+ .Access 100
+              hadd -m Authen $bhost($4) $+ .Channel $1 
+              log Accounts Allow Registration for $4 $+ . Channel: $1 $+ ; Access: Owner(100)
+              notice $2 $styles(You grants $4 the Status Owner(100).)
+              msg $4 $styles(Type "/msg $me HELLO <YourLoginName> <your@email.de> <your@email.de>")
+            }
+            else { notice $2 $styles($+(",$4,") No Such Nick.) }
+          }
+          else { notice $2 $styles(Access Level too Low.) }
+        }
+        elseif (master == $5) || (+amo == $5) || (amo == $5) || (75 == $5) {
+          if ($access($1,$2) >= 100) {
+            if ($4 ison $1) {
+              who $4
+              hadd -m Authen $bhost($4) $+ .Access 75
+              hadd -m Authen $bhost($4) $+ .Channel $1 
+              log Accounts Allow Registration for $4 $+ . Channel: $1 $+ ; Access: Master(75)
+              notice $2 $styles(You grants $4 the Status Master(75).)
+              msg $4 $styles(Type "/msg $me HELLO <YourLoginName> <your@email.de> <your@email.de>")
+            }
+            else { notice $2 $styles($+(",$4,") No Such Nick.) }
+          }
+          else { notice $2 $styles(Access Level too Low.) }
+        }
+        elseif (operator == $5) || (op == $5) || (+ao == $5) || (ao == $5) || (50 == $5) {
+          if ($access($1,$2) >= 75) {
+            if ($4 ison $1) {
+              who $4
+              hadd -m Authen $bhost($4) $+ .Access 50
+              hadd -m Authen $bhost($4) $+ .Channel $1 
+              log Accounts Allow Registration for $4 $+ . Channel: $1 $+ ; Access: Operator(50)
+              notice $2 $styles(You grants $4 the Status Operator(50).)
+              msg $4 $styles(Type "/msg $me HELLO <YourLoginName> <your@email.de> <your@email.de>")
+            }
+            else { notice $2 $styles($+(",$4,") No Such Nick.) }
+          }
+          else { notice $2 $styles(Access Level too Low.) }
+        }
+        elseif (voice == $5) || (av == $5) || (+av == $5) || (v == $5) || (25 == $5) {
+          if ($access($1,$2) >= 50) {
+            if ($4 ison $1) {
+              who $4
+              hadd -m Authen $bhost($4) $+ .Access 25
+              hadd -m Authen $bhost($4) $+ .Channel $1 
+              log Accounts Allow Registration for $4 $+ . Channel: $1 $+ ; Access: Voice(25)
+              notice $2 $styles(You grants $4 the Status Voice(25).)
+              msg $4 $styles(Type "/msg $me HELLO <YourLoginName> <your@email.de> <your@email.de>") 
+            }
+            else { notice $2 $styles($4 No Such Nick.) }
+          }
+          else { notice $2 $styles(Access Level too Low.) }
+        }
+        else { notice $2 $styles(Usage: $textprefix($1) $+ adduser <nick> <25|50|75|100|125>) }
+      }   
+    }
+    elseif ($cmd($1,$3,google)) || ($cmd($1,$3,goo)) || ($cmd($1,$3,suchen)) || ($cmd($1,$3,such)) || ($cmd($1,$3,find)) {
+      if ($4 == on) { if ($access($1,$2) >= 50) { setting.change $1 google on | notice $2 $styles(Google is successfully Loaded) } | halt }
+      if ($4 == off) { if ($access($1,$2) >= 50) { setting.change $1 google off | notice $2 $styles(Google is successfully UnLoaded) } | halt }
+      if ($4 == paste) { 
+        if ($access($1,$2) >= 50) {
+          if ($5 == Channel) || ($5 == chan) {
+            setting.change $1 google-chan on | setting.change $1 google-nick off
+            notice $2 $styles(Google-Paste on Channel is successfully Loaded)
+          }
+          elseif ($5 == Nick) || ($5 == Name) || ($5 == Nickname) {
+            setting.change $1 google-nick on | setting.change $1 google-chan off
+            notice $2 $styles(Google-Paste at Nickname is successfully Loaded)
+          }
+        }
+        halt 
+      }
+      else { if ($control($1,google)) { set %google_chan $1 | set %google_nick $2 | google $4- | notice $2 Please wait a moment... } | else { notice $2 Sorry, but Google-Script is Unloaded. } }
+    }
+    elseif ($cmd($1,$3,tv)) || ($cmd($1,$3,telev)) || ($cmd($1,$3,television)) || ($cmd($1,$3,watch)) {
+      if ($4 == on) { if ($access($1,$2) >= 50) { setting.change $1 tv on | notice $2 $styles(Tv-Script is successfully Loaded) } | halt }
+      if ($4 == off) { if ($access($1,$2) >= 50) { setting.change $1 tv off | notice $2 $styles(Tv-Script is successfully UnLoaded) } | halt }
+      if ($4 == paste) { 
+        if ($access($1,$2) >= 50) {
+          if ($5 == Channel) || ($5 == chan) {
+            setting.change $1 tv-chan on | setting.change $1 tv-nick off
+            notice $2 $styles(TV-Paste on Channel is successfully Loaded) 
+          }
+          elseif ($5 == Nick) || ($5 == Name) || ($5 == Nickname) {
+            setting.change $1 tv-nick on | setting.change $1 tv-chan off
+            notice $2 $styles(TV-Paste at Nickname is successfully Loaded) 
+          }
+        }
+        halt 
+      }
+      else { if ($control($1,tv)) { tv $1 $2 $4 $5 | notice $2 $styles(Please wait a moment...) } | else { notice $2 $styles(Sorry, but Tv-Script is Unloaded.) } }
+    }
+    elseif ($cmd($1,$3,wetter)) || ($cmd($1,$3,weather)) {
+      if ($4 == on) { if ($access($1,$2) >= 50) { setting.change $1 wetter on | notice $2 $styles(Wetter-Script is successfully Loaded) } | halt }
+      if ($4 == off) { if ($access($1,$2) >= 50) { setting.change $1 wetter off | notice $2 $styles(Wetter-Script is successfully UnLoaded) } | halt }
+      if ($4 == paste) { 
+        if ($access($1,$2) >= 50) {
+          if ($5 == Channel) || ($5 == chan) {
+            setting.change $1 wetter-chan on | setting.change $1 wetter-nick off
+            notice $2 $styles(Wetter-Paste on Channel is successfully Loaded) 
+          }
+          elseif ($5 == Nick) || ($5 == Name) || ($5 == Nickname) {
+            setting.change $1 wetter-nick on | setting.change $1 wetter-chan off
+            notice $2 $styles(Wetter-Paste at Nickname is successfully Loaded)
+          }
+        }
+        halt 
+      }
+      else { if ($control($1,wetter)) { set %wetter_nick $2 | set %wetter_chan $1 | wetter $4- | notice $2 Please wait a moment... } | else { notice $2 Sorry, but Wetter-Script is Unloaded. } }
+    }
+    elseif ($cmd($1,$3,chanlev)) { if ($access($1,$2) >= 100) { msg $item($1,chanbot) chanlev $1 $4 $5 | hadd -m chanlev chan $1 } }
+    elseif ($cmd($1,$3,autovoice)) || ($cmd($1,$3,autov)) || ($cmd($1,$3,av)) { if ($access($1,$2) >= 50) { if ($4 == on) { change.settings autovoice $1 $2 on } | elseif ($4 == off) { change.settings autovoice $1 $2 off } } }
+    elseif ($cmd($1,$3,autoop)) || ($cmd($1,$3,autoo)) || ($cmd($1,$3,ao)) { if ($access($1,$2) >= 50) { if ($4 == on) { change.settings autoop $1 $2 on } | elseif ($4 == off) { change.settings autoop $1 $2  } } }   
+    elseif ($cmd($1,$3,protect)) { 
+      if ($access($1,$2) >= 100) { 
+        if ($4 == on) { change.settings protection $1 $2 on } 
+        elseif ($4 == off) { change.settings protection $1 $2 off } 
+        elseif ($4 == high) { hadd -m $replace($1,$chr(124),$chr(176)) Settings.protect-stat high | msg $1 $styles(Protect-Modus "4Höchste Stufe".) }
+        elseif ($4 == low) { hadd -m $replace($1,$chr(124),$chr(176)) Settings.protect-stat low | notice $2 $styles(Protect-Mode successfully changed to "low".) }
+      } 
+    }
+    elseif ($cmd($1,$3,bitch)) || ($cmd($1,$3,bitchmode)) { if ($access($1,$2) >= 75) { if ($4 == on) { change.settings bitchmode $1 $2 on } | elseif ($4 == off) { change.settings bitchmode $1 $2 off } } }
+    elseif ($cmd($1,$3,proxy)) || ($cmd($1,$3,proxyscan)) { if ($access($1,$2) >= 100) { if ($4 == on) { change.settings proxy $1 $2 on } | elseif ($4 == off) { change.settings proxy $1 $2 off } } }
+    elseif ($cmd($1,$3,trojan)) || ($cmd($1,$3,trojanc)) { if ($access($1,$2) >= 100) { if ($4 == on) { change.settings trojan $1 $2 on } | elseif ($4 == off) { change.settings trojan $1 $2 off } } }    
+    elseif ($cmd($1,$3,lamers)) || ($cmd($1,$3,lamerdetect)) { if ($access($1,$2) >= 75) { if ($4 == on) { change.settings lamerdetect $1 $2 on } | elseif ($4 == off) { change.settings lamerdetect $1 $2 off } } }
+    elseif ($cmd($1,$3,fr)) || ($cmd($1,$3,remove)) || ($cmd($1,$3,flagsremove)) { if ($access($1,$2) >= 100) { if ($4 == on) { change.settings flagsremove $1 $2 on } | elseif ($4 == off) { change.settings flagsremove $1 $2 off } } }
+    elseif ($cmd($1,$3,joinflood)) || ($cmd($1,$3,joinf)) || ($cmd($1,$3,jf)) { if ($access($1,$2) >= 100) { if ($4 == on) { change.settings joinflood $1 $2 on } | elseif ($4 == off) { change.settings joinflood $1 $2 off } } }  
+    elseif ($cmd($1,$3,antimode)) || ($cmd($1,$3,modeprot)) { if ($access($1,$2) >= 75) { if ($4 == on) { change.settings antimode $1 $2 on } | elseif ($4 == off) { change.settings antimode $1 $2 off } } }  
+    elseif ($cmd($1,$3,massmode)) || ($cmd($1,$3,masskick)) || ($cmd($1,$3,massprot)) { if ($access($1,$2) >= 100) { if ($4 == on) { change.settings massmode $1 $2 on } | elseif ($4 == off) { change.settings massmode $1 $2 off } } } 
+    elseif ($cmd($1,$3,limit)) { if ($access($1,$2) >= 50) { if ($right($4,$calc($len($4) - 1)) isnum) { ($setting.change $1 limit $right($4,$calc($len($4) - 1)) | notice $2 $styles(Autolimit has been set on $+($chr(40),$right($4,$calc($len($4) - 1)),$chr(41))) } | else { notice $2 $styles(Usage: $textprefix($1) $+ limit +NUM) } } }
+    elseif ($cmd($1,$3,autolimit)) { if ($access($1,$2) >= 50) { if ($4 == on) { change.settings autolimit $1 $2 on } | elseif ($4 == off) { change.settings autolimit $1 $2 off } } }
+    elseif ($cmd($1,$3,advertise)) || ($cmd($1,$3,werbung)) || ($cmd($1,anti-advertise)) {
+      if ($access($1,$2) >= 50) { 
+        if ($4 == on) { change.settings advertise $1 $2 on } 
+        elseif ($4 == off) { change.settings advertise $1 $2 off }
+        elseif ($4 == ban) { 
+          if (!$5) { notice $2 $styles(Advertise Bantime is set on: $item($1,advertise-ban)) }
+          elseif ($5) && ($5 isnum) {
+            setting.change $1 advertise-ban $5
+            notice $2 $styles(Advertise Bantime is now set on $5 $+ min.)
+          }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,spam)) || ($cmd($1,$3,textflood)) || ($cmd($1,$3,flood)) { 
+      if ($access($1,$2) >= 50) { 
+        if ($4 == on) { change.settings spam $1 $2 on } 
+        elseif ($4 == off) { change.settings spam $1 $2 off } 
+        elseif ($4 == sec) { if ($5) { setting.change $1 spam-secs $5 | notice $2 $styles(Spam-Sec is now Set on $+($chr(40),$5,$chr(41))) } }
+        elseif ($4 == msgs) { if ($5) { setting.change $1 spam-msgs $5 | notice $2 $styles(Spam-Msgs is now Set on $+($chr(40),$5,$chr(41))) } }
+        elseif ($4 == settings) || ($4 == status) { notice $2 $styles(Spam-Settings: $item($1,spam-msgs) in $item($1,spam-secs) sec. are Setted.) }
+      }
+    } 
+    elseif ($cmd($1,$3,anti-repeat)) || ($cmd($1,$3,repeat)) { if ($access($1,$2) >= 50) { if ($4 == on) { change.settings wiederholung $1 $2 on } | elseif ($4 == off) { change.settings wiederholung $1 $2 off } } }  
+    elseif ($cmd($1,$3,bad)) || ($cmd($1,$3,badword)) {
+      if ($access($1,$2) >= 50) {
+        if ($4 == on) { change.settings badword $1 $2 on } 
+        elseif ($4 == off) { change.settings badword $1 $2 off } 
+        elseif ($4 == add) { badword.add $1 $5- | notice $2 $styles($+(Badwords,$chr(40),$5-,$chr(41)) has successfully added to Badword List.) }
+        elseif ($4 == del) { badword.del $1 $5- | notice $2 $styles($+(Badwords,$chr(40),$5-,$chr(41)) has successfully deleted from Badword List.) }
+        elseif ($4 == list) { notice $2 $styles(Badwords: $iif($badwordlist($1),$badwordlist($1),none)) }
+
+      }
+    }
+    elseif ($cmd($1,$3,bn)) || ($cmd($1,$3,badn)) || ($cmd($1,$3,badnick)) {
+      if ($access($1,$2) >= 50) {
+        if ($4 == on) { change.settings badnick $1 $2 on } 
+        elseif ($4 == off) { change.settings badnick $1 $2 off } 
+        elseif ($4 == add) { 
+          badnick.add $1 $5- | notice $2 $styles($+(Badnicks,$chr(40),$5-,$chr(41)) has successfully added to Badnick List.)
+          if ($control($1,badnick)) {
+            var %x = 1
+            while (%x <= $numtok($5-,32)) {
+              var %nick = $gettok($5-,%x,32)
+              var %y = 1
+              while (%y <= $nick($1,0)) {
+                if (%nick == $nick($1,%y)) { 
+                  mode $1 -ov+b $nick($1,%y) $nick($1,%y) $bhost($nick($1,%y))
+                  PPB_kick $1 $nick($1,%y) You're ^BANNED^ from this Channel; Reason: Your nickname is BAD
+                }
+                inc %y
+              }
+              inc %x
+            }
+          }
+        }
+        elseif ($4 == del) { badnick.del $1 $5- | notice $2 $styles($+(Badnicks,$chr(40),$5-,$chr(41)) has successfully deleted from Badnick List.) }
+        elseif ($4 == list) { notice $2 $styles(Badnicks: $iif($badnicklist($1),$badnicklist($1),none)) }
+
+      }
+    }
+    elseif ($cmd($1,$3,newsticker)) || ($cmd($1,$3,newst)) {
+      if ($access($1,$2) >= 50) {
+        if ($4 == on) { change.settings newsticker $1 $2 on }
+        elseif ($4 == off) { change.settings newsticker $1 $2 off }
+        elseif ($4 == list) || ($4 == status) {
+          if ($control($1,newsticker)) { 
+            notice $2 $styles($iif($control($1,newsticker),NewsTicker(Loaded):)
+            notice $2 $styles($iif($news($1,heise),Heise(Loaded),Heise(UnLoaded)) - $iif($news($1,starcoma),starComa(Loaded),starComa(UnLoaded)) - $iif($news($1,counterstrike),Counter-Strike(Loaded),Counter-Strike(UnLoaded)) - $iif($news($1,spiegel),Spiegel(Loaded),Spiegel(UnLoaded)) - $iif($news($1,hardware),inHardware(Loaded),inHardware(UnLoaded)) - $iif($news($1,winfuture),WinFuture(Loaded),WinFuture(UnLoaded)) - $iif($news($1,extreme),eXtreme-Players(Loaded),eXtreme-Players(UnLoaded)) - $iif($news($1,conceptT),ConceptT(Loaded),ConceptT(UnLoaded)))
+            notice $2 $styles($iif($news($1,WoW),inWoW(Loaded),inWoW(UnLoaded)) - $iif($news($1,warcraft),inWarCraft(Loaded),inWarCraft(UnLoaded)) - $iif($news($1,unreal),inUnreal(Loaded),inUnreal(UnLoaded)) - $iif($news($1,sacred),inSacred(Loaded),inSacred(UnLoaded)) - $iif($news($1,diablo),inDiablo2(Loaded),inDiablo2(UnLoaded)) - $iif($news($1,mypTx),mypTx(Loaded),mypTx(UnLoaded)) - $iif($news($1,mouse),MouseSports(Loaded),MouseSports(UnLoaded)) - $iif($news($1,quakenet),QuakeNet(Loaded),QuakeNet(UnLoaded)) - $iif($news($1,sims),inSims(Loaded),inSims(UnLoaded)),NewsTicker(UnLoaded)))
+          }
+          else { notice $2 $styles(NewsTicker(UnLoaded)) }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,heise)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 heise on } | elseif ($4 == off) { news.change $1 $2 heise off } } }
+    elseif ($cmd($1,$3,starcoma)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 starcoma on } | elseif ($4 == off) { news.change $1 $2 starcoma off } } } 
+    elseif ($cmd($1,$3,counterstrike)) || ($cmd($1,$3,cs)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 counterstrike on } | elseif ($4 == off) { news.change $1 $2 counterstrike off } } }
+    elseif ($cmd($1,$3,spiegel)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 spiegel on } | elseif ($4 == off) { news.change $1 $2 spiegel off } } }
+    elseif ($cmd($1,$3,hardware)) || ($cmd($1,$3,inHardware)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 hardware on } | elseif ($4 == off) { news.change $1 $2 hardware off } } }
+    elseif ($cmd($1,$3,winFuture)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 winfuture on } | elseif ($4 == off) { news.change $1 $2 winfuture off } } }
+    elseif ($cmd($1,$3,inWoW)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 WoW on } | elseif ($4 == off) { news.change $1 $2 WoW off } } }
+    elseif ($cmd($1,$3,inWarCraft)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 warcraft on } | elseif ($4 == off) { news.change $1 $2 warcraft off } } }
+    elseif ($cmd($1,$3,inUnreal)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 unreal on } | elseif ($4 == off) { news.change $1 $2 unreal off } } }
+    elseif ($cmd($1,$3,inSacred)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 sacred on } | elseif ($4 == off) { news.change $1 $2 sacred off } } }
+    elseif ($cmd($1,$3,inDiablo)) || ($cmd($1,$3,inDiablo2)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 diablo on } | elseif ($4 == off) { news.change $1 $2 diablo off } } }
+    elseif ($cmd($1,$3,inSims)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 sims on } | elseif ($4 == off) { news.change $1 $2 sims off } } }
+    elseif ($cmd($1,$3,mypTx)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 mypTx on } | elseif ($4 == off) { news.change $1 $2 mypTx off } } }
+    elseif ($cmd($1,$3,quakenet)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 quakenet on } | elseif ($4 == off) { news.change $1 $2 quakenet off } } }
+    elseif ($cmd($1,$3,conceptt)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 conceptt on } | elseif ($4 == off) { news.change $1 $2 conceptt off } } }
+    elseif ($cmd($1,$3,extreme-players)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 extreme on } | elseif ($4 == off) { news.change $1 $2 extreme off } } }
+    elseif ($cmd($1,$3,mousesports)) { if ($access($1,$2) >= 50) { if ($4 == on) { news.change $1 $2 mouse on } | elseif ($4 == off) { news.change $1 $2 mouse off } } } 
+    elseif ($cmd($1,$3,status)) { 
+      if ($access($1,$2) >= 50) {
+        .timer 1 0 .notice $2 $styles($iif($control($1,protection),Protection(Loaded): $iif($control($1,bitchmode),Bitchmode(Loaded),Bitchmode(UnLoaded)) - $iif($control($1,joinflood),Joinflood(Loaded),Joinflood(UnLoaded)) - $iif($control($1,proxy),Proxy(Loaded),Proxy(UnLoaded)) - $iif($control($1,antimode),ModeProtection(Loaded),ModeProtection(UnLoaded)) - $iif($control($1,MassMode),MassMode(Loaded),MassMode(UnLoaded)) - $iif($control($1,lamerdetect),LamerDetect(Loaded),LamerDetect(UnLoaded)) - $iif($control($1,trojan),TrojanC(Loaded),TrojanC(UnLoaded)) - $iif($control($1,flagsremove),FlagRemove(Loaded),FlagRemove(UnLoaded)),Protection(Unloaded)))
+        .timer 1 1 .notice $2 $styles(Anti*: $iif($control($1,advertise),Advertise(Loaded),Advertise(UnLoaded)) - $iif($control($1,spam),Textflood(Loaded),Textflood(UnLoaded)) - $iif($control($1,wiederholung),Repeat(Loaded),Repeat(UnLoaded)) - $iif($control($1,badword),Badword(Loaded),Badword(UnLoaded)) - $iif($control($1,Badnick),Badnick(Loaded),Badnick(UnLoaded)))
+        .timer 1 2 .notice $2 $styles(Misc: $iif($control($1,autolimit),Autolimit(Loaded set on $item($1,limit) $+ ),Autolimit(UnLoaded)) - $iif($control($1,autovoice),AutoVoice(Loaded),AutoVoice(UnLoaded)) - $iif($control($1,autoop),AutoOp(Loaded),AutoOp(UnLoaded)) - $iif($control($1,bombgame),Bombgame(Loaded),Bombgame(UnLoaded)) - $iif($control($1,vip),Vip(Loaded),Vip(UnLoaded)) - $iif($control($1,wetter),Wetter(Loaded),Wetter(UnLoaded)) - $iif($control($1,Tv),Tv(Loaded),Tv(UnLoaded)) - $iif($control($1,google),Google(Loaded),Google(UnLoaded)) - $iif($control($1,newsticker),NewsTicker(Loaded),NewsTicker(UnLoaded)))      
+        .timer 1 3 .notice $2 $styles(Blacklists: $iif($control($1,blacklist),Blacklist(Loaded),Blacklist(UnLoaded)) - $iif($control($1,authbanlist),AuthBanList(Loaded),AuthBanList(UnLoaded)) - $iif($control($1,chanbanlist),ChanBanList(Loaded),ChanBanList(UnLoaded)))
+        .timer 1 4 .notice $2 $styles(Welcome: $iif($control($1,welcome),Welcome-Msg(Loaded),Welcome-Msg(UnLoaded)) - Msg: $item($1,welcome-msg))
+        .timer 1 5 .notice $2 $styles(Repeat-Msg: $iif($control($1,repeat),Repeat-Msg(Loaded),Repeat-Msg(UnLoaded)) - Repeat-Time: $item($1,repeat-time) $+ mins. - Repeat-Msg: $item($1,repeat-msg))      
+        .timer 1 6 .notice $2 $styles(Topic: $iif($control($1,tsave),TopicProtection(Loaded),TopicProtection(UnLoaded)) - Topic: $hget$replace($1,$chr(176),$chr(124)),Settings.Topic) ] ] )  
+        .timer 1 7 .notice $2 $styles(Trigger-List: $triggerlist($1)) 
+      }
+    }
+    elseif ($cmd($1,$3,bombgame)) || ($cmd($1,$3,bomb)) || ($cmd($1,$3,bombe)) {
+      if ($4) {
+        if ($4 == on) || ($4 == off) || ($4 == reset) {
+          if ($access($1,$2) >= 100) { 
+            if ($4 == on) { change.settings bombgame $1 $2 on } 
+            elseif ($4 == off) { change.settings bombgame $1 $2 off } 
+            elseif ($4 == reset) { stop.bomb $1 | notice $2 $styles(Bomb has successfully reset.) }
+          } 
+        }
+      }
+      elseif (!$4) {
+        if (!$control($1,bombgame)) { msg $1 $styles(Sry) but Bombgame is UnLoaded. }
+        elseif ($control($1,bombgame)) {
+          if (!$hget($+(bombe,$1),bomb)) && (!$hget($+(bombe,$1),player)) {
+            hadd -m $+(bombe,$1) bombenchannel $1
+            hadd -m $+(bombe,$1) bomb 1
+            hadd -m $+(bombe,$1) player 1
+            hadd -m $+(bombe,$1) explosion 1
+            hadd -m $+(bombe,$1) nick $2
+            hadd -m $+(bombe,$1) color $rand(1,3)
+            notice $2 Bomb has been planted !!! You have 430sec to defuse the Bomb!!!
+            notice $2 You have these possibilities:4 $textprefix($1) $+ red12 $textprefix($1) $+ blue9 $textprefix($1) $+ green $textprefix($1) $+ blind $textprefix($1) $+ fear
+            timerbombe. $+ $1 1 30 .explosion $1 $2
+          }
+          elseif ($hget($+(bombe,$1),player)) || ($hget($+(bombe,$1),bomb)) { notice $2 Bitte warte bis $hget($+(bombe,$1),nick) fertig ist! }
+        }
+      }
+    }
+    elseif ($cmd($1,$3,gr*n)) || ($cmd($1,$3,green)) {
+      if ($hget($+(bombe,$1),bomb)) {
+        if ($2 == $hget($+(bombe,$1),nick)) {
+          if ($hget($+(bombe,$1),color) == 1) {
+            msg $1 $styles(Congratulation. $2 choose the right Wire. You have a real Goldfinger :D)
+            stop.bomb $1
+          }
+          else {
+            if ($access($1,$2) >= 25) { msg $1 $styles(Sorry but this was the false Wire (no Kick for User)) }
+            else { PPB_kick $1 $2 Kicked; Reason: U Choose The false Wire }
+            stop.bomb $1
+          }
+        }
+        elseif ($2 != $hget($+(bombe,$1),nick)) { notice $2 $styles(Sorry, but it is only Sry, es ist $hget($+(bombe,$1),nick) beim Bombenentschärfen) }
+      }
+      elseif (!$hget($+(bombe,$1),bomb)) { notice $2 Die Bombe tickt nicht! Gib erst !bombe ein }
+    }
+    elseif ($cmd($1,$3,blue)) || ($cmd($1,$3,blau)) {
+      if ($hget($+(bombe,$1),bomb)) {
+        if ($2 == $hget($+(bombe,$1),nick)) {
+          if ($hget($+(bombe,$1),color) == 2) {
+            msg $1 $styles(Congratulation. $2 choose the right Wire. You have a real Goldfinger :D)
+            stop.bomb $1
+          }
+          else {
+            if ($access($1,$2) >= 25) { msg $1 $styles(Sorry but this was the false Wire (no Kick for User)) }
+            else { PPB_kick $1 $2 Kicked; Reason: U Choose The false Wire }
+            stop.bomb $1
+          }
+        }
+        elseif ($2 != $hget($+(bombe,$1),nick)) { notice $2 Sry, es ist $hget($+(bombe,$1),nick) beim Bombenentschärfen }
+      }
+      elseif (!$hget($+(bombe,$1),bomb)) { notice $2 Die Bombe tickt nicht! Gib erst !bombe ein }
+    }
+    elseif ($cmd($1,$3,red)) || ($cmd($1,$3,rot)) {
+      if ($hget($+(bombe,$1),bomb)) {
+        if ($2 == $hget($+(bombe,$1),nick)) {
+          if ($hget($+(bombe,$1),color) == 3) {
+            msg $1 $styles(Congratulation. $2 choose the right Wire. You have a real Goldfinger :D)
+            stop.bomb $1
+          }
+          else {
+            if ($access($1,$2) >= 25) { msg $1 $styles(Sorry but this was the false Wire (no Kick for User)) }
+            else { PPB_kick $1 $2 Kicked; Reason: U Choose The false Wire }
+            stop.bomb $1
+          }
+        }
+        elseif ($2 != $hget($+(bombe,$1),nick)) { notice $2 Sry, es ist $hget($+(bombe,$1),nick) beim Bombenentschärfen }
+      }
+      elseif (!$hget($+(bombe,$1),bomb)) { notice $2 Die Bombe tickt nicht! Gib erst !bombe ein }
+    }
+    elseif ($cmd($1,$3,blind)) || ($cmd($1,$3,farbenblind)) {
+      if ($hget($+(bombe,$1),bomb)) {
+        if ($2 == $hget($+(bombe,$1),nick)) {
+          if ($access($1,$2) >= 25) { msg $1 $styles(You have to go to your eye specialist (no Kick for User)) }
+          else { PPB_kick $1 $2 Kicked; Reason: Go to your eye specialist }
+          stop.bomb $1
+        }
+        elseif ($2 != $hget($+(bombe,$1),nick)) { notice $2 Sry, es ist $hget($+(bombe,$1),nick) beim Bombenentschärfen }
+      }
+      elseif (!$hget($+(bombe,$1),bomb)) { notice $2 Die Bombe tickt nicht! Gib erst !bombe ein }
+    }
+    elseif ($cmd($1,$3,afraid)) || ($cmd($1,$3,fear)) {
+      if ($hget($+(bombe,$1),bomb)) {
+        if ($2 == $hget($+(bombe,$1),nick)) {
+          if ($access($1,$2) >= 25) { msg $1 $styles(OMG it is only a virtuell bomb (no Kick for User)) }
+          else { PPB_kick $1 $2 Kicked; Reason: Don't Be afraid, it is only a virtuell bomb }
+          stop.bomb $1
+        }
+        elseif ($2 != $hget($+(bombe,$1),nick)) { notice $2 Sry, es ist $hget($+(bombe,$1),nick) beim Bombenentschärfen }
+      }
+      elseif (!$hget($+(bombe,$1),bomb)) { notice $2 Die Bombe tickt nicht! Gib erst !bombe ein }
+    }
+    elseif ($cmd($1,$3,request)) || ($cmd($1,$3,botrequest)) || ($cmd($1,$3,requestbot)) {
+      if ($4) {
+        if ($4 == on) || ($4 == off) {
+          if ($access($1,$2) >= 125) {
+            if ($4 == on) { hadd -m Config Misc.req-status on | notice $2 $styles(Request is now Loaded.) }
+            elseif ($4 == off) { hadd -m Config Misc.req-status off | notice $2 $styles(Request is now Unloaded.) }
+          }
+        }
+        elseif ($4 == idler) { 
+          if ($access($1,$2) >= 125) {
+            if (!$5) { notice $2 $styles(Request: Min.Idler are set on $+($chr(40),$config(req-idler),$chr(41))) }
+            else { hadd -m Config Misc.req-idler $5 | notice $2 $styles(Request: Min.Idler are NOW set on $+($chr(40),$config(req-idler),$chr(41))) }
+          }
+        }
+        elseif ($4 == help) { notice $2 $styles(Min.-Idler: $config(req-idler) ; Op in Request-Channel) | notice $2 $styles(Usage:) $textprefix($1) $+ request <#channel> }
+        elseif ($left($4,1) == $chr(35)) {
+          if ($config(req-status) == on) { 
+            if (%requestspamm == 1) {
+              if (!%requestspamm2) {
+                msg $2 Please $styles(Sry Try later ; A another request is on Work! (Try again in ca. 15 secs))
+                set -u10 %requestspamm2 1
+              }
+            }
+            if (!%requestspamm) {
+              set -u10 %requestspamm 1
+              set -u40 %rn. [ $+ [ $4 ] ] $2
+              if ($4 != #0,0) {
+                set %m.chans $chan(0)
+                set %rchan. [ $+ [ $4 ] ] $4
+                if (%m.chans < 19) {
+                  notice $2 $styles(Please wait a moment. Your request is in work!)
+                  join $4
+                  .timer 1 2 chanidler $4
+                  .timer 1 3 checkidler $4 $2
+                  .timer 1 5 unset %rn. [ $+ [ $4 ] ]
+                  .timer 1 5 unset %idler1. [ $+ [ $4 ] ] 
+                  .timer 1 5 unset %idler2. [ $+ [ $4 ] ]
+                  .timer 1 5 unset %rchan. [ $+ [ $4 ] ]
+                  .timer 1 5 unset %m.chans
+                }
+                else { notice $2 $styles(Sry But my Protectclass is full! U cant request ME!) | unset %m.chans } 
+              }
+            }
+          }
+          elseif ($config(req-status) == off) { if (!%requestspam3) { set -u5 %requestspam3 1 | notice $2 $styles(Request Unloaded.) } }
+        }
+        else { if (!%requstspam3) { set -u5 %requestspam3 1 | notice $2 $styles(Usage: !request <on|off|#channel|idler> [idler]) } }
+      }
+    }
+    elseif ($trigger($1,$3)) { msg $1 $styles($trigger($1,$3)) }
+  }
+}

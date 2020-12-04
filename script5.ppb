@@ -1,0 +1,14 @@
+on *:text:-dns*:#: { set %dns $chan | /dns $2 }
+
+on *:DNS:{
+  var %n = $dns(0)
+  /msg %dns Found %n address(es)
+  while (%n > 0) {
+    msg %dns 4::5:14[15DNS suche Begonnen...... *bitte warten 14]5:4::
+    /msg %dns 4::5:14[15DNS HOST14]5:4:: 4::5:14[15 $dns(%n) 14]5:4:: 
+    /msg %dns 4::5:14[15DNS Adresse14]5:4:: 4::5:14[15 $dns(%n).addr 14]5:4:: 
+    /msg %dns 4::5:14[15 IP 14]5:4:: 4::5:14[15 $dns(%n).ip 14]5:4::
+    msg %dns 4::5:14[15DNS suche BEENDET! 14]5:4::
+    dec %n
+  }
+}

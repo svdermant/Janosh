@@ -1,0 +1,29 @@
+[Sun Feb 11 17:16:44 2018] :: [SYSTEM] Connecting...
+[Sun Feb 11 17:16:48 2018] :: [SYSTEM] Join Protected-Channel
+[Sun Feb 11 17:17:08 2018] :: [SYSTEM] Check Autop/Voice Status
+[Sun Feb 11 17:17:15 2018] :: [SYSTEM] Ready To Work..
+[Sun Feb 11 17:18:42 2018] :: [SYSTEM] Newstickers has been disabled.
+[Sun Feb 11 17:18:42 2018] :: [SYSTEM] Connection Interrupted.
+[Sun Feb 11 17:19:16 2018] :: [SYSTEM] Connecting...
+[Sun Feb 11 17:19:20 2018] :: [SYSTEM] Join Protected-Channel
+[Sun Feb 11 17:19:40 2018] :: [SYSTEM] Check Autop/Voice Status
+[Sun Feb 11 17:19:47 2018] :: [SYSTEM] Ready To Work..
+[Sun Feb 11 17:21:15 2018] :: [SYSTEM] Newstickers has been disabled.
+[Sun Feb 11 17:21:15 2018] :: [SYSTEM] Connection Interrupted.
+[Sun Feb 11 17:24:35 2018] :: [SYSTEM] Connecting...
+[Sun Feb 11 17:24:40 2018] :: [SYSTEM] Join Protected-Channel
+[Sun Feb 11 17:24:59 2018] :: [SYSTEM] Newstickers has been disabled.
+[Sun Feb 11 17:24:59 2018] :: [SYSTEM] Connection Interrupted.
+[Sun Feb 11 17:25:24 2018] :: [SYSTEM] Connecting...
+[Sun Feb 11 17:25:28 2018] :: [SYSTEM] Join Protected-Channel
+[Sun Feb 11 17:25:48 2018] :: [SYSTEM] Check Autop/Voice Status
+[Sun Feb 11 17:25:55 2018] :: [SYSTEM] Ready To Work..
+[Sun Feb 11 19:29:32 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sun Feb 11 19:31:46 2018] :: [LOGIN] Zenturion successfully login. Accountname: Admin
+[Sun Feb 11 19:38:02 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sun Feb 11 19:44:22 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sun Feb 11 19:56:20 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sun Feb 11 20:04:30 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sun Feb 11 20:29:10 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sun Feb 11 22:03:32 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sun Feb 11 22:09:20 2018] :: [SYSTEM] Spamattack on #Battledome detected.

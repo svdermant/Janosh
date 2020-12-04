@@ -1,0 +1,23 @@
+[Sun Aug 19 10:44:18 2012] :: Drago|Abwesend: !yes
+[Sun Aug 19 10:44:38 2012] :: Test: !yes
+[Sun Aug 19 10:45:43 2012] :: Drago|Abwesend: !kill dragon
+[Sun Aug 19 10:46:14 2012] :: Test: !check test
+[Sun Aug 19 10:49:31 2012] :: Test: !kill dragon
+[Sun Aug 19 10:50:59 2012] :: Test: !stop
+[Sun Aug 19 10:51:16 2012] :: Dragon: !stop
+[Sun Aug 19 10:57:36 2012] :: Dragon: !yes
+[Sun Aug 19 10:58:13 2012] :: Test: !yes
+[Sun Aug 19 10:58:38 2012] :: Dragon: !check test
+[Sun Aug 19 10:59:04 2012] :: Test: !kill 2
+[Sun Aug 19 11:01:40 2012] :: Dragon: !stop
+[Sun Aug 19 11:01:54 2012] :: Dragon: !stop
+[Sun Aug 19 11:02:15 2012] :: Dragon: !stop
+[Sun Aug 19 11:07:56 2012] :: Dragon: !stop
+[Sun Aug 19 11:11:23 2012] :: Test: !yes
+[Sun Aug 19 11:11:33 2012] :: Dragon: !yes
+[Sun Aug 19 11:11:53 2012] :: Test: !kill test
+[Sun Aug 19 11:12:29 2012] :: Dragon: !check 3
+[Sun Aug 19 11:20:10 2012] :: Test: !yes
+[Sun Aug 19 11:20:20 2012] :: Dragon: !yes
+[Sun Aug 19 11:20:36 2012] :: Test: !kill dragon
+[Sun Aug 19 11:20:59 2012] :: Dragon: !check test

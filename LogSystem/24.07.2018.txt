@@ -1,0 +1,10 @@
+[Tue Jul 24 03:12:55 2018] :: [SYSTEM] IAL-List successfully updatet for #Support
+[Tue Jul 24 03:12:55 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Tue Jul 24 03:12:55 2018] :: [SYSTEM] Connecting...
+[Tue Jul 24 03:12:58 2018] :: [SYSTEM] Join Protected-Channel
+[Tue Jul 24 03:13:18 2018] :: [SYSTEM] Check Autop/Voice Status
+[Tue Jul 24 03:13:25 2018] :: [SYSTEM] Ready To Work..
+[Tue Jul 24 12:53:39 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Tue Jul 24 12:56:05 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Tue Jul 24 13:32:38 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Tue Jul 24 22:16:24 2018] :: [SYSTEM] Spamattack on #Battledome detected.

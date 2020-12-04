@@ -1,0 +1,70 @@
+on *:load:if ($version < 5.9) { echo $color(info) *** channel anti idle needs mIRC 5.9+... unloading... | .unload -rs $script | return } | echo $color(info) -e *** Loaded channel anti idle (drlm - madog@iol.pt)
+dialog idle {
+  title "channel anti idle (v1)"
+  size -1 -1 170 91
+  option dbu
+  button "Ok",1,52 79 30 10,ok
+  button "Cancel",2,84 79 30 10,cancel
+  box "",3,3 1 164 75
+  text "channels",4,7 7 30 8
+  list 5,7 15 40 55
+  text "check idle all",6,50 17 40 8
+  edit "",7,84 16 12 9
+  text "secs",8,97 17 12 8
+  text "max idle",9,50 27 20 8
+  edit "",10,72 26 12 9
+  text "mins",11,85 27 12 8
+  text "include",12,50 37 20 8
+  check "@ops",13,72 37 23 8,push
+  check "+voices",14,95 37 23 8,push
+  check "%halfs",15,118 37 23 8,push
+  check "users",16,141 37 23 8,push
+  text "kick",17,50 47 15 9
+  edit "",18,62 46 102 10
+  text "ban for",19,50 59 20 9
+  edit "",20,69 58 12 9
+  text "minutes ('0' for non timed ban)",21,82 59 70 9
+  button "add",25,8 63 19 8
+  button "del",26,27 63 19 8
+  edit "",500,1 1 1 1,hide
+}
+on 1:dialog:idle:init:0:didtok idle 5 32 $_ic(chanlist) | _ai-lc $_ic(chanlist)
+on 1:dialog:idle:sclick:*:{
+  if ($did == 5) { var %i = $_ai-sc($did(500)) | _ai-lc $did(5).seltext }
+  if ($did == 1) var %i = $_ai-sc($did(500))
+  if ($did == 25) { var %c = $input(Enter new channel,1) | if (#* !iswm %c) || (!%c) || ($istok($_ic(chanlist),%c,32)) return | set $_icv(chanlist) $_ic(chanlist) %c | did -ca idle 5 %c | _ai-lc %c } 
+  if ($did == 26) && ($did(5).seltext) { var %c = $ifmatch | set $_icv(chanlist) $deltok($_ic(chanlist),$findtok($_ic(chanlist),%c,32),32) | .timer 1 0 unset $_icv(%c,.*) | did -d idle 5 $did(5).sel | did -r idle 500 | _ai-lc $_ic(chanlist) }
+}
+alias _ai-lc if (!$1) return | did -ra idle 7 $_ic($1,.check_idle) | did -ra idle 10 $_ic($1,.max_idle) | did -u idle 13,14,15,16 | if ($_ici($1,@)) did -c idle 13 | if ($_ici($1,+)) did -c idle 14 | if ($_ici($1,%)) did -c idle 15 | if ($_ici($1,u)) did -c idle 16 | did -ra idle 18 $_icr1($1) | did -ra idle 20 $_ic($1,.ban_time) | did -ra idle 500 $1 | did -c idle 5 $didwm(idle,5,$1)
+alias _ai-sc if (!$1) return | set $_icv($1,.check_idle) $did(7) | set $_icv($1,.max_idle) $did(10) | var %i | if ($did(13).state) %i = @ | if ($did(14).state) %i = %i + | if ($did(15).state) %i = %i % | if ($did(16).state) %i = %i user | set $_icv($1,.include) %i | set $_icv($1,.kick) $replace($did(18),,&k,,&b,,&users) | set $_icv($1,.ban_time) $did(20)
+alias _ic return $__'($_icv($+($1-)))
+alias _icv .tokenize 32 $1- | return $+($chr(37),£.idle.,$remove($1-,$chr(32)))
+alias __' return [ [ $1 ] ]
+alias _ici if ($istok($_ic($1,.include),$2,32)) return 1
+alias _icr1 return $replace($_ic($1,.kick),&k,,&b,,&user,)
+alias _icr2 return $replace($1-,,&k,,&b,,&user)
+alias idle-setup dialog -m idle idle
+alias _icb if ($_ic($1,.ban_time) > 0) return $+(-u,$calc($ifmatch *60))
+alias _idle-check if (!$istok($_ic(chanlist),$1,32)) return | .timerCHECK-IDLE. $+ $1 0 $_ic($1,.check_idle) check-idle $1
+alias check-idle {
+  var %max-idle = $calc($_ic($1,.max_idle) *60), %i = 1, %inc-idle = $_ic($1,.check_idle), %nick
+  while ($nick($1,%i)) {
+    %nick = $ifmatch
+    if ((%nick isop $1) && (!$_ici($1,@))) || ((%nick isvo $1) && (!$_ici($1,+))) || ((%nick ishop $1) && (!$_ici($1,%))) || ((%nick isreg $1) && (!$_ici($1,user))) goto e
+    inc $_icv(temp.,$1,.,%nick) %inc-idle
+    if ($_ic(temp.,$1,.,%nick)  > %max-idle) && ($me isop $1) { ban $_icb($1) $1 %nick 2 | kick $1 %nick $_icr1($1) | .timer 1 0 unset $_icv(temp.,$1,.,%nick) }
+    :e | inc %i
+  }
+  if (!$istok($_ic(chanlist),$1,32)) .timerCHECK-IDLE. $+ $1 off
+}
+on *:join:#:if ($nick == $me) _idle-check #
+on *:text:*:#:.timer 1 0 unset $_icv(temp.,#,.,$nick)
+on *:action:*:#:.timer 1 0 unset $_icv(temp.,#,.,$nick)
+on *:part:#:if ($nick == $me) .timer 1 0 unset $_icv(temp.,#,.*) | else .timer 1 0 unset $_icv(temp.,#,.,$nick)
+on *:disconnect:.timer 1 0 unset $_icv(temp.*) | .timerCHECK-IDLE* off
+on *:connect:.timer 1 0 unset $_icv(temp.*)
+menu status,menubar {
+  -
+  chan anti-idle:idle-setup
+}
+on *:unload:.timerCHECK-IDLE.* off

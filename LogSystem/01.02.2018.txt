@@ -1,0 +1,6 @@
+[Thu Feb 01 00:56:16 2018] :: [LOGIN] Zenturion successfully login. Accountname: Admin
+[Thu Feb 01 01:09:12 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Feb 01 01:19:00 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Feb 01 21:28:32 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Feb 01 22:18:17 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Feb 01 22:31:45 2018] :: [SYSTEM] Spamattack on #Battledome detected.

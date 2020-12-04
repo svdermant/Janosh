@@ -1,0 +1,7 @@
+[Thu Oct 19 18:37:37 2017] :: [SYSTEM] Connecting...
+[Thu Oct 19 18:37:41 2017] :: [SYSTEM] Join Protected-Channel
+[Thu Oct 19 18:38:01 2017] :: [SYSTEM] Check Autop/Voice Status
+[Thu Oct 19 18:38:08 2017] :: [SYSTEM] Ready To Work..
+[Thu Oct 19 18:38:27 2017] :: [SYSTEM] IAL-List successfully updatet for #battledome-En
+[Thu Oct 19 18:42:02 2017] :: [LOGIN] SmZ successfully login. Accountname: Admin
+[Thu Oct 19 21:11:58 2017] :: [SYSTEM] Spamattack on #Battledome-En detected.

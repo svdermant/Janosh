@@ -1,0 +1,5 @@
+ON *:text:!find*:#: { 
+  set %t $2- 
+  If (%t !isin $read(qdb.txt, w, * $+ $2- $+ *)) { /msg # 4::5:<>14Quote5<>:4::15 Nicht Vorhanden! }
+  else { /msg # 4::5:<>14Quote5<>:4::15 $read(qdb.txt, w, * $+ $2- $+ *) }
+}

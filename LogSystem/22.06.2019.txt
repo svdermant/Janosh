@@ -1,0 +1,9 @@
+[Sat Jun 22 14:24:57 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Sat Jun 22 14:46:13 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Sat Jun 22 19:31:02 2019] :: [SYSTEM] Newstickers has been disabled.
+[Sat Jun 22 19:31:02 2019] :: [SYSTEM] Connection Interrupted.
+[Sat Jun 22 19:31:04 2019] :: [SYSTEM] IAL-List successfully updatet for #IgameRPG
+[Sat Jun 22 19:31:04 2019] :: [SYSTEM] Connecting...
+[Sat Jun 22 19:31:07 2019] :: [SYSTEM] Join Protected-Channel
+[Sat Jun 22 19:31:27 2019] :: [SYSTEM] Check Autop/Voice Status
+[Sat Jun 22 19:31:34 2019] :: [SYSTEM] Ready To Work..

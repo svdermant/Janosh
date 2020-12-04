@@ -1,0 +1,100 @@
+; Quote Database 1.0
+; Written by E-nomine
+
+on *:LOAD:{
+  /echo 8,1Quote Database 1.0, written by E-NoMine. 
+  /auser qdbop $?="Enter Nickname to be URL OP"
+}
+on qdbop:TEXT:!addqdbchan:#:{
+  write -ds $+ $chan qdbchans.txt
+  write qdbchans.txt $chan
+  /msg $chan 1,0  $+ $chan $+  Wurde Zur QDB Channel List hinzugefügt.
+}
+on qdbop:TEXT:!delqdbchan:#:{
+  write -ds $+ $chan qdbchans.txt
+  /msg $chan 0,1  $+ $chan $+  Wurde von der QDB Channel List entfernt.
+}
+on qdbuser:TEXT:!addquote *:#:{
+  if ($2 != $null) {
+    if ($read(qdbchans.txt, w, $chan) != $null) {
+      write -ds" $+ $2- $+ " qdb.txt
+      write qdb.txt von $nick 4::5<>14[15 $+ $time - am $date $+ 14]5<>4::  14 $2- 
+      /msg $chan 0,1 $nick Quote Hinzugefügt!.
+    }
+  }
+}
+on qdbop:TEXT:!addquote *:#:{
+  if ($2 != $null) {
+    if ($read(qdbchans.txt, w, $chan) != $null) {
+      write -ds" $+ $2- $+ " qdb.txt
+      write qdb.txt von $nick 4::5<>14[15 $+ $time - am $date $+ 14]5<>4:: 14 $2- 
+      /msg $chan 0,1 $nick Quote Hinzugefügt!.
+    }
+  }
+}
+on qdbuser:TEXT:!delquote *:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    write -dl $+ $2 qdb.txt
+    msg $chan 0,1 $nick Quote Gelöscht!
+  }
+}
+on qdbop:TEXT:!delquote *:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    write -dl $+ $2 qdb.txt
+    /msg $chan 0,1 $nick Quote Gelöscht!
+  }
+}
+on qdbop:TEXT:!addqdbuser *:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    /auser -a qdbuser $address($2,1) QDB User
+    /msg $chan 0,1 $2 Du wurdest von $nick Hinzugefügt!. Du kannst qoutes löschen un adden!.
+    /msg $chan 0,1 $nick User Hinzugefügt.
+  }
+}
+on qdbop:TEXT:!delqdbuser *:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    /ruser qdbuser $address($2,1)
+    /msg $chan 0,1 $nick User Gelöscht!.
+  }
+}
+on qdbop:TEXT:!addqdbop *:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    /auser -a qdbop $address($2,1) QDB Op
+    /msg $chan 0,1 $2 Du wurdest als ein QDB Op von $nick Hinzugefügt! . Du kannst jetzt Beiträge löschen als auch adden sowie user!
+    /msg $chan 0,1 $nick Op Hinzugefügt!.
+  }
+}
+on qdbop:TEXT:!delqdbop *:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    /ruser qdbop $address($2,1)
+    /msg $chan 0,1 $nick Op Gelöscht!
+  }
+}
+on *:TEXT:!qdbhelp*:*:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    if ($2 == !addquote) {
+      /msg $chan 0,1 $nick !addquote [quote]
+      /msg $chan 0,1 $nick Fügt Qute hinzu!.
+    }
+    elseif ($2 == !delquote) {
+      /msg $chan 0,1 $nick !delquote [Quote #]
+      /msg $chan 0,1 $nick Löscht eine Quote!
+    }
+    else {
+      /msg $chan 0,1 Befehle: !addquote !delquote
+      /msg $chan 0,1 Tippe !qdbhelp [befehl] für details.
+    }
+  }
+}
+on *:TEXT:!quote:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    %quote = $read(qdb.txt)
+    /msg $chan 11::12:15[ 10 Quote 15]12:11:: 14 $readn $+ : %quote
+    /unset %quote
+  }
+}
+on *:TEXT:!lastquote:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    /msg $chan 0,1Neuste Quote ( $+ $lines(qdb.txt) $+ ): $read(qdb.txt, $lines(qdb.txt))
+  }
+}

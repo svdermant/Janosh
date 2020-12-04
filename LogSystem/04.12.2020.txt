@@ -1,0 +1,4 @@
+[Fri Dec 04 16:19:06 2020] :: [SYSTEM] Connecting...
+[Fri Dec 04 16:19:10 2020] :: [SYSTEM] Join Protected-Channel
+[Fri Dec 04 16:19:30 2020] :: [SYSTEM] Check Autop/Voice Status
+[Fri Dec 04 16:19:37 2020] :: [SYSTEM] Ready To Work..

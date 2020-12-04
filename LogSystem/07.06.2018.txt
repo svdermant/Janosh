@@ -1,0 +1,11 @@
+[Thu Jun 07 00:55:50 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 22:00:25 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 22:29:41 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 22:34:13 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 22:38:48 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 22:52:05 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 22:53:12 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 23:00:15 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 23:25:04 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 23:37:43 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Thu Jun 07 23:54:56 2018] :: [SYSTEM] Spamattack on #Battledome detected.

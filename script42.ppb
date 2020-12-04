@@ -1,0 +1,106 @@
+on *:text:!Notruf:#:{
+  if (%notruf [ $+ [ $nick ] ] == $null) {
+    set %notruf [ $+ [ $nick ] ] 1
+    set %n $nick
+    set %not on
+    msg # Herzlich Willkommen beim $styles(Norufsystem)
+    msg # Ich werde dich jetzt Gleich Privat anschreiben und Alles weitere erklären
+    /timer $+ $nick $+ 1 1 5 /meldung
+    halt
+  }
+  if (%notruf [ $+ [ $nick ] ] == 1) {
+    msg # Du hast schon einen Notruf Erstellt..
+    msg # Bitte Warte 5 min bis du einen Neuen Erstellen/Melden kannst
+  }
+}
+
+alias Meldung {
+  msg %n Willkommen %n Ich habe gehört du Fühlst dich gestört durch die Anwesenheit eines Anderen.
+  msg %n Kein Problem durch mein Notrufsystem kannst du das Gerne den Operatoren im Channel Melden.
+  msg %n Um einen Notruf zu melden wähle jetzt gleich den Verstoß aus hier im Fenster durch folgende Eingabemöglichkeiten:
+  /timernotruf1 1 4 msg %n 4!n 12Nickverlängerung 14- Wenn ein Chatter mehrmals einen Nick gesagt hat wähle dies
+  /timernotruf2 1 6 msg %n 4!n 12Werbung 14- Jegliche Werbung (Hp, Foto, etc) dann wähle dies
+  /timernotruf3 1 8 msg %n 4!n 12Sexuelle-Belästigung 14-Öffentliche Cs, Ts oder Rs-Fragen, genauso wie sexuelle Anspielungen oder Andeutungen (Fragen nach 'mehr') dann Wähle dies  
+  /timernotruf4 1 11 msg %n 4!n 12Dauergross 14-Anbrüllen in Form von GROßSCHREIBEN dann wähle dies
+  /timernotruf5 1 13 msg %n 4!n 12Beleidigung-Bedrohung 14- Beleidigung o. Bedrohungen jeglicher art Wähle das.
+  /timernotruf6 1 15 msg %n 4!n 12Chatbilder 14- Das Posten Von Chatbildern Wähle dies wenn es dauerhaft Passiert
+  /timernotruf7 1 17 msg %n 4!n 12Cam-Video 14- Cam-Fragen, Fragen nach Video- und/oder Pictausch wähle dies
+  /timernotruf8 1 19 msg %n 4!n 12Messanger-Tel 14- Bei Posten von Messanger oder Tel-Nummern Wähle dies
+  /timernotruf9 1 20 msg %n 4!n 12Sonstiges 14- Beschwerden ohne auszügliche beweise
+  /timernotruf10 1 23 msg %n Tippe jetzt eine dieser Verstöße ein wie angegeben, um weitere Details zu erhalten
+}
+on *:text:**:?: {
+  if (%notruf [ $+ [ $nick ] ] == 1) && (%not == on) {
+    if ($1 == !n) && ($2 == Nickverlängerung) {
+      msg $nick 12Nickverlängerung: 14 - Dieser Verstoß ist nur dann Gültig wenn Ein Chatter mehrmals als 3x in einer Zeile deinen Nick Ruft zb: 
+      msg $nick 7Heinz Heinz Heinz 14- Kein Verstoß - 7Heinz Heinz Heinz Heinz Heinz - 4VERSTOß (Der Nick wurde 5x Geschrieben) 14- Erlaubt ist 3x
+      msg $nick Tippe jetzt 4!nw 12Nickverlängerung  um dies als Verstoß zu Wählen.
+    }
+    if ($1 == !n) && ($2 == Werbung) {
+      msg $nick 12Werbung: 14 - Dieser Verstoß ist nur dann Gültig wenn ein Link einer Website oder des Gleichen gepostet wird egal ob nun
+      msg $nick Mit http:// vorsatz oder anderen . Werbung ist generell Untersagt - Ausgeschlossen sind die Flirtcommunity Links
+      msg $nick Tippe jetzt 4!nw 12Werbung  um dies als Verstoß zu Wählen.  
+    }
+    if ($1 == !n) && ($2 == Sexuelle-Belästigung) || ($2 == Sexuelle-Anfrage) {
+      msg $nick 12Sexuelle-Beästigung/Anfrage: 14 - Dieser Verstoß ist nur dann Gültig wenn Ein Chatter dich Sexuell Belästigt.
+      msg $nick 4BEACHTE14 Jegliche Art von Belästigung Zählt ob TS CS oder Rs sowie öffentliche Sexangebote oder Sexdates
+      msg $nick Tippe jetzt 4!nw 12Sex  um dies als Verstoß zu Wählen.  
+    }
+    if ($1 == !n) && ($2 == Dauergross) {
+      msg $nick 12DAUERGROSS: 14 - Dieser Verstoß ist nur dann Gültig wenn ein Chatter ununterbrochen groß schreibt.
+      msg $nick Es wird hier als Brüllen interpretiert - Und hier wird niemand irgendwie Angebrüllt.
+      msg $nick Tippe jetzt 4!nw 12Dauergross  um dies als Verstoß zu Wählen.
+
+    }
+    if ($1 == !n) && ($2 == Beleidigung) {
+      msg $nick 12Beleidigung/Bedrohung: 14 - Dieser Verstoß ist nur dann Gültig wenn ein Chatter dich Vulgär beleidigt oder dir Sogar Droht.
+      msg $nick Tippe jetzt 4!nw 12Beleidigung  um dies als Verstoß zu Wählen.
+    }
+    if ($1 == !n) && ($2 == Chatbilder) {
+      msg $nick 12Chatbilder: 14 - Dieser Verstoß ist nur dann Gültig wenn ein Chatter unterbrochen den Channel mit Asciibildern zuspammt.
+      msg $nick Tippe jetzt 4!nw 12Chatbilder  um dies als Verstoß zu Wählen.
+    }
+    if ($1 == !n) && ($2 == Cam-Video) {
+      msg $nick 12Cam-Video: 14 - Dieser Verstoß ist nur dann Gültig wenn ein Chatter nach Pictausch, Video, Oder Camanfragen öffentlich sowie auch Privat fragt
+      msg $nick Tippe jetzt 4!nw 12Cam-Video  um dies als Verstoß zu Wählen.
+    }
+    if ($1 == !n) && ($2 == Messanger-Tel) {
+      msg $nick 12Messanger-Tel: 14 - Dieser Verstoß ist nur dann Gültig wenn ein Chatter Nummern oder sogar MSN oder dergleichen Adressen Preisgibt
+      msg $nick Tippe jetzt 4!nw 12Messanger-Tel  um dies als Verstoß zu Wählen.
+    }
+    if ($1 == !n) && ($2 == Sonstiges) {
+      msg $nick 12Sonstiges: 14 - Dieser Verstoß ist nur dann Gültig wenn keines der Oben Genannten zutrifft
+      msg $nick Tippe jetzt 4!nw 12Sonstiges  um dies als Verstoß zu Wählen.
+    }
+    if ($1 == !nw) && ($2 == Nickverlängerung) || ($2 == Nickverlaengerung) {
+      msg $nick Okay du bist also dieser Ansicht. Ich trage es ein. Danke dir Bitte gebe Jetzt den Beschuldigten an.
+      msg $nick Dieses machst du mit !nw Nickverlnick <nickname>
+      set %grund Nickverlängerung
+      set %bführer $nick
+      set %nummer $rand(A,Z) $+ - $+ $rand(1000,10000)
+      write -l1 $nick $+ .txt 14 ----- 4Notrufsystem 14----
+      write -l3 $nick $+ .txt 12Notrufnummer: 10 %nummer
+      write -l4 $nick $+ .txt 14 ---------Grund--------
+      write -l5 $nick $+ .txt 14 4 $+ %grund  - Mehr als 3x den Nick genannt
+    }
+    if ($1 == !nw) && ($2 == Nickverlnick) && ($3 != $null) {
+      msg $nick Okay du denkst $3 Hat den Verstoß begangen. Ich schreibe es ein.
+      msg $nick Beschreibe bitte nun den Vorfall Genau mit !nw nickverl-Beschreibung <text>
+      msg $nick Bitte Gib die Uhrzeit, Channel und Nick Nocheinmal an..
+      msg $nick Beispiel !nw Nickverl-Beschreibung 22:00Uhr #-Flirt- Darso hatte den Nick oswald um diese zeit 5x Genannt etc.
+      set %nv-nick $3
+      write -l2 $nick $+ .txt 14 Beschuldigt: %nv-nick
+    }
+    if ($1 == !nw) && ($2 == Nickverl-Beschreibung) && ($3- != $null) {
+      msg $nick Es ist also so Gewesen wie du sagtest?. Sehr gut ich werde dies jetzt Speichern
+      msg $nick Bitte geduld dich nun etwas - Der Notruf wurde an die Ops weitergeleitet und werden Den Vorfall nun Prüfen
+      set %nv-time $3
+      set %nv-chan $4
+      set %nv-nick-1 $5
+      set %nv-besch $6-
+      write -l6 $nick $+ .txt ------- Vorfallschilderung -----------
+      write -l7 $nick $+ .txt --Beschwerde: %nv-time ( $+ %nv-chan $+ ) %nv-nick-1 - %nv-besch 
+      /timernotnick1 1 5 /msg %nv-nick-1 Du hast soeben eine Beschwerde erhalten, da du gegen die Regel (Nickverlängerung) Verstoßen hast. Um sie zu Lesen tippe !n lesen ein. Danke
+    }
+  }
+}

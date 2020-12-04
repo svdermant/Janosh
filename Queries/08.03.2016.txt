@@ -1,0 +1,35 @@
+[Tue Mar 08 17:15:03 2016] :: BattleDome: 3Welcome to The BattleDome Tutorial
+[Tue Mar 08 17:15:04 2016] :: BattleDome: Now it's your turn, throw yourself into battle and save the world from destruction.
+[Tue Mar 08 17:15:04 2016] :: BattleDome: First you should create a character, this HAPPENS with the command !new char here in this window.
+[Tue Mar 08 17:15:05 2016] :: BattleDome: Your most important start commands are: !stats !hp !tp !xp !cdesc !shop !help and !view-info - Prepare yourself well, at any time, a Dark Portal could open!.
+[Tue Mar 08 17:15:06 2016] :: BattleDome: ===== Step By Step Beginner Guide =====
+[Tue Mar 08 17:15:07 2016] :: BattleDome: ====== Creating Charakter ======
+[Tue Mar 08 17:15:08 2016] :: BattleDome: 1. write in the chat to Battledome the bot !new char (not in the channel)
+[Tue Mar 08 17:15:09 2016] :: BattleDome: ====== Changing Password ======
+[Tue Mar 08 17:15:10 2016] :: BattleDome: 2. Changing your password type !newpass altespasswort newpass (for example :!newpass battlearena36d thenewpasswd
+[Tue Mar 08 17:15:11 2016] :: BattleDome: ====== Show Your Charakter Stats ======
+[Tue Mar 08 17:15:12 2016] :: BattleDome: 3. Show your stats and learn the feature type !stats and then type !level to show your level Information
+[Tue Mar 08 17:15:13 2016] :: BattleDome: when You use it you can see your charakter details for example HP TP Ignition Gauge Status Royal Guard Meter and many more
+[Tue Mar 08 17:15:14 2016] :: BattleDome: ====== Increasing Attributes ======
+[Tue Mar 08 17:15:15 2016] :: BattleDome: 4. now i will learn you how to increase the hp str spd etc and any more to level up
+[Tue Mar 08 17:15:16 2016] :: BattleDome: stat values can you buy in the shop type !shop list stats in the () you see the currency of Redorbs
+[Tue Mar 08 17:15:17 2016] :: BattleDome: you can collect this in Battles at the bottom you see your shop level 1.0 <-- this level increased a little bit by purchasing anything in the shop exclusive weapons and styles the price is increased **__(not for items and weapons)__**.
+[Tue Mar 08 17:15:20 2016] :: BattleDome: now you can increase your hp by writing the following command "!shop buy stats hp" without the "" this will increase the hp by +50 (__This is the same way for str def int spd ig ect. replace HP with one of these values__)
+[Tue Mar 08 17:15:22 2016] :: BattleDome: ====== Leveling System ======
+[Tue Mar 08 17:15:24 2016] :: BattleDome: 5. Now let me tell a little for the Level system . At the End of any battle you can raise up your stats weaponlevel techniklevel and skill level etc these is the level system which level you are epends on how you value distribute etc. exclusive the Stylesystem gives you an extra bonus for any style show in the wiki for more details.
+[Tue Mar 08 17:15:29 2016] :: BattleDome: ====== Buying a Technique ======
+[Tue Mar 08 17:15:29 2016] :: BattleDome: 6. Now let us learn a technique (techiques costs RedOrbs) you can only see techniques for the equipped weapon.
+[Tue Mar 08 17:15:32 2016] :: BattleDome: at the beginning you has your own fists and you can see your techs by type !techs . The Value in the () are the level of the techniqe. would you buy a tech you must know which technique can you learn.
+[Tue Mar 08 17:15:34 2016] :: BattleDome: you see it by type !shop list techs the value in the () are the price in red orbs. Now by the Shouldertackle Technique Type !shop buy tech Shouldertackle
+[Tue Mar 08 17:15:37 2016] :: BattleDome: ====== Buying a Weapon ======
+[Tue Mar 08 17:15:37 2016] :: BattleDome: 7. the same way is for a Weapon but Weapons needed BlackOrbs these orbs can you collect from Boss battles
+[Tue Mar 08 17:15:41 2016] :: BattleDome: See the Weaponlist by !shop list weapons and buy a weapon by !shop buy weapon weaponname
+[Tue Mar 08 17:15:42 2016] :: BattleDome: ====== The !view-info command ======
+[Tue Mar 08 17:15:43 2016] :: BattleDome: 8. The Very Useful tool is the !view-info Command //!view-info <tech, item, skill, weapon, armor, accessory, ignition, shield> <name> (and remember to remove the < >)//
+[Tue Mar 08 17:15:46 2016] :: BattleDome: with this tool you can show any information of an item skill etc
+[Tue Mar 08 17:15:47 2016] :: BattleDome: ====== The End ======
+[Tue Mar 08 17:15:48 2016] :: BattleDome: The Final: I Hope you understand the basics and you can now create your own charakter. Have you any question or problems then ask Regra
+[Tue Mar 08 17:15:51 2016] :: BattleDome: At the end of these Tutorial Now you can fight with the monsters.
+[Tue Mar 08 17:15:51 2016] :: BattleDome: BattleCommands are here http://ag-universe.de/wiki/doku.php?id=battlecommands
+[Tue Mar 08 17:15:54 2016] :: BattleDome: The Bot Will tell you when a portal was opened and you can join.
+[Tue Mar 08 17:15:54 2016] :: BattleDome: Have Fun.

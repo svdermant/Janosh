@@ -1,0 +1,2 @@
+[Sat May 25 23:34:54 2019] :: [SYSTEM] Newstickers has been disabled.
+[Sat May 25 23:34:54 2019] :: [SYSTEM] Connection Interrupted.

@@ -1,0 +1,805 @@
+[Mon Jun 18 17:58:22 2007] :: Superghost: Du Chomiker!
+[Mon Jun 18 17:58:30 2007] :: Superghost: Du bist los!
+[Mon Jun 18 17:58:47 2007] :: Superghost: Du hast mich voll umgehauen mit deinem Witz grad!
+[Mon Jun 18 17:59:09 2007] :: Superghost: Hahahahahahaha!
+[Mon Jun 18 17:59:51 2007] :: Superghost: Willst du die Scheiße in der Toilette ablecken?
+[Mon Jun 18 18:00:45 2007] :: Superghost: Weißt du was du gerade gesagt hast?
+[Mon Jun 18 18:00:54 2007] :: Superghost: GOTT
+[Mon Jun 18 18:01:07 2007] :: Superghost: !witz
+[Mon Jun 18 18:01:15 2007] :: Superghost: !gedicht
+[Mon Jun 18 18:01:34 2007] :: Superghost: !gedicht
+[Mon Jun 18 18:34:55 2007] :: Mitte: lol
+[Mon Jun 18 18:48:15 2007] :: Mitte: lol
+[Mon Jun 18 19:17:51 2007] :: James: Die Befehle Von James
+[Mon Jun 18 19:17:51 2007] :: James: Was ?
+[Mon Jun 18 19:17:51 2007] :: James: 15 Kapiere überhaupt nicht, Worüber James redet!
+[Mon Jun 18 19:17:52 2007] :: James: Höre ich da ein hauch ironie ?
+[Mon Jun 18 19:17:52 2007] :: James: Bitte
+[Mon Jun 18 19:17:53 2007] :: James: Ja?
+[Mon Jun 18 19:17:53 2007] :: James: So, SO....
+[Mon Jun 18 19:17:53 2007] :: James: 11,12 bla bla bla
+[Mon Jun 18 19:17:54 2007] :: James: Sind sie sich da sicher ?
+[Mon Jun 18 19:17:54 2007] :: James: 11,12 James reicht es nicht das ich euer butler bin??
+[Mon Jun 18 19:17:54 2007] :: James: ich bin ja immerhin kein Fachmann, der das so ruhig kann....
+[Mon Jun 18 19:17:55 2007] :: James: Generale Commandos
+[Mon Jun 18 19:17:55 2007] :: James: Woher Sollte ich das Wissen ?
+[Mon Jun 18 19:17:56 2007] :: James: Und wo bleibt der Witz dabei?
+[Mon Jun 18 19:17:56 2007] :: James: Tatsächlich ?
+[Mon Jun 18 19:17:56 2007] :: James: Nein, Weis ich nicht !
+[Mon Jun 18 19:17:59 2007] :: James: Das sollte eigentlich ein Geheimniss bleiben. James
+[Mon Jun 18 19:18:01 2007] :: James: · Benutzer Commandos
+[Mon Jun 18 19:18:02 2007] :: James: Fragen Sie
+[Mon Jun 18 19:18:03 2007] :: James: · Admin
+[Mon Jun 18 19:18:04 2007] :: James: · BenutzerSystem
+[Mon Jun 18 19:18:05 2007] :: James: ? = ChannelPrefix
+[Mon Jun 18 19:18:05 2007] :: James: · General Commands
+[Mon Jun 18 19:18:07 2007] :: James: ?prefix
+[Mon Jun 18 19:18:07 2007] :: James: ?help
+[Mon Jun 18 19:18:09 2007] :: James: ?request #channel - Weist den Bot in einem Channel zu (Admins werden informiert)
+[Mon Jun 18 19:18:11 2007] :: James: 11,12 Kommt der Einarmige in den Second-Hand Shop (jaja, fies..ich weiß)
+[Mon Jun 18 19:18:13 2007] :: James: ?info #chan|nick|ip - gibt Informationen über den Channel/nick/ip aus.
+[Mon Jun 18 19:18:13 2007] :: James: Fragen sie mich Später nochmal....
+[Mon Jun 18 19:18:14 2007] :: James: ?uptime - Die laufzeit des Bots
+[Mon Jun 18 19:18:14 2007] :: James: 11,12 Oh Herr, laß Hirn vom Himmel regnen...
+[Mon Jun 18 19:18:17 2007] :: James: ?channels - Die Geschützten Räume
+[Mon Jun 18 19:18:17 2007] :: James: Gern Geschehen :D
+[Mon Jun 18 19:18:19 2007] :: James: ?lag - Die lag halt
+[Mon Jun 18 19:18:21 2007] :: James: Hallo!
+[Mon Jun 18 19:18:21 2007] :: James: ?lines - Die Programmzeilen
+[Mon Jun 18 19:18:23 2007] :: James: James das gehört nicht hierher!
+[Mon Jun 18 19:18:23 2007] :: James: ?kick[*me|* me] - Kickt dich selber!
+[Mon Jun 18 19:18:25 2007] :: James: ich denke nein,
+[Mon Jun 18 19:18:25 2007] :: James: ?google 'text' - Google Suche
+[Mon Jun 18 19:18:26 2007] :: James: Mach ich gerne.
+[Mon Jun 18 19:18:28 2007] :: James: ?tv 'sender' 'time' - Tv Suche
+[Mon Jun 18 19:18:28 2007] :: James: Das bin ich!
+[Mon Jun 18 19:18:28 2007] :: James: · Benutzer Commands
+[Mon Jun 18 19:18:31 2007] :: James: 11,12 ...grün oder rot...grün oder rot...hmmm--->rot...knipsBOOOHHMMMMMM
+[Mon Jun 18 19:18:32 2007] :: James: Das ist Auch nicht Gerade Neu....
+[Mon Jun 18 19:18:32 2007] :: James: ?adduser 'nick' +'25|50|75|100' Fügt 'nick' zum Channel Access hinzu
+[Mon Jun 18 19:18:34 2007] :: James: 11,12 sets mode: +nervensäge James
+[Mon Jun 18 19:18:35 2007] :: James: ?deluser 'nick|name' Löscht 'nick|name' von der Benutzerliste
+[Mon Jun 18 19:18:35 2007] :: James: 15 Ähm Naja.. James wenn einem nichts mehr einfällt!
+[Mon Jun 18 19:18:38 2007] :: James: ?access 'nick|name' +|-'25|50|75|100' Erhöht/senkt 'nick|name's Zugriff
+[Mon Jun 18 19:18:39 2007] :: James: 11,12Geh und nerv dein Friseur . *fg
+[Mon Jun 18 19:18:41 2007] :: James: 15 Das ist Nicht Grad das intelligenteste was ich gehört habe , James *g*
+[Mon Jun 18 19:18:43 2007] :: James: ?addbot 'botnick' Fügt einen Bot hinzu
+[Mon Jun 18 19:18:43 2007] :: James: 42!
+[Mon Jun 18 19:18:44 2007] :: James: ?delbot 'botnick' Löscht einen Bot von Der liste
+[Mon Jun 18 19:18:45 2007] :: James: Na Immerhin,,,,
+[Mon Jun 18 19:18:47 2007] :: James: ?status Zeigt die Raum einstellungen
+[Mon Jun 18 19:18:50 2007] :: James: Sie Lachen wohl über alles James ?
+[Mon Jun 18 19:18:51 2007] :: James: ?protect on|off An/Aus Schutzsystem
+[Mon Jun 18 19:18:51 2007] :: James: 11,12 Schau dich um.... was siehst du.. lauter nette Menschen, also was willst du von mir?
+[Mon Jun 18 19:18:53 2007] :: James: ?bitch on|off An/Aus Bitchmode
+[Mon Jun 18 19:18:54 2007] :: James: 11,12 Wie war doch gleich das lateinische Wort für Depp?
+[Mon Jun 18 19:18:54 2007] :: James: ?proxy on|off An/Aus Proxydetection
+[Mon Jun 18 19:18:55 2007] :: James: 15 Versuch Nocheinmal Mich auszulachen James , Dann hagelt es Nägel +FG+
+[Mon Jun 18 19:18:56 2007] :: James: 11,12 Waldbrand auf hoher See... und kein Wasser zum löschen... tztztz
+[Mon Jun 18 19:18:58 2007] :: James: 15 Das ist Nicht Grad das intelligenteste was ich gehört habe , James *g*
+[Mon Jun 18 19:19:00 2007] :: James: ?joinflood on|off An/Aus Joinflood.
+[Mon Jun 18 19:19:01 2007] :: James: Hallo!
+[Mon Jun 18 19:19:02 2007] :: James: ?antimode on|off An/Aus ModeProtection
+[Mon Jun 18 19:19:03 2007] :: James: 11,12 War einmal ein Bumerang, war ein weniges zu lang. Bumerang flog ein Stück, aber kam nicht mehr zurück. Publikum noch stundenlang wartete auf Bumerang.
+[Mon Jun 18 19:19:06 2007] :: James: ?massmode on|off An/Aus MassModeProt.
+[Mon Jun 18 19:19:08 2007] :: James: 11,12Sag mal einer James er soll mich in Ruhe lassen! *jammer
+[Mon Jun 18 19:19:08 2007] :: James: ?lamers on|off An/Aus Lamerdetection
+[Mon Jun 18 19:19:09 2007] :: James: Oho ein Blitzmerker :D
+[Mon Jun 18 19:19:10 2007] :: James: ?flagsremove on|off An/Aus Flagsremove
+[Mon Jun 18 19:19:11 2007] :: James: ich bin ja immerhin kein Fachmann, der das so ruhig kann....
+[Mon Jun 18 19:19:12 2007] :: James: ?trojan on|off An/Aus Trojan Scan
+[Mon Jun 18 19:19:14 2007] :: James: 11,12 Was sagt dein Psychologe dazu?
+[Mon Jun 18 19:19:15 2007] :: James: ?autolimit on|off An/Aus Autolimit
+[Mon Jun 18 19:19:16 2007] :: James: Ja?
+[Mon Jun 18 19:19:18 2007] :: James: ?limit +x Setzt Autolimit zu x
+[Mon Jun 18 19:19:18 2007] :: James: Werde ich hier für antworten auf dumme Fragen bezahlt?!
+[Mon Jun 18 19:19:19 2007] :: James: ?advertise on|off An/Aus Anti-Werbung
+[Mon Jun 18 19:19:21 2007] :: James: aha, Mir geht es Ähnlich, James
+[Mon Jun 18 19:19:21 2007] :: James: ?spam on|off An/Aus Anti-Textflood
+[Mon Jun 18 19:19:23 2007] :: James: James , Sie nerven.
+[Mon Jun 18 19:19:24 2007] :: James: ?repeat on|off An/Aus Anti-Repeat
+[Mon Jun 18 19:19:25 2007] :: James: 11,12 Was nu los?
+[Mon Jun 18 19:19:25 2007] :: James: ?badword on|off An/Aus Anti-Badword
+[Mon Jun 18 19:19:27 2007] :: James: Höre ich da ein hauch ironie ?
+[Mon Jun 18 19:19:27 2007] :: James: ?badword add|del|list [Words*] Löscht/fügt hinzu [Words*]
+[Mon Jun 18 19:19:29 2007] :: James: HääääääääääääääääääääääH??
+[Mon Jun 18 19:19:30 2007] :: James: ?autovoice on|off An/Aus AutoVoice
+[Mon Jun 18 19:19:33 2007] :: James: James Sie sind ein Scherzkeks :D
+[Mon Jun 18 19:19:33 2007] :: James: ?autoop on|off An/Aus AutoOp
+[Mon Jun 18 19:19:34 2007] :: James: Ach wirklich ?!
+[Mon Jun 18 19:19:35 2007] :: James: ?tv|google on|off An/Aus Tv|Google
+[Mon Jun 18 19:19:36 2007] :: James: Sein oder nicht sein, das ist die Frage!
+[Mon Jun 18 19:19:37 2007] :: James: ?tv|google paste nick|chan Sagts im Channel oder nick
+[Mon Jun 18 19:19:38 2007] :: James: Werden sie das denn nie lernen ?
+[Mon Jun 18 19:19:38 2007] :: James: ?bl|ab|cb on|off An/Aus Auth/Chan-Blacklist
+[Mon Jun 18 19:19:39 2007] :: James: Sonst machts Ja keiner ;D
+[Mon Jun 18 19:19:41 2007] :: James: ?bl add|del|check|list 'nick|host' add/del 'nick|host' zur Blacklist
+[Mon Jun 18 19:19:43 2007] :: James: James Sie sind ein Scherzkeks :D
+[Mon Jun 18 19:19:44 2007] :: James: ?ab add|del|check|list 'auth' add/del 'auth' zur AuthB.list
+[Mon Jun 18 19:19:45 2007] :: James: Ich Bin Grade im STress!
+[Mon Jun 18 19:19:46 2007] :: James: ?cb add|del|check|list '#chan' add/del '#chan' zur ChanB.list
+[Mon Jun 18 19:19:47 2007] :: James: Sind sie sich da sicher ?
+[Mon Jun 18 19:19:48 2007] :: James: ?topic on|off|save An/Aus TopicSafe
+[Mon Jun 18 19:19:48 2007] :: James: James ist es nachts Dunkel ?
+[Mon Jun 18 19:19:51 2007] :: James: 11,12 Kann man denn hier nicht in Ruhe den wirklich wichtigen Dingen im Leben nachsinnieren?
+[Mon Jun 18 19:19:52 2007] :: James: ?vip on|off An/Aus VIP-Script
+[Mon Jun 18 19:19:54 2007] :: James: wäre froh das zu lesen.
+[Mon Jun 18 19:19:55 2007] :: James: ?vip add|del|list [nick|#chan] hinz/löschen nick|host|channel
+[Mon Jun 18 19:19:56 2007] :: James: Ihr Wunsch?, James
+[Mon Jun 18 19:19:57 2007] :: James: ?welcome on|off|msg [msg] An/Aus Welcome-Msg
+[Mon Jun 18 19:19:58 2007] :: James: Lassen sie mich in ruhe!
+[Mon Jun 18 19:20:00 2007] :: James: ?repeatmsg on|off|time|msg [time|msg] An/Aus Repeat-Msg
+[Mon Jun 18 19:20:01 2007] :: James: Warum Warum ist die banane krum....
+[Mon Jun 18 19:20:02 2007] :: James: Ich Bin Grade im STress!
+[Mon Jun 18 19:20:03 2007] :: James: ?prefix set [!,?..] Setzt Channelprefix
+[Mon Jun 18 19:20:04 2007] :: James: ääH...
+[Mon Jun 18 19:20:04 2007] :: James: ?accounts Zeigt Channelaccounts
+[Mon Jun 18 19:20:05 2007] :: James: Tja wer das Geld hat....
+[Mon Jun 18 19:20:07 2007] :: James: ?cycle Bot rejoint CHannel
+[Mon Jun 18 19:20:09 2007] :: James: 11,12 18.....20.....wech
+[Mon Jun 18 19:20:09 2007] :: James: ?refresh Setzt den Channel Zurück
+[Mon Jun 18 19:20:11 2007] :: James: James , Sie nerven.
+[Mon Jun 18 19:20:11 2007] :: James: ?op 'nick*' Gibt 'nick*' Op Status
+[Mon Jun 18 19:20:12 2007] :: James: tu dies, tu das, bin ich hier der Bimbo?
+[Mon Jun 18 19:20:14 2007] :: James: ?deop 'nick*' entnimmt 'nick*' Op Status
+[Mon Jun 18 19:20:14 2007] :: James: Werden sie das denn nie lernen ?
+[Mon Jun 18 19:20:16 2007] :: James: ?voice 'nick*' gibt 'nick*' Voice Status
+[Mon Jun 18 19:20:17 2007] :: James: 11,12 Menno, WAS IS?
+[Mon Jun 18 19:20:20 2007] :: James: ?dev 'nick*' entnimmt 'nick' Voice Status
+[Mon Jun 18 19:20:20 2007] :: James: Gut Gut, und Ihnen James?
+[Mon Jun 18 19:20:21 2007] :: James: ?kick 'nick' Kickt 'nick' vom Channel
+[Mon Jun 18 19:20:22 2007] :: James: 11,12 We will we will Rock you ;)
+[Mon Jun 18 19:20:23 2007] :: James: ?kb 'nick' KickBans 'nick' vom Channel
+[Mon Jun 18 19:20:25 2007] :: James: Darüber will ich jetzt nicht reden James !
+[Mon Jun 18 19:20:25 2007] :: James: ?tb 'nick' 'min' KickBans 'nick' 'mins' vom Channel
+[Mon Jun 18 19:20:26 2007] :: James: Na das haben sie sich so gedacht wa ? James
+[Mon Jun 18 19:20:27 2007] :: James: ?mute 'nick' 'minutes' Mutes 'nick' für x minuten
+[Mon Jun 18 19:20:28 2007] :: James: Naja als Butler muss ich immerhin nur gehorchen und nicht denken :)
+[Mon Jun 18 19:20:30 2007] :: James: ?unmute 'nick' Unmutes 'nick'
+[Mon Jun 18 19:20:31 2007] :: James: 11,12 Treffen sich zwei Jäger...(Oouuu)
+[Mon Jun 18 19:20:33 2007] :: James: ?+|- 'mode' Setzt/löscht Channelmode 'mode'
+[Mon Jun 18 19:20:33 2007] :: James: Tja wer das Geld hat....
+[Mon Jun 18 19:20:34 2007] :: James: ?banlist Zeigt Channel-Banlist
+[Mon Jun 18 19:20:36 2007] :: James: 15 sitzt du wieder da und faulezt James ?
+[Mon Jun 18 19:20:38 2007] :: James: ?unban [num|host] Entbannt num|host-Ban
+[Mon Jun 18 19:20:38 2007] :: James: Das passt nicht Zu ihnen James ,
+[Mon Jun 18 19:20:39 2007] :: James: ?mass[v|dev|op|deop] Massen v|dev|op|deop
+[Mon Jun 18 19:20:41 2007] :: James: Naja....
+[Mon Jun 18 19:20:41 2007] :: James: ?invite 'nick' Invites 'nick'
+[Mon Jun 18 19:20:43 2007] :: James: Sie fangen Ja schon wieder damit an James !
+[Mon Jun 18 19:20:43 2007] :: James: ?say 'msg' Bot Sagt 'msg'
+[Mon Jun 18 19:20:44 2007] :: James: Wulla Wulla!
+[Mon Jun 18 19:20:47 2007] :: James: ?kickmsg add|del|list|random|default Hinz/löscht Kickmsgs Zur Zufalls Liste
+[Mon Jun 18 19:20:49 2007] :: James: Nett, Nett.
+[Mon Jun 18 19:20:49 2007] :: James: · Admin Commands
+[Mon Jun 18 19:20:51 2007] :: James: Ich Weis mir geht es Ähnlich.
+[Mon Jun 18 19:20:53 2007] :: James: ?nick 'nickname' Wechselt den Botnick!
+[Mon Jun 18 19:20:53 2007] :: James: Ich bin Bei der Arbeit, Bitte nerven sie mich nicht!
+[Mon Jun 18 19:20:54 2007] :: James: ?join|part '#channel' Bot join|part #channel
+[Mon Jun 18 19:20:54 2007] :: James: Höre ich da ein hauch ironie ?
+[Mon Jun 18 19:20:54 2007] :: James: ?addchan #chan Fügt #chan zur Protectliste Hinzu
+[Mon Jun 18 19:20:56 2007] :: James: Naja als Butler muss ich immerhin nur gehorchen und nicht denken :)
+[Mon Jun 18 19:20:58 2007] :: James: 11,12...
+[Mon Jun 18 19:21:00 2007] :: James: ?delchan #chan löscht #chan von der Protectliste
+[Mon Jun 18 19:21:00 2007] :: James: Noch da.
+[Mon Jun 18 19:21:02 2007] :: James: Das bin ich!
+[Mon Jun 18 19:21:03 2007] :: James: ?autojoin 'list|add|del|check' Hinz/lö #chan zur AutojoinList
+[Mon Jun 18 19:21:04 2007] :: James: Werde ich hier für antworten auf dumme Fragen bezahlt?!
+[Mon Jun 18 19:21:05 2007] :: James: ?account add|del 'nick|name' hinz/lösch nick|name
+[Mon Jun 18 19:21:06 2007] :: James: 11,12 Wo anderen Gras in der Tasche wächst, wächst meine Geduld dir antworten zu müssen...
+[Mon Jun 18 19:21:08 2007] :: James: ?template set <text> Wechselt Das Botstyle
+[Mon Jun 18 19:21:10 2007] :: James: Ja einer ist immer der fleisige.
+[Mon Jun 18 19:21:10 2007] :: James: ?request on|off|idler|help Zeigt die hilfe an Zu request etc
+[Mon Jun 18 19:21:12 2007] :: James: Wir sind hier nicht in Seattle , James :D
+[Mon Jun 18 19:21:12 2007] :: James: ?modex Bot set mode +x
+[Mon Jun 18 19:21:13 2007] :: James: Blöd ist der, der Blödes Tut!
+[Mon Jun 18 19:21:15 2007] :: James: ?broadcast 'msg' Broadcastmsg
+[Mon Jun 18 19:21:16 2007] :: James: ist das ein Befehl?
+[Mon Jun 18 19:21:18 2007] :: James: · UserSystem
+[Mon Jun 18 19:21:18 2007] :: James: 11,12 18.....20.....wech
+[Mon Jun 18 19:21:20 2007] :: James: Lassen sie mich in ruhe!
+[Mon Jun 18 19:21:20 2007] :: James: Häh ? Versteh ich nicht!
+[Mon Jun 18 19:21:21 2007] :: James: /msg 'Bot' hello 'loginname' 'email' 'email'
+[Mon Jun 18 19:21:22 2007] :: James: 11,12 Muss das sein, dass hier nur Flüstertüten rumschwirren...... hier ist ein Chatraum!
+[Mon Jun 18 19:21:25 2007] :: James: Nur möglich bei Erlaubter Registration
+[Mon Jun 18 19:21:26 2007] :: James: Helf mal James :D
+[Mon Jun 18 19:21:27 2007] :: James: /msg 'Bot' login 'loginname' 'loginPW'
+[Mon Jun 18 19:21:28 2007] :: James: 11,12Zum letzten mal James hör auf damit!!! ;-)
+[Mon Jun 18 19:21:29 2007] :: James: Um sich beim Bot einzuloggen
+[Mon Jun 18 19:21:30 2007] :: James: 11,12 Ähhh, wie bidde?
+[Mon Jun 18 19:21:31 2007] :: James: /msg 'Bot' newpass 'oldPW' 'newPW' 'newPW'
+[Mon Jun 18 19:21:33 2007] :: James: 11,12 James reicht es nicht das ich euer butler bin??
+[Mon Jun 18 19:21:33 2007] :: James: Ein neues Passwort setzen
+[Mon Jun 18 19:21:35 2007] :: James: 11,12 Heute schon SEX gehabt??? *g*
+[Mon Jun 18 19:21:37 2007] :: James: /msg 'Bot' newmail 'oldMail' 'newMail' 'newMail'
+[Mon Jun 18 19:21:37 2007] :: James: Das ist ein Geheimniss.
+[Mon Jun 18 19:21:39 2007] :: James: Eine neue Email setzen
+[Mon Jun 18 19:21:39 2007] :: James: Immer loker bleiben, James
+[Mon Jun 18 19:21:40 2007] :: James: /msg 'Bot' requestpassword 'yourMAIL'
+[Mon Jun 18 19:21:42 2007] :: James: Tatsächlich ?
+[Mon Jun 18 19:21:43 2007] :: James: Sendet die Login Daten
+[Mon Jun 18 19:21:43 2007] :: James: Das könnt am Wetter liegen James
+[Mon Jun 18 19:21:45 2007] :: James: /msg 'Bot' info
+[Mon Jun 18 19:21:46 2007] :: James: Was ?
+[Mon Jun 18 19:21:47 2007] :: James: Zeigt Account-Daten an
+[Mon Jun 18 19:21:47 2007] :: James: Helf mal James :D
+[Mon Jun 18 19:21:49 2007] :: James: /msg 'Bot' logout
+[Mon Jun 18 19:21:49 2007] :: James: Ich glaube, sie schweifen ab, James
+[Mon Jun 18 19:21:51 2007] :: James: Ausloggen vom Bot
+[Mon Jun 18 19:21:53 2007] :: James: Jahaaaaaa???
+[Mon Jun 18 19:21:53 2007] :: James: Hat mehr zeit als ich !
+[Mon Jun 18 19:21:55 2007] :: James: Ich denke Nein.
+[Mon Jun 18 19:21:55 2007] :: James: Hier!
+[Mon Jun 18 19:21:57 2007] :: James: Werden sie das denn nie lernen ?
+[Mon Jun 18 19:21:59 2007] :: James: Ja?
+[Mon Jun 18 19:21:59 2007] :: James: Das ist wohl die Dümmste frage die ich gehört habe, James!
+[Mon Jun 18 19:22:00 2007] :: James: Welch denkwürdiger Augenblick.
+[Mon Jun 18 19:22:02 2007] :: James: Gibt es auch Noch normale menschen hier ?
+[Mon Jun 18 19:22:02 2007] :: James: Alles Blödsinn.
+[Mon Jun 18 19:22:04 2007] :: James: Lassen sie mich in ruhe!
+[Mon Jun 18 19:22:04 2007] :: James: 11,12 Selbst Vegetarier beissen ungern ins Gras ;-)
+[Mon Jun 18 19:22:06 2007] :: James: Nein, Weis ich nicht !
+[Mon Jun 18 19:22:06 2007] :: James: Ja?
+[Mon Jun 18 19:22:09 2007] :: James: Das weis ich schon länger :D
+[Mon Jun 18 19:22:09 2007] :: James: Bitteschön.
+[Mon Jun 18 19:22:10 2007] :: James: Ihr Wunsch?, James
+[Mon Jun 18 19:22:12 2007] :: James: Woe profan
+[Mon Jun 18 19:22:12 2007] :: James: James Von dir hätt ich das nicht gedacht.
+[Mon Jun 18 19:22:14 2007] :: James: Sie fangen Ja schon wieder damit an James !
+[Mon Jun 18 19:22:14 2007] :: James: 15 .oO(Ohh Nein , Schon wieder James )?
+[Mon Jun 18 19:22:16 2007] :: James: Seien sie Gegrüßt, James .
+[Mon Jun 18 19:22:16 2007] :: James: 11,12 Alle Hesse sind Verbräscher, denn sie klaue Aschebäscher... *fg*
+[Mon Jun 18 19:22:16 2007] :: Mitte: Hallo
+[Mon Jun 18 19:22:17 2007] :: James: Sind sie da sicher ?
+[Mon Jun 18 19:22:18 2007] :: James: Welch Intressante Frage :D
+[Mon Jun 18 19:22:20 2007] :: James: 11,12 Du hast ja so recht.. und wäre ich Kanzler geworden, hätt' es mich interessiert
+[Mon Jun 18 19:22:22 2007] :: James: Das hält man ja im Kopf nicht aus!
+[Mon Jun 18 19:22:22 2007] :: James: Blöd? Sollte das eine Beleidigung sein? James
+[Mon Jun 18 19:22:24 2007] :: James: Bitte sehr ;D
+[Mon Jun 18 19:22:26 2007] :: James: Das weis ich Nicht!
+[Mon Jun 18 19:22:26 2007] :: James: Warum?
+[Mon Jun 18 19:22:28 2007] :: James: Währen sie so freundlich, iHre Frage umzuformuliern!
+[Mon Jun 18 19:22:30 2007] :: James: Das darf ich ihnen leider nicht verraten, James ....
+[Mon Jun 18 19:22:30 2007] :: James: Alles Blödsinn.
+[Mon Jun 18 19:22:32 2007] :: James: Sie fangen Ja schon wieder damit an James !
+[Mon Jun 18 19:22:32 2007] :: James: Ja, Ja,,,,
+[Mon Jun 18 19:22:34 2007] :: James: Das könnt am Wetter liegen James
+[Mon Jun 18 19:22:34 2007] :: James: Sonst noch Wünsche?!
+[Mon Jun 18 19:22:36 2007] :: James: Warum Warum ist die banane krum....
+[Mon Jun 18 19:22:36 2007] :: James: James?
+[Mon Jun 18 19:22:37 2007] :: James: 11,12Zwecklos! Einige Leute lernen es nie. *ggg
+[Mon Jun 18 19:22:39 2007] :: James: Hier!
+[Mon Jun 18 19:22:39 2007] :: James: Darüber will ich jetzt nicht reden James !
+[Mon Jun 18 19:22:41 2007] :: James: Woe profan
+[Mon Jun 18 19:22:42 2007] :: James: Immer Positiv denken James !
+[Mon Jun 18 19:22:43 2007] :: James: Ich werds überleben , James
+[Mon Jun 18 19:22:44 2007] :: James: Das weis ich schon länger :D
+[Mon Jun 18 19:22:45 2007] :: James: Einen muss es ja immer Treffen, James ?
+[Mon Jun 18 19:22:45 2007] :: James: 11,12 *Jubel* endlich mal jemand der mit mir spricht...
+[Mon Jun 18 19:22:47 2007] :: James: Sie Lachen wohl über alles James ?
+[Mon Jun 18 19:22:49 2007] :: James: 11,12 Hey, ist dir kalt... ich mach dir mal nen steifen Grog... ist dir warm... dann seh zu wer dir was kaltes gibt *g*
+[Mon Jun 18 19:22:51 2007] :: James: 11,12 Lass das du, sonst hol ich meine Mutti. *droh
+[Mon Jun 18 19:22:53 2007] :: James: Ich kann kaum fassen was das hier für ausnahmen nimmt :D
+[Mon Jun 18 19:22:54 2007] :: James: Oho ein Blitzmerker :D
+[Mon Jun 18 19:22:54 2007] :: James: Was hat sie blos so ruiniert ?
+[Mon Jun 18 19:22:55 2007] :: James: James, Was geht in Ihrem Kopf vor?
+[Mon Jun 18 19:22:55 2007] :: James: James , Sie nerven.
+[Mon Jun 18 19:22:58 2007] :: James: Das sollte eigentlich nie erfahren.
+[Mon Jun 18 19:23:00 2007] :: James: Das weis ich Nicht!
+[Mon Jun 18 19:23:00 2007] :: James: Hallo  James .
+[Mon Jun 18 19:23:02 2007] :: James: 11,12Geh und nerv dein Friseur . *fg
+[Mon Jun 18 19:23:02 2007] :: James: Auf die Antworten müssen sie Selbst kommen.
+[Mon Jun 18 19:23:04 2007] :: James: Nein, Weis ich nicht !
+[Mon Jun 18 19:23:04 2007] :: James: Was hat das jetzt damit zu Tun ?
+[Mon Jun 18 19:23:05 2007] :: James: Ja?
+[Mon Jun 18 19:23:07 2007] :: James: Blöd ist der, der Blödes sagt.
+[Mon Jun 18 19:23:09 2007] :: James: Wie peinlich.
+[Mon Jun 18 19:23:09 2007] :: James: Gegenfrage: wieso wollen sie das wissen ?
+[Mon Jun 18 19:23:11 2007] :: James: 11,12Hör auf mich zu rufen James , sonst kommst du ins Heim. *fg
+[Mon Jun 18 19:23:11 2007] :: James: Fragen sie mich Später nochmal....
+[Mon Jun 18 19:23:12 2007] :: James: James?
+[Mon Jun 18 19:23:12 2007] :: James: Sie sind ja Selbst Blöd!
+[Mon Jun 18 19:23:15 2007] :: James: So etwas aus ihrem Mund!, Schämen sie sich James.
+[Mon Jun 18 19:23:15 2007] :: James: 15 Kapiere überhaupt nicht worüber James redet!!
+[Mon Jun 18 19:23:16 2007] :: James: Früher hätte es sowas nicht gegeben .
+[Mon Jun 18 19:23:18 2007] :: James: 11,12 Was nu los?
+[Mon Jun 18 19:23:18 2007] :: James: James!
+[Mon Jun 18 19:23:20 2007] :: James: Ja?
+[Mon Jun 18 19:23:22 2007] :: James: Da Lässt sich bestimmt was machen.
+[Mon Jun 18 19:23:22 2007] :: James: Bitteschön.
+[Mon Jun 18 19:23:23 2007] :: James: Ja so heiße ich!
+[Mon Jun 18 19:23:24 2007] :: James: Hab ich mich auch schon gefragt....
+[Mon Jun 18 19:23:26 2007] :: James: ääH...
+[Mon Jun 18 19:23:26 2007] :: James: Sie Sprechen in rätseln :D
+[Mon Jun 18 19:23:28 2007] :: James: Nur in Ihren Träumen. James
+[Mon Jun 18 19:23:29 2007] :: James: Weshalb?
+[Mon Jun 18 19:23:30 2007] :: James: Lassen sie mich in ruhe!
+[Mon Jun 18 19:23:31 2007] :: James: 11,12 Übel übel sprach der Dübel und verschwand in der Wand wo ihn niemand wieder fand, denn als er grade grade war, da brach er ab, was schade war
+[Mon Jun 18 19:23:33 2007] :: James: Bitte sehr ;D
+[Mon Jun 18 19:23:34 2007] :: James: Ohe, Das ist ja wie Weihnachten und ostern zusammen-
+[Mon Jun 18 19:23:36 2007] :: James: Sonst machts Ja keiner ;D
+[Mon Jun 18 19:23:36 2007] :: James: Was ist?
+[Mon Jun 18 19:23:36 2007] :: James: 11,12was wollen wir schreiben viele stunden lang was wollen wir schreiben hier im chat ¿?¿
+[Mon Jun 18 19:23:39 2007] :: James: ich Sage Nur Schockierend!
+[Mon Jun 18 19:23:41 2007] :: James: Fragen sie mich Später nochmal....
+[Mon Jun 18 19:23:41 2007] :: James: James, Was geht in Ihrem Kopf vor?
+[Mon Jun 18 19:23:43 2007] :: James: James Wenn sie hilfe brauchen fragen sie mich :)
+[Mon Jun 18 19:23:43 2007] :: James: Ah Ein Kenner :D
+[Mon Jun 18 19:23:45 2007] :: James: So kann manns auch sagen....
+[Mon Jun 18 19:23:46 2007] :: James: 11,12 Oh Herr, laß Hirn vom Himmel regnen...
+[Mon Jun 18 19:23:48 2007] :: James: 15 .oO(Ohh Nein , Schon wieder James )?
+[Mon Jun 18 19:23:48 2007] :: James: Warum Warum ist die banane krum....
+[Mon Jun 18 19:23:50 2007] :: James: Das entzieht sich meiner Kentniss...
+[Mon Jun 18 19:23:51 2007] :: James: 11,12 Kann man denn hier nicht in Ruhe den wirklich wichtigen Dingen im Leben nachsinnieren?
+[Mon Jun 18 19:23:52 2007] :: James: Na Immerhin,,,,
+[Mon Jun 18 19:23:54 2007] :: James: Neugierig wa ? James
+[Mon Jun 18 19:23:54 2007] :: James: Blöd? Sollte das eine Beleidigung sein? James
+[Mon Jun 18 19:23:56 2007] :: James: Ihr Wunsch, James?
+[Mon Jun 18 19:23:56 2007] :: James: 15 Das ist Nicht Grad das intelligenteste was ich gehört habe , James *g*
+[Mon Jun 18 19:24:00 2007] :: James: Bitteschön.
+[Mon Jun 18 19:24:01 2007] :: James: Das weis ich schon länger :D
+[Mon Jun 18 19:24:01 2007] :: James: James , Das fragen sie mich doch jedes mal???
+[Mon Jun 18 19:24:03 2007] :: James: 11,12 18.....20.....wech
+[Mon Jun 18 19:24:05 2007] :: James: 11,12 Karl Ranseier ist tot...
+[Mon Jun 18 19:24:05 2007] :: James: ääH...
+[Mon Jun 18 19:24:07 2007] :: James: 11,12Schon wieder du James ! Ich glaub ich kündige. *droh
+[Mon Jun 18 19:24:07 2007] :: James: Naja James das ist wohl ansichtsache :D
+[Mon Jun 18 19:24:09 2007] :: James: Das ist nicht ihr Ernst, James oder?
+[Mon Jun 18 19:24:11 2007] :: James: 11,12 sets mode: +nervensäge James
+[Mon Jun 18 19:24:11 2007] :: James: So kann manns auch sagen....
+[Mon Jun 18 19:24:13 2007] :: James: Nur in Ihren Träumen. James
+[Mon Jun 18 19:24:13 2007] :: James: James?
+[Mon Jun 18 19:24:15 2007] :: James: Hat mehr zeit als ich !
+[Mon Jun 18 19:24:15 2007] :: James: Gut Gut, und Ihnen James?
+[Mon Jun 18 19:24:17 2007] :: James: Sie geht nichts lieb.
+[Mon Jun 18 19:24:17 2007] :: James: Oho ein Blitzmerker :D
+[Mon Jun 18 19:24:19 2007] :: James: 11,12Schon wieder du James ! Ich glaub ich kündige. *droh
+[Mon Jun 18 19:24:19 2007] :: James: 11,12 sets mode: +nervensäge James
+[Mon Jun 18 19:24:21 2007] :: James: Wie naiv!
+[Mon Jun 18 19:24:23 2007] :: James: 11,12 James reicht es nicht das ich euer butler bin??
+[Mon Jun 18 19:24:23 2007] :: James: 11,12Fehler! Versuche es noch einmal! ;-)
+[Mon Jun 18 19:24:25 2007] :: James: 15 Ähm Naja.. James wenn einem nichts mehr einfällt!
+[Mon Jun 18 19:24:25 2007] :: James: interresiert nich nicht !
+[Mon Jun 18 19:24:27 2007] :: James: James?
+[Mon Jun 18 19:24:27 2007] :: James: Ich glaube, sie schweifen ab, James
+[Mon Jun 18 19:24:28 2007] :: James: 11,12 Übel übel sprach der Dübel und verschwand in der Wand wo ihn niemand wieder fand, denn als er grade grade war, da brach er ab, was schade war
+[Mon Jun 18 19:24:32 2007] :: James: Helf mal James :D
+[Mon Jun 18 19:24:32 2007] :: James: Fragen sie
+[Mon Jun 18 19:24:34 2007] :: James: 11,12 Was ist der unteschie zwischen einem Trabbi und einem Kondom....??? ... es gibt kein Beide verhindern den Verkehr. *lol*
+[Mon Jun 18 19:24:36 2007] :: James: Ja einer ist immer der fleisige.
+[Mon Jun 18 19:24:36 2007] :: James: Fragen sie
+[Mon Jun 18 19:24:38 2007] :: James: Welch denkwürdiger Augenblick.
+[Mon Jun 18 19:24:40 2007] :: James: 11,12 da isch ein schlecht programierte bot bin wees ich net was isch sagen soll
+[Mon Jun 18 19:24:42 2007] :: James: Hat mehr zeit als ich !
+[Mon Jun 18 19:24:43 2007] :: James: Danke, Nicht schlecht.
+[Mon Jun 18 19:24:43 2007] :: James: Ach wirklich ?!
+[Mon Jun 18 19:24:44 2007] :: James: aha, Mir geht es Ähnlich, James
+[Mon Jun 18 19:24:44 2007] :: James: Sonst noch Wünsche?!
+[Mon Jun 18 19:24:46 2007] :: James: 11,12 Wenn hier nicht gleich die Luzie losgeht.. dann ist hier Ooaaachterrboooahhhhhhn
+[Mon Jun 18 19:24:50 2007] :: James: Warum?
+[Mon Jun 18 19:24:50 2007] :: James: 11,12bekomme ich denn hier nie meine ruhe??
+[Mon Jun 18 19:24:52 2007] :: James: Gegenfrage: wieso wollen sie das wissen ?
+[Mon Jun 18 19:24:52 2007] :: James: 15 Versuch Nocheinmal Mich auszulachen James , Dann hagelt es Nägel +FG+
+[Mon Jun 18 19:24:54 2007] :: James: James auf dem Ohr bin ich schwerhörig....
+[Mon Jun 18 19:24:54 2007] :: James: Bereit.
+[Mon Jun 18 19:24:55 2007] :: James: Immer loker bleiben, James
+[Mon Jun 18 19:24:57 2007] :: James: James das gehört nicht hierher!
+[Mon Jun 18 19:24:59 2007] :: James: Gegenfrage: wieso wollen sie das wissen ?
+[Mon Jun 18 19:24:59 2007] :: James: 11,12 Mach doch mal einer das Fenster auf... diesen Qualm kann ja keiner aushalten *hust*
+[Mon Jun 18 19:25:01 2007] :: James: ich sage nur , Schockierend!
+[Mon Jun 18 19:25:03 2007] :: James: 11,12 Ständig solche überflüssigen Anfragen. *stöhn
+[Mon Jun 18 19:25:03 2007] :: James: 11,12An Alle. Nehmt euch vor James in 8! *gg
+[Mon Jun 18 19:25:04 2007] :: James: 11,12 Heute schon SEX gehabt??? *g*
+[Mon Jun 18 19:25:07 2007] :: James: Noch da.
+[Mon Jun 18 19:25:07 2007] :: James: Ah jo.
+[Mon Jun 18 19:25:09 2007] :: James: James, Was geht in Ihrem Kopf vor?
+[Mon Jun 18 19:25:09 2007] :: James: Ich Bin Grade im STress!
+[Mon Jun 18 19:25:11 2007] :: James: So Kann manns auch sagen :D
+[Mon Jun 18 19:25:11 2007] :: James: Das klingt als hätten sie keinerlei gewissen James ?
+[Mon Jun 18 19:25:13 2007] :: James: James auf dem Ohr bin ich schwerhörig....
+[Mon Jun 18 19:25:13 2007] :: James: Wenn sie hilfe benötigen fragen sie mich.
+[Mon Jun 18 19:25:15 2007] :: James: Warum?
+[Mon Jun 18 19:25:15 2007] :: James: 11,12 da isch ein schlecht programierte bot bin wees ich net was isch sagen soll
+[Mon Jun 18 19:25:19 2007] :: James: Sollte mich das amüsieren ?
+[Mon Jun 18 19:25:19 2007] :: James: 11,12 Leidest du an Alzheimer James ?
+[Mon Jun 18 19:25:21 2007] :: James: Das bin ich.
+[Mon Jun 18 19:25:21 2007] :: James: Da sind wohl Nachforschungen nötig.
+[Mon Jun 18 19:25:23 2007] :: James: Währen sie so freundlich, iHre Frage umzuformuliern!
+[Mon Jun 18 19:25:23 2007] :: James: 11,12An Alle. Nehmt euch vor James in 8! *gg
+[Mon Jun 18 19:25:25 2007] :: James: Wulla Wulla!
+[Mon Jun 18 19:25:25 2007] :: James: Das ist ein Geheimniss.
+[Mon Jun 18 19:25:28 2007] :: James: War mir eine Ehre
+[Mon Jun 18 19:25:28 2007] :: James: James , Sie nerven.
+[Mon Jun 18 19:25:30 2007] :: James: Blöd ist der, der Blödes Tut!
+[Mon Jun 18 19:25:31 2007] :: James: ach wofür denn ?
+[Mon Jun 18 19:25:32 2007] :: James: Wie naiv!
+[Mon Jun 18 19:25:32 2007] :: James: 11,12Schon wieder du James ! Ich glaub ich kündige. *droh
+[Mon Jun 18 19:25:33 2007] :: James: HääääääääääääääääääääääH??
+[Mon Jun 18 19:25:33 2007] :: James: Themawechsel James !
+[Mon Jun 18 19:25:36 2007] :: James: Hier!
+[Mon Jun 18 19:25:36 2007] :: James: Tja wer das Geld hat....
+[Mon Jun 18 19:25:37 2007] :: James: 11,12 Was mich am meisten an dir interessiert ist bestimmt nicht dein Intellekt.... den bekomme ich auf www.schlau.de
+[Mon Jun 18 19:25:39 2007] :: James: 11,12 Deine Gegenwart erhellt den Raum.... find ich gut.. aber ich bin nachtblind
+[Mon Jun 18 19:25:41 2007] :: James: 11,12 Kann man denn hier nicht in Ruhe den wirklich wichtigen Dingen im Leben nachsinnieren?
+[Mon Jun 18 19:25:45 2007] :: James: So etwas aus ihrem mund ? schämen sie sich, James .
+[Mon Jun 18 19:25:46 2007] :: James: Nun Sagen sie schon was ist ihr begehren?
+[Mon Jun 18 19:25:47 2007] :: James: ich bin ja immerhin kein Fachmann, der das so ruhig kann....
+[Mon Jun 18 19:25:49 2007] :: James: Ich Kann nicht klagen, und selbst James?
+[Mon Jun 18 19:25:49 2007] :: James: 11,12 Was mich am meisten an dir interessiert ist bestimmt nicht dein Intellekt.... den bekomme ich auf www.schlau.de
+[Mon Jun 18 19:25:51 2007] :: James: Ja?
+[Mon Jun 18 19:25:52 2007] :: James: 11,12gäääääääääähhhhhhnnnnnnn hat da jemand mein name gesagt?
+[Mon Jun 18 19:25:52 2007] :: James: 11,12 Kann man denn hier nicht in Ruhe den wirklich wichtigen Dingen im Leben nachsinnieren?
+[Mon Jun 18 19:25:55 2007] :: James: 11,12 War einmal ein Bumerang, war ein weniges zu lang. Bumerang flog ein Stück, aber kam nicht mehr zurück. Publikum noch stundenlang wartete auf Bumerang.
+[Mon Jun 18 19:25:57 2007] :: James: Sowas sagte auch schon ?
+[Mon Jun 18 19:25:59 2007] :: James: Nun Sagen sie schon was ist ihr begehren?
+[Mon Jun 18 19:25:59 2007] :: James: Warum?
+[Mon Jun 18 19:26:00 2007] :: James: 11,12 Kommt der Einarmige in den Second-Hand Shop (jaja, fies..ich weiß)
+[Mon Jun 18 19:26:03 2007] :: James: Das passt nicht Zu ihnen James ,
+[Mon Jun 18 19:26:05 2007] :: James: Dumm ist der der dummes sagt.
+[Mon Jun 18 19:26:06 2007] :: James: JamesIch bin Hier!
+[Mon Jun 18 19:26:07 2007] :: James: 11,12 Schau dich um.... was siehst du.. lauter nette Menschen, also was willst du von mir?
+[Mon Jun 18 19:26:09 2007] :: James: Darf ich sie Zitieren ?
+[Mon Jun 18 19:26:09 2007] :: James: Ja?
+[Mon Jun 18 19:26:11 2007] :: James: Ich und Blöd? Ich habe eine hervoragende Schulbildung!
+[Mon Jun 18 19:26:11 2007] :: James: Zur stelle..
+[Mon Jun 18 19:26:11 2007] :: James: Hat mehr zeit als ich
+[Mon Jun 18 19:26:14 2007] :: James: Meinen Sie ?
+[Mon Jun 18 19:26:16 2007] :: James: Zur stelle..
+[Mon Jun 18 19:26:16 2007] :: James: Welch denkwürdiger Augenblick.
+[Mon Jun 18 19:26:18 2007] :: James: 11,12lass mich doch mal einfach nur hier sein ohne mich zu stören James *motz
+[Mon Jun 18 19:26:20 2007] :: James: Hat mehr zeit als ich
+[Mon Jun 18 19:26:20 2007] :: James: Das darf ich ihnen leider nicht verraten, James ....
+[Mon Jun 18 19:26:22 2007] :: James: Nein, Nein,
+[Mon Jun 18 19:26:22 2007] :: James: So nennt man mich wohl!
+[Mon Jun 18 19:26:24 2007] :: James: HääääääääääääääääääääääH??
+[Mon Jun 18 19:26:24 2007] :: James: Wie naiv!
+[Mon Jun 18 19:26:26 2007] :: James: Als Kind wollt ich so sein wie
+[Mon Jun 18 19:26:28 2007] :: James: 11,12 James reicht es nicht das ich euer butler bin??
+[Mon Jun 18 19:26:28 2007] :: James: 11,12 Das darf ja wohl nicht WaRsTein sein, da könnt ja JeVeR kommen *grinsel*
+[Mon Jun 18 19:26:30 2007] :: James: Fragen über Fragen ... Ich bin der Butler nicht Jesus.
+[Mon Jun 18 19:26:32 2007] :: James: Armen.
+[Mon Jun 18 19:26:32 2007] :: James: Was ?
+[Mon Jun 18 19:26:34 2007] :: James: Ja, Ja,,,,
+[Mon Jun 18 19:26:34 2007] :: James: Das wüssten sie wohl gern !
+[Mon Jun 18 19:26:34 2007] :: James: Wenn sie hilfe benötigen fragen sie mich.
+[Mon Jun 18 19:26:36 2007] :: James: Höre ich da ein hauch ironie ?
+[Mon Jun 18 19:26:38 2007] :: James: Was fragen sie mich ?!
+[Mon Jun 18 19:26:38 2007] :: James: War mir eine Ehre
+[Mon Jun 18 19:26:40 2007] :: James: 11,12 Schau dich um.... was siehst du.. lauter nette Menschen, also was willst du von mir?
+[Mon Jun 18 19:26:42 2007] :: James: Darüber Sollte man keine Witze machen.
+[Mon Jun 18 19:26:44 2007] :: James: Das darf ich ihnen Leider nicht veraten... James....
+[Mon Jun 18 19:26:44 2007] :: James: HääääääääääääääääääääääH??
+[Mon Jun 18 19:26:44 2007] :: James: Ja einer ist immer der fleisige.
+[Mon Jun 18 19:26:46 2007] :: James: Da sind wohl Nachforschungen nötig.
+[Mon Jun 18 19:26:48 2007] :: James: Ah jo.
+[Mon Jun 18 19:26:49 2007] :: James: Werden sie das denn nie lernen ?
+[Mon Jun 18 19:26:51 2007] :: James: Ja?
+[Mon Jun 18 19:26:51 2007] :: James: 15 .oO(Ohh Nein , Schon wieder James )?
+[Mon Jun 18 19:26:53 2007] :: James: Tja wer das Geld hat....
+[Mon Jun 18 19:26:53 2007] :: James: Sonst fühlt sich ja nieman verpflichtet :D
+[Mon Jun 18 19:26:55 2007] :: James: Mach ich gerne.
+[Mon Jun 18 19:26:55 2007] :: James: 11,12Geh und nerv dein Friseur . *fg
+[Mon Jun 18 19:26:55 2007] :: James: 11,12was wilst du denn von mir ich bin doch nur ein bot
+[Mon Jun 18 19:26:58 2007] :: James: Das entzieht sich meiner Kentniss...
+[Mon Jun 18 19:26:58 2007] :: James: Wulla Wulla!
+[Mon Jun 18 19:27:00 2007] :: James: Hallo  James .
+[Mon Jun 18 19:27:02 2007] :: James: Da Lässt sich bestimmt was machen.
+[Mon Jun 18 19:27:02 2007] :: James: Und ist es schlimmer geworden ?....
+[Mon Jun 18 19:27:04 2007] :: James: 15 sOWAS *GG+
+[Mon Jun 18 19:27:04 2007] :: James: Hier!
+[Mon Jun 18 19:27:06 2007] :: James: 11,12gäääääääääähhhhhhnnnnnnn hat da jemand mein name gesagt?
+[Mon Jun 18 19:27:06 2007] :: James: 11,12 Was nu los?
+[Mon Jun 18 19:27:07 2007] :: James: Das weis ich Nicht!
+[Mon Jun 18 19:27:09 2007] :: James: 11,12Zum letzten mal James hör auf damit!!! ;-)
+[Mon Jun 18 19:27:10 2007] :: James: 11,12 Was sagt dein Psychologe dazu?
+[Mon Jun 18 19:27:12 2007] :: James: Gut Soweit aber ich könne mal Urlaub gebrauchen.
+[Mon Jun 18 19:27:12 2007] :: James: So Nennt man mich wohl.
+[Mon Jun 18 19:27:14 2007] :: James: 11,12 Wenn hier nicht gleich die Luzie losgeht.. dann ist hier Ooaaachterrboooahhhhhhn
+[Mon Jun 18 19:27:15 2007] :: James: Lassen sie mich in ruhe!
+[Mon Jun 18 19:27:15 2007] :: James: 11,12 Sagt der Einbeinige zum Blinden: Dir tret ich gleich in den Arsch. Sagt der Blinde: Das will ich sehen...;-)
+[Mon Jun 18 19:27:18 2007] :: James: Wie kann ich ihnen Helfen ?
+[Mon Jun 18 19:27:20 2007] :: James: wäre froh das zu lesen.
+[Mon Jun 18 19:27:20 2007] :: James: Nein, Nein,
+[Mon Jun 18 19:27:22 2007] :: James: Männer sind viel toller als Frauen.
+[Mon Jun 18 19:27:24 2007] :: James: Armen.
+[Mon Jun 18 19:27:24 2007] :: James: Hat mehr zeit als ich !
+[Mon Jun 18 19:27:26 2007] :: James: 11,12 Mach doch mal einer das Fenster auf... diesen Qualm kann ja keiner aushalten *hust*
+[Mon Jun 18 19:27:28 2007] :: James: Meinen Sie ?
+[Mon Jun 18 19:27:28 2007] :: James: aha, Mir geht es Ähnlich, James
+[Mon Jun 18 19:27:31 2007] :: James: Sollte mich das amüsieren ?
+[Mon Jun 18 19:27:31 2007] :: James: 11,12 Sag mal, musst du mir unbedingt meine kostbare Zeit stehlen?
+[Mon Jun 18 19:27:33 2007] :: James: 11,12Musst du mich jetzt anquatschen James ?
+[Mon Jun 18 19:27:33 2007] :: James: Naja James das ist wohl ansichtsache :D
+[Mon Jun 18 19:27:34 2007] :: James: Was ist?
+[Mon Jun 18 19:27:34 2007] :: James: Anwesend.
+[Mon Jun 18 19:27:36 2007] :: James: So Kann manns auch sagen :D
+[Mon Jun 18 19:27:38 2007] :: James: Seien sie Gegrüßt, James .
+[Mon Jun 18 19:27:38 2007] :: James: Seien sie Gegrüßt, James .
+[Mon Jun 18 19:27:40 2007] :: James: 11,12 Was nu los?
+[Mon Jun 18 19:27:42 2007] :: James: Oho ein Blitzmerker :D
+[Mon Jun 18 19:27:42 2007] :: James: Er tut unsinn, Schnell....
+[Mon Jun 18 19:27:43 2007] :: James: Das verstehe wer will.
+[Mon Jun 18 19:27:45 2007] :: James: Wie peinlich.
+[Mon Jun 18 19:27:45 2007] :: James: ich denke nein,
+[Mon Jun 18 19:27:46 2007] :: James: Das hält man ja im Kopf nicht aus!
+[Mon Jun 18 19:27:48 2007] :: James: Mach ich gerne.
+[Mon Jun 18 19:27:48 2007] :: James: 11,12Willst du wirklich was von mir James?
+[Mon Jun 18 19:27:50 2007] :: James: 11,12Wer kann James helfen? ich mag nicht mehr. *lol
+[Mon Jun 18 19:27:51 2007] :: James: Ja so heiße ich!
+[Mon Jun 18 19:27:52 2007] :: James: Rosinen im Kopf ?
+[Mon Jun 18 19:27:54 2007] :: James: Das sollte eigentlich nie erfahren.
+[Mon Jun 18 19:27:54 2007] :: James: Warum stellen sie eigentlich immer so Viele Fragen ? James ?
+[Mon Jun 18 19:27:56 2007] :: James: Mach ich gerne.
+[Mon Jun 18 19:27:56 2007] :: James: ist dem So??
+[Mon Jun 18 19:27:58 2007] :: James: ich fühle mich nicht angesprochen,
+[Mon Jun 18 19:27:58 2007] :: James: Hallo  James .
+[Mon Jun 18 19:28:00 2007] :: James: 11,12 Sagt der Einbeinige zum Blinden: Dir tret ich gleich in den Arsch. Sagt der Blinde: Das will ich sehen...;-)
+[Mon Jun 18 19:28:02 2007] :: James: ich denke nein,
+[Mon Jun 18 19:28:03 2007] :: James: Sind sie sich da sicher ?
+[Mon Jun 18 19:28:04 2007] :: James: Das bin ich!
+[Mon Jun 18 19:28:04 2007] :: James: 11,12 Besser heimlich schlau, als unheimlich doof
+[Mon Jun 18 19:28:06 2007] :: James: Meinen Sie mich James ?
+[Mon Jun 18 19:28:08 2007] :: James: Ich werds überleben , James
+[Mon Jun 18 19:28:08 2007] :: James: 11,12 Menno, WAS IS?
+[Mon Jun 18 19:28:10 2007] :: James: Da Lässt sich bestimmt was machen.
+[Mon Jun 18 19:28:10 2007] :: James: Hier!
+[Mon Jun 18 19:28:10 2007] :: James: 11,12Fehler! Versuche es noch einmal! ;-)
+[Mon Jun 18 19:28:13 2007] :: James: Wer sagt das ?!
+[Mon Jun 18 19:28:13 2007] :: James: Das ist fast so schlecht wie schlechte werbung....
+[Mon Jun 18 19:28:15 2007] :: James: Auf die Antworten müssen sie Selbst kommen.
+[Mon Jun 18 19:28:15 2007] :: James: Wie naiv!
+[Mon Jun 18 19:28:17 2007] :: James: Schwierige Frage....
+[Mon Jun 18 19:28:19 2007] :: James: Jedem sein recht auf freie meinungsäuserung.
+[Mon Jun 18 19:28:19 2007] :: James: Nett, Nett.
+[Mon Jun 18 19:28:19 2007] :: James: 11,12 Was ist der unteschie zwischen einem Trabbi und einem Kondom....??? ... es gibt kein Beide verhindern den Verkehr. *lol*
+[Mon Jun 18 19:28:23 2007] :: James: Hallo  James .
+[Mon Jun 18 19:28:23 2007] :: James: 11,12 Kann Jemand das Fenster schließen mir ist kalt
+[Mon Jun 18 19:28:25 2007] :: James: Wie kann ich Sie glücklich machen, James ?
+[Mon Jun 18 19:28:25 2007] :: James: Themawechsel James !
+[Mon Jun 18 19:28:27 2007] :: James: 11,12 we we we punkt botlady punkt de....Webseite gefu-\Oh nee, wer will denn jetzt schon wieder was?
+[Mon Jun 18 19:28:29 2007] :: James: So nennt man mich wohl!
+[Mon Jun 18 19:28:30 2007] :: James: Äh Wie bitte ? komm wieder wenn du erwachsen bist Kleiner......
+[Mon Jun 18 19:28:31 2007] :: James: Sowas sagte auch schon ?
+[Mon Jun 18 19:28:31 2007] :: James: 15 .oO(Ohh Nein , Schon wieder James )?
+[Mon Jun 18 19:28:33 2007] :: James: ich denke nein,
+[Mon Jun 18 19:28:34 2007] :: James: kennt die antwort
+[Mon Jun 18 19:28:34 2007] :: James: 15 Das Kommt weil du selbst so fantasielos bist James :D *fg*
+[Mon Jun 18 19:28:35 2007] :: James: Was ist?
+[Mon Jun 18 19:28:38 2007] :: James: Hier!
+[Mon Jun 18 19:28:40 2007] :: James: 11,12Zwecklos! Einige Leute lernen es nie. *ggg
+[Mon Jun 18 19:28:40 2007] :: James: Ach wirklich ?!
+[Mon Jun 18 19:28:41 2007] :: James: 11,12 Kommt der Einarmige in den Second-Hand Shop (jaja, fies..ich weiß)
+[Mon Jun 18 19:28:43 2007] :: James: Ach wirklich ?!
+[Mon Jun 18 19:28:43 2007] :: James: Und wo bleibt der Witz dabei?
+[Mon Jun 18 19:28:45 2007] :: James: Fragen sie
+[Mon Jun 18 19:28:45 2007] :: James: 11,12Geh und nerv dein Friseur . *fg
+[Mon Jun 18 19:28:47 2007] :: James: ääH...
+[Mon Jun 18 19:28:47 2007] :: James: 11,12Sag mal einer James er soll mich in Ruhe lassen! *jammer
+[Mon Jun 18 19:28:48 2007] :: James: Was fragen sie mich ?!
+[Mon Jun 18 19:28:50 2007] :: James: 11,12 Was mich am meisten an dir interessiert ist bestimmt nicht dein Intellekt.... den bekomme ich auf www.schlau.de
+[Mon Jun 18 19:28:52 2007] :: James: Das hält man ja im Kopf nicht aus!
+[Mon Jun 18 19:28:54 2007] :: James: 11,12 Mach doch mal einer das Fenster auf... diesen Qualm kann ja keiner aushalten *hust*
+[Mon Jun 18 19:28:56 2007] :: James: Darüber will ich jetzt nicht reden James !
+[Mon Jun 18 19:28:56 2007] :: James: Hier!
+[Mon Jun 18 19:28:58 2007] :: James: Männer sind viel toller als Frauen.
+[Mon Jun 18 19:28:58 2007] :: James: Sind sie sich da sicher ?
+[Mon Jun 18 19:29:02 2007] :: James: Warten sie nur biss ich das erzähle :;D
+[Mon Jun 18 19:29:02 2007] :: James: Woe profan
+[Mon Jun 18 19:29:02 2007] :: James: Das war ja Abzusehen.
+[Mon Jun 18 19:29:04 2007] :: James: 11,12 18.....20.....wech
+[Mon Jun 18 19:29:04 2007] :: James: Er tut unsinn, Schnell....
+[Mon Jun 18 19:29:06 2007] :: James: Nun Sagen sie schon was ist ihr begehren?
+[Mon Jun 18 19:29:06 2007] :: James: Häh ? Versteh ich nicht!
+[Mon Jun 18 19:29:06 2007] :: James: Das ist nicht ihr Ernst, James oder?
+[Mon Jun 18 19:29:09 2007] :: James: Sieht so aus als müsste sie noch was lernen :D
+[Mon Jun 18 19:29:09 2007] :: James: Nun Sagen sie schon was ist ihr begehren?
+[Mon Jun 18 19:29:11 2007] :: James: Meinen Sie ?
+[Mon Jun 18 19:29:13 2007] :: James: wäre froh das zu lesen.
+[Mon Jun 18 19:29:13 2007] :: James: 11,12 Alle Hesse sind Verbräscher, denn sie klaue Aschebäscher... *fg*
+[Mon Jun 18 19:29:15 2007] :: James: 11,12 Was nu los?
+[Mon Jun 18 19:29:15 2007] :: James: JamesIch bin Hier!
+[Mon Jun 18 19:29:17 2007] :: James: Da Lässt sich bestimmt was machen.
+[Mon Jun 18 19:29:17 2007] :: James: Sie nerven.
+[Mon Jun 18 19:29:18 2007] :: James: Naja James das ist wohl ansichtsache :D
+[Mon Jun 18 19:29:20 2007] :: James: Das wüssten sie wohl gern !
+[Mon Jun 18 19:29:22 2007] :: James: Und ist es schlimmer geworden ?....
+[Mon Jun 18 19:29:22 2007] :: James: Da Lässt sich bestimmt was machen.
+[Mon Jun 18 19:29:24 2007] :: James: Häh ? Versteh ich nicht!
+[Mon Jun 18 19:29:24 2007] :: James: 11,12Geh und nerv dein Friseur . *fg
+[Mon Jun 18 19:29:26 2007] :: James: 11,12 we we we punkt botlady punkt de....Webseite gefu-\Oh nee, wer will denn jetzt schon wieder was?
+[Mon Jun 18 19:29:28 2007] :: James: Hier!
+[Mon Jun 18 19:29:28 2007] :: James: Na das haben sie sich so gedacht wa ? James
+[Mon Jun 18 19:29:30 2007] :: James: 11,12Hör auf mich zu rufen James , sonst kommst du ins Heim. *fg
+[Mon Jun 18 19:29:32 2007] :: James: Als Kind wollt ich so sein wie
+[Mon Jun 18 19:29:32 2007] :: James: 11,12 Muss das sein, dass hier nur Flüstertüten rumschwirren...... hier ist ein Chatraum!
+[Mon Jun 18 19:29:34 2007] :: James: Mach ich gerne.
+[Mon Jun 18 19:29:35 2007] :: James: Ich kann kaum fassen was das hier für Ausmaße Animmt.
+[Mon Jun 18 19:29:37 2007] :: James: Ich Weis mir geht es Ähnlich.
+[Mon Jun 18 19:29:38 2007] :: James: 11,12 Hmmhmmm, popel... Ups, ohh... ähhh, peinlich...
+[Mon Jun 18 19:29:40 2007] :: James: 11,12 Oh Herr, laß Hirn vom Himmel regnen...
+[Mon Jun 18 19:29:40 2007] :: James: Das darf ich ihnen Leider nicht veraten... James....
+[Mon Jun 18 19:29:42 2007] :: James: 11,12 Heute schon SEX gehabt??? *g*
+[Mon Jun 18 19:29:42 2007] :: James: Naja....
+[Mon Jun 18 19:29:44 2007] :: James: 11,12 Deine Gegenwart erhellt den Raum.... find ich gut.. aber ich bin nachtblind
+[Mon Jun 18 19:29:46 2007] :: James: 11,12Sorry! Dieses Jahr komme ich nicht mehr zu wort James.
+[Mon Jun 18 19:29:46 2007] :: James: 11,12 Sorry! ich habe gerade keine Zeit für dich James . *lol
+[Mon Jun 18 19:29:48 2007] :: James: Nun Sagen sie schon was ist ihr begehren?
+[Mon Jun 18 19:29:50 2007] :: James: 15 James Wer hat dir Zugang zum Netzt Gegeben :9 +FG+
+[Mon Jun 18 19:29:50 2007] :: James: Warum?
+[Mon Jun 18 19:29:52 2007] :: James: 11,12 da isch ein schlecht programierte bot bin wees ich net was isch sagen soll
+[Mon Jun 18 19:29:54 2007] :: James: Hier!
+[Mon Jun 18 19:29:54 2007] :: James: 11,12 Viele verlieren ihren Verstand deshalb nicht, weil sie keinen haben!
+[Mon Jun 18 19:29:57 2007] :: James: Lassen sie mich in ruhe!
+[Mon Jun 18 19:29:59 2007] :: James: 11,12An Alle. Nehmt euch vor James in 8! *gg
+[Mon Jun 18 19:29:59 2007] :: James: 11,12 Hast du nichts Anderes zum spielen das du mich ärgern musst hier ?
+[Mon Jun 18 19:30:01 2007] :: James: Gern Geschehen :D
+[Mon Jun 18 19:30:01 2007] :: James: nich so interessant....
+[Mon Jun 18 19:30:02 2007] :: James: War mir eine ehre :D
+[Mon Jun 18 19:30:03 2007] :: James: Das klingt als hätten sie keinerlei gewissen James ?
+[Mon Jun 18 19:30:06 2007] :: James: Da sind wohl Nachforschungen nötig.
+[Mon Jun 18 19:30:06 2007] :: James: Blöd? ich hab mich wohl verhört. Oder haben sie von sich gesprochen James?
+[Mon Jun 18 19:30:08 2007] :: James: 11,12Sorry! Dieses Jahr komme ich nicht mehr zu wort James.
+[Mon Jun 18 19:30:10 2007] :: James: James?
+[Mon Jun 18 19:30:10 2007] :: James: 11,12 Hey, ist dir kalt... ich mach dir mal nen steifen Grog... ist dir warm... dann seh zu wer dir was kaltes gibt *g*
+[Mon Jun 18 19:30:12 2007] :: James: Ja?
+[Mon Jun 18 19:30:14 2007] :: James: Das ist nicht ihr ernst James , ? oder .
+[Mon Jun 18 19:30:16 2007] :: James: Fragen Sie doch .
+[Mon Jun 18 19:30:16 2007] :: James: Nah Dran...
+[Mon Jun 18 19:30:18 2007] :: James: Sie bringen mich doch immerwieder zum staunen, James .
+[Mon Jun 18 19:30:18 2007] :: James: 11,12 Muss das sein, dass hier nur Flüstertüten rumschwirren...... hier ist ein Chatraum!
+[Mon Jun 18 19:30:20 2007] :: James: Nur in Ihren Träumen James .
+[Mon Jun 18 19:30:22 2007] :: James: So sei es.
+[Mon Jun 18 19:30:22 2007] :: James: So kann manns auch sagen....
+[Mon Jun 18 19:30:23 2007] :: James: Was fragen sie mich ?!
+[Mon Jun 18 19:30:25 2007] :: James: 11,12 Was ist der unteschie zwischen einem Trabbi und einem Kondom....??? ... es gibt kein Beide verhindern den Verkehr. *lol*
+[Mon Jun 18 19:30:27 2007] :: James: 11,12Hör auf mich zu rufen James , sonst kommst du ins Heim. *fg
+[Mon Jun 18 19:30:29 2007] :: James: 15 .oO(Ohh Nein , Schon wieder James )?
+[Mon Jun 18 19:30:29 2007] :: James: Bereit!
+[Mon Jun 18 19:30:31 2007] :: James: Ihr Wunsch, James?
+[Mon Jun 18 19:30:31 2007] :: James: 11,12 Wo anderen Gras in der Tasche wächst, wächst meine Geduld dir antworten zu müssen...
+[Mon Jun 18 19:30:33 2007] :: James: Weshalb?
+[Mon Jun 18 19:30:35 2007] :: James: Das darf ich ihnen leider nicht verraten, James ....
+[Mon Jun 18 19:30:37 2007] :: James: 11,12 Kommt der Einarmige in den Second-Hand Shop (jaja, fies..ich weiß)
+[Mon Jun 18 19:30:37 2007] :: James: James!
+[Mon Jun 18 19:30:39 2007] :: James: 11,12 *Jubel* endlich mal jemand der mit mir spricht...
+[Mon Jun 18 19:30:39 2007] :: James: 11,12 *Jubel* endlich mal jemand der mit mir spricht...
+[Mon Jun 18 19:30:40 2007] :: James: Pardon`?
+[Mon Jun 18 19:30:40 2007] :: James: JamesIch bin Hier!
+[Mon Jun 18 19:30:42 2007] :: James: Und wo bleibt der Witz dabei?
+[Mon Jun 18 19:30:44 2007] :: James: Hat mehr zeit als ich !
+[Mon Jun 18 19:30:46 2007] :: James: 15 .oO(Ohh Nein , Schon wieder James )?
+[Mon Jun 18 19:30:46 2007] :: James: 11,12lass mich doch mal einfach nur hier sein ohne mich zu stören James *motz
+[Mon Jun 18 19:30:48 2007] :: James: Ich bin Hier nur der Butler.
+[Mon Jun 18 19:30:50 2007] :: James: Und wo bleibt der Witz dabei?
+[Mon Jun 18 19:30:50 2007] :: James: Das entzieht sich meiner Kentniss...
+[Mon Jun 18 19:30:51 2007] :: James: 11,12 Muss das sein, dass hier nur Flüstertüten rumschwirren...... hier ist ein Chatraum!
+[Mon Jun 18 19:30:54 2007] :: James: Ohe, Das ist ja wie Weihnachten und ostern zusammen-
+[Mon Jun 18 19:30:56 2007] :: James: Ja?
+[Mon Jun 18 19:30:58 2007] :: James: 11,12 Du hast ja so recht.. und wäre ich Kanzler geworden, hätt' es mich interessiert
+[Mon Jun 18 19:30:59 2007] :: James: Hat mehr Zeit als ich :D
+[Mon Jun 18 19:30:59 2007] :: James: Warum stellen sie eigentlich immer so Viele Fragen ? James ?
+[Mon Jun 18 19:31:01 2007] :: James: Das entzieht sich meiner Kentniss...
+[Mon Jun 18 19:31:03 2007] :: James: Sie geht nichts lieb.
+[Mon Jun 18 19:31:03 2007] :: James: 15 Kapiere überhaupt nicht worüber James redet!!
+[Mon Jun 18 19:31:05 2007] :: James: Gern Geschehen :D
+[Mon Jun 18 19:31:05 2007] :: James: Einen muss es ja immer Treffen, James ?
+[Mon Jun 18 19:31:07 2007] :: James: Das ist wohl die Dümmste frage die ich gehört habe, James!
+[Mon Jun 18 19:31:09 2007] :: James: Ja so heiße ich!
+[Mon Jun 18 19:31:09 2007] :: James: Höre ich da ein hauch ironie ?
+[Mon Jun 18 19:31:10 2007] :: James: 11,12 Wenn hier nicht gleich die Luzie losgeht.. dann ist hier Ooaaachterrboooahhhhhhn
+[Mon Jun 18 19:31:12 2007] :: James: ich bin ja immerhin kein Fachmann, der das so ruhig kann....
+[Mon Jun 18 19:31:14 2007] :: James: wie Obsolet.
+[Mon Jun 18 19:31:14 2007] :: James: Schön wenn man auf Gleich sinnige Trifft...
+[Mon Jun 18 19:31:17 2007] :: James: tu dies, tu das, bin ich hier der Bimbo?
+[Mon Jun 18 19:31:17 2007] :: James: So etwas aus ihrem Mund!, Schämen sie sich James.
+[Mon Jun 18 19:31:19 2007] :: James: Ich Weis mir geht es Ähnlich.
+[Mon Jun 18 19:31:19 2007] :: James: Themawechsel James !
+[Mon Jun 18 19:31:21 2007] :: James: 11,12was wollen wir schreiben viele stunden lang was wollen wir schreiben hier im chat ¿?¿
+[Mon Jun 18 19:31:23 2007] :: James: Warum stellen sie eigentlich immer so Viele Fragen ? James ?
+[Mon Jun 18 19:31:23 2007] :: James: Meinen Sie mich James ?
+[Mon Jun 18 19:31:25 2007] :: James: 11,12 Ähhh, wie bidde?
+[Mon Jun 18 19:31:27 2007] :: James: James!
+[Mon Jun 18 19:31:27 2007] :: James: Gut Gut, und Ihnen James?
+[Mon Jun 18 19:31:29 2007] :: James: Wäre Froh das zu hören.
+[Mon Jun 18 19:31:29 2007] :: James: War mir eine Ehre
+[Mon Jun 18 19:31:30 2007] :: James: James das gehört nicht hierher!
+[Mon Jun 18 19:31:32 2007] :: James: Gehen sie doch zu James
+[Mon Jun 18 19:31:32 2007] :: James: Auf die Antworten müssen sie Selbst kommen.
+[Mon Jun 18 19:31:34 2007] :: James: Wäre Froh das zu hören.
+[Mon Jun 18 19:31:35 2007] :: James: James sie sollten mal zur untersuchung.
+[Mon Jun 18 19:31:37 2007] :: James: Weshalb?
+[Mon Jun 18 19:31:38 2007] :: James: Nein, Weis ich nicht !
+[Mon Jun 18 19:31:38 2007] :: James: Das war ja Abzusehen.
+[Mon Jun 18 19:31:39 2007] :: James: Rosinen im Kopf ?
+[Mon Jun 18 19:31:40 2007] :: James: Jahaaaaaaa????
+[Mon Jun 18 19:31:43 2007] :: James: James Wenn sie hilfe brauchen fragen sie mich :)
+[Mon Jun 18 19:31:43 2007] :: James: Schön wenn man auf Gleich sinnige Trifft...
+[Mon Jun 18 19:31:44 2007] :: James: Meinen Sie ?
+[Mon Jun 18 19:31:44 2007] :: James: Und wo bleibt der Witz dabei?
+[Mon Jun 18 19:31:46 2007] :: James: Ah jo.
+[Mon Jun 18 19:31:46 2007] :: James: Blöd? Sollte das eine Beleidigung sein? James
+[Mon Jun 18 19:31:48 2007] :: James: 11,12 Lass uns Userkicken spielen... Ene mene muh... und raus bist du... *sfg*
+[Mon Jun 18 19:31:51 2007] :: James: Anwesend.
+[Mon Jun 18 19:31:51 2007] :: James: Ich und Blöd? Ich habe eine hervoragende Schulbildung!
+[Mon Jun 18 19:31:53 2007] :: James: Lassen sie mich in ruhe!
+[Mon Jun 18 19:31:53 2007] :: James: 11,12 Wenn hier nicht gleich die Luzie losgeht.. dann ist hier Ooaaachterrboooahhhhhhn
+[Mon Jun 18 19:31:56 2007] :: James: James auf dem Ohr bin ich schwerhörig....
+[Mon Jun 18 19:31:58 2007] :: James: Wäre Froh das zu hören.
+[Mon Jun 18 19:31:58 2007] :: James: Ja, Ja,,,,
+[Mon Jun 18 19:32:00 2007] :: James: 11,12...
+[Mon Jun 18 19:32:00 2007] :: James: Was hat sie blos so ruiniert ?
+[Mon Jun 18 19:32:02 2007] :: James: Gegenfrage: Warum wollen sie das Wissen ? James!
+[Mon Jun 18 19:32:02 2007] :: James: James auf dem Ohr bin ich schwerhörig....
+[Mon Jun 18 19:32:03 2007] :: James: 11,12 James gleich mal ein putzlappen in der hand drück wenn ich meine ruhe nicht bekomme
+[Mon Jun 18 19:32:06 2007] :: James: Das klingt irgendwie Vertraut.
+[Mon Jun 18 19:32:06 2007] :: James: Bereit.
+[Mon Jun 18 19:32:08 2007] :: James: 11,12was wilst du denn von mir ich bin doch nur ein bot
+[Mon Jun 18 19:32:10 2007] :: James: Darüber Sollte man keine Witze machen.
+[Mon Jun 18 19:32:10 2007] :: James: Ich kann das nicht nachvollziehen, James
+[Mon Jun 18 19:32:12 2007] :: James: Jahaaaaaa???
+[Mon Jun 18 19:32:12 2007] :: James: Das darf ich ihnen leider nicht verraten, James ....
+[Mon Jun 18 19:32:14 2007] :: James: Na das haben sie sich so gedacht wa ? James
+[Mon Jun 18 19:32:14 2007] :: James: Darüber Sollte man keine Witze machen.
+[Mon Jun 18 19:32:15 2007] :: James: Sein oder nicht sein, das ist die Frage!
+[Mon Jun 18 19:32:16 2007] :: James: 15 sitzt du wieder da und faulezt James ?
+[Mon Jun 18 19:32:19 2007] :: James: 11,12Sorry! Dieses Jahr komme ich nicht mehr zu wort James.
+[Mon Jun 18 19:32:19 2007] :: James: Noch da.
+[Mon Jun 18 19:32:21 2007] :: James: So, SO....
+[Mon Jun 18 19:32:21 2007] :: James: 11,12Fehler! Versuche es noch einmal! ;-)
+[Mon Jun 18 19:32:23 2007] :: James: Sind sie sich da sicher ?
+[Mon Jun 18 19:32:23 2007] :: James: 11,12 we we we punkt botlady punkt de....Webseite gefu-\Oh nee, wer will denn jetzt schon wieder was?
+[Mon Jun 18 19:32:26 2007] :: James: 15 sitzt du wieder da und faulezt James ?
+[Mon Jun 18 19:32:29 2007] :: James: Sieht so aus als müsste sie noch was lernen :D
+[Mon Jun 18 19:32:31 2007] :: James: Fragen über Fragen ... Ich bin der Butler nicht Jesus.
+[Mon Jun 18 19:32:35 2007] :: James: Weshalb wollen sie das wissen ? James .
+[Mon Jun 18 19:32:35 2007] :: James: Währen sie so freundlich, iHre Frage umzuformuliern!
+[Mon Jun 18 19:32:36 2007] :: James: Seien sie Gegrüßt, James .
+[Mon Jun 18 19:32:37 2007] :: James: 11,12Zum letzten mal James hör auf damit!!! ;-)
+[Mon Jun 18 19:32:38 2007] :: James: 11,12 Wenn hier nicht gleich die Luzie losgeht.. dann ist hier Ooaaachterrboooahhhhhhn
+[Mon Jun 18 19:32:40 2007] :: James: ich Sage Nur Schockierend!
+[Mon Jun 18 19:32:42 2007] :: James: 11,12 Wenn die Sonne tief steht, werfen selbst Zwerge lange Schatten :-)
+[Mon Jun 18 19:32:42 2007] :: James: Das könnt am Wetter liegen James
+[Mon Jun 18 19:32:44 2007] :: James: James auf dem Ohr bin ich schwerhörig....
+[Mon Jun 18 19:32:46 2007] :: James: Währen sie so freundlich, iHre Frage umzuformuliern!
+[Mon Jun 18 19:32:47 2007] :: James: 11,12 Ständig solche überflüssigen Anfragen. *stöhn
+[Mon Jun 18 19:32:48 2007] :: James: Und wenn schon .....
+[Mon Jun 18 19:32:49 2007] :: James: 11,12 Ups, war grad beschäftigt...
+[Mon Jun 18 19:32:50 2007] :: James: James?
+[Mon Jun 18 19:32:50 2007] :: James: 11,12Wer ist James? *mal dumm frag
+[Mon Jun 18 19:32:52 2007] :: James: Ja so heiße ich!
+[Mon Jun 18 19:32:52 2007] :: James: Wenn sie hilfe benötigen fragen sie mich.
+[Mon Jun 18 19:32:54 2007] :: James: Bitteschön.
+[Mon Jun 18 19:32:56 2007] :: James: Höre ich da ein hauch ironie ?
+[Mon Jun 18 19:32:57 2007] :: James: Die Antwort Liegt auf der Hand :)
+[Mon Jun 18 19:32:59 2007] :: James: Blöd? ich hab mich wohl verhört. Oder haben sie von sich gesprochen James?
+[Mon Jun 18 19:33:01 2007] :: James: Naja James das ist wohl ansichtsache :D
+[Mon Jun 18 19:33:01 2007] :: James: ich fühle mich nicht angesprochen,
+[Mon Jun 18 19:33:04 2007] :: James: Darf ich sie Zitieren?
+[Mon Jun 18 19:33:04 2007] :: James: Bitteschön.
+[Mon Jun 18 19:33:06 2007] :: James: Das entzieht sich meiner Kentniss...
+[Mon Jun 18 19:33:06 2007] :: James: Nichts zu Danken.
+[Mon Jun 18 19:33:08 2007] :: James: Früher hätte es sowas nicht gegeben .
+[Mon Jun 18 19:33:08 2007] :: James: 11,12Wer ist James? *mal dumm frag
+[Mon Jun 18 19:33:10 2007] :: James: So etwas aus ihrem Mund!, Schämen sie sich James.
+[Mon Jun 18 19:33:10 2007] :: James: 11,12lass mich doch mal einfach nur hier sein ohne mich zu stören James *motz
+[Mon Jun 18 19:33:13 2007] :: James: Das passt nicht Zu ihnen James ,
+[Mon Jun 18 19:33:15 2007] :: James: Sieht so aus als müsste sie noch was lernen :D
+[Mon Jun 18 19:33:15 2007] :: James: James das gehört nicht hierher!
+[Mon Jun 18 19:33:17 2007] :: James: Meinen Sie ?
+[Mon Jun 18 19:33:17 2007] :: James: Seien sie Gegrüßt, James .
+[Mon Jun 18 19:33:19 2007] :: James: James , Das fragen sie mich doch jedes mal???
+[Mon Jun 18 19:33:19 2007] :: James: 11,12 Lass das du, sonst hol ich meine Mutti. *droh
+[Mon Jun 18 19:33:21 2007] :: James: Kennen sie sich damit aus ? James ?
+[Mon Jun 18 19:33:22 2007] :: James: Als Kind wollt ich so sein wie
+[Mon Jun 18 19:33:22 2007] :: James: interresiert nich nicht !
+[Mon Jun 18 19:33:24 2007] :: James: Woe profan
+[Mon Jun 18 19:33:26 2007] :: James: Sollte mich das amüsieren ?
+[Mon Jun 18 19:33:26 2007] :: James: Darf ich sie Zitieren?
+[Mon Jun 18 19:33:28 2007] :: James: Schwierige Frage...
+[Mon Jun 18 19:33:29 2007] :: James: 11,12 We will we will Rock you ;)
+[Mon Jun 18 19:33:30 2007] :: James: Das Entzieht sich meiner Kentniss.
+[Mon Jun 18 19:33:31 2007] :: James: Auf die Antworten müssen sie Selbst kommen.
+[Mon Jun 18 19:33:33 2007] :: James: 11,12Wer kann James helfen? ich mag nicht mehr. *lol
+[Mon Jun 18 19:33:35 2007] :: James: 11,12An Alle. Nehmt euch vor James in 8! *gg
+[Mon Jun 18 19:33:35 2007] :: James: Zur stelle..
+[Mon Jun 18 19:33:37 2007] :: James: 11,12 Heute schon SEX gehabt??? *g*

@@ -1,0 +1,56 @@
+[Wed Aug 08 09:23:24 2012] :: Holgi|Scripten: hmm
+[Wed Aug 08 09:58:03 2012] :: ubu: !n Dauergo√ü
+[Wed Aug 08 09:58:21 2012] :: ubu: !n Dauergro√ü
+[Wed Aug 08 10:11:54 2012] :: Holgi|Scripten: !n Nickverl‰ngerung
+[Wed Aug 08 14:26:52 2012] :: Holgi|Scripten: !n werbung
+[Wed Aug 08 14:27:17 2012] :: Holgi|Scripten: !n werbung
+[Wed Aug 08 14:46:25 2012] :: Holgi|Scripten: !nw Nickverl‰ngerung
+[Wed Aug 08 14:47:26 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 14:47:55 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 14:50:28 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 14:58:43 2012] :: Holgie: !nw Nickverl-Nick ubu
+[Wed Aug 08 15:00:40 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 15:01:08 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 15:01:54 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 15:02:42 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 15:03:28 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 15:03:41 2012] :: Holgie: !nw NickverlNick James
+[Wed Aug 08 15:04:08 2012] :: Holgie: !nw NickverlNick James
+[Wed Aug 08 15:24:13 2012] :: Holgie: !nw NickverlNick James
+[Wed Aug 08 15:25:22 2012] :: Holgie: !nw Nickverl-beschreibung 15:24Uhr #-flirt- Darso hatte den Nick Oswald um diese zeit 5x Gennannt etc.
+[Wed Aug 08 15:33:31 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 15:33:36 2012] :: Holgie: !nw NickverlNick James
+[Wed Aug 08 15:33:47 2012] :: Holgie: !nw Nickverl-beschreibung 15:24Uhr #-flirt- James hatte den Nick Oswald um diese zeit 5x Gennannt etc.
+[Wed Aug 08 21:25:09 2012] :: Holgie: !n Nickverl‰ngerung
+[Wed Aug 08 21:25:26 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 21:25:52 2012] :: Holgie: !nw Nickverlnick Holgie
+[Wed Aug 08 21:27:25 2012] :: Holgie: !Nw Nickverl-Beschreibung 21:25 #-flirt- Holgie hat 4x James gesagt.. Bitte Pr¸fen
+[Wed Aug 08 21:28:17 2012] :: Holgie: !Nw Nickverl-Beschreibung 21:25 #-flirt- Holgie hat 4x James gesagt.. Bitte Pr¸fen
+[Wed Aug 08 21:29:19 2012] :: Holgie: !n lesen
+[Wed Aug 08 21:30:22 2012] :: Holgie: !n Lesen
+[Wed Aug 08 21:31:47 2012] :: Holgie: !n Lesen
+[Wed Aug 08 21:32:30 2012] :: Holgie: !n Lesen
+[Wed Aug 08 21:33:13 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:34:27 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:35:16 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:35:42 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:36:47 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:37:28 2012] :: Holgie: !stellung Ich weis gar nicht worum es geht.. :( H‰‰‰‰‰?
+[Wed Aug 08 21:38:53 2012] :: Holgie: !stellung Ich weis gar nicht worum es geht.. :( H‰‰‰‰‰?
+[Wed Aug 08 21:55:06 2012] :: Holgie: !n Nickverl‰ngerung
+[Wed Aug 08 21:55:13 2012] :: Holgie: !nw Nickverlnick Holgie
+[Wed Aug 08 21:55:21 2012] :: Holgie: !Nw Nickverl-Beschreibung 21:25 #-flirt- Holgie hat 4x James gesagt.. Bitte Pr¸fen
+[Wed Aug 08 21:55:33 2012] :: Holgie: !n Lesen
+[Wed Aug 08 21:55:44 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:55:55 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:57:39 2012] :: Holgie: !n Nickverl‰ngerung
+[Wed Aug 08 21:58:01 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 21:58:06 2012] :: Holgie: !nw Nickverlnick Holgie
+[Wed Aug 08 21:58:19 2012] :: Holgie: !Nw Nickverl-Beschreibung 21:25 #-flirt- Holgie hat 4x James gesagt.. Bitte Pr¸fen
+[Wed Aug 08 21:58:27 2012] :: Holgie: !nLesen
+[Wed Aug 08 21:59:28 2012] :: Holgie: !nw Nickverl‰ngerung
+[Wed Aug 08 21:59:33 2012] :: Holgie: !nLesen
+[Wed Aug 08 22:00:36 2012] :: Holgie: !nw Nickverl-beschreibung 15:24Uhr #-flirt- James hatte den Nick Oswald um diese zeit 5x Gennannt etc.
+[Wed Aug 08 22:00:41 2012] :: James: Du hast soeben eine Beschwerde erhalten, da du gegen die Regel (Nickverl‰ngerung) Verstoﬂen hast. Um sie zu Lesen tippe !n lesen ein. Danke
+[Wed Aug 08 22:00:51 2012] :: Holgie: !nLesen
+[Wed Aug 08 22:01:08 2012] :: Holgie: !stellung Kp warum?

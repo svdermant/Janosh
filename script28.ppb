@@ -1,0 +1,1 @@
+ON *:text:!euro*:#: { msg # $2 Euro sind: $round($calc($2 * 1.95583),2) Deutsche Mark }

@@ -1,0 +1,139 @@
+on *:TEXT:-stat:#:{
+  write -a $mircdir $+ Database\Protokoll.txt $time : !stat ( $nick )
+  var %filelines $lines($mircdir $+ Daten\wortzahl. $+ $chan $+ .txt)
+  var %statz 1
+  set %hzahl 1
+  set %mzahl 1
+  set %kzahl 1
+  set %lzahl 1
+  set %nzahl 1
+  set %bzahl 1
+  while (%statz <= %filelines) {
+    set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,%statz)
+    set %position $pos(%statuser,$chr(32),1)
+    set %wuser $mid(%statuser,1,%position)
+    set %szahl $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,s,%wuser)
+    if (%szahl > %hzahl) { set %hzahl %szahl }
+    inc %statz
+  }
+  set %statz 1
+  while (%statz <= %filelines) {
+    set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,%statz)
+    set %position $pos(%statuser,$chr(32),1)
+    set %wuser $mid(%statuser,1,%position)
+    set %szahl $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,s,%wuser)
+    if (%szahl < %hzahl) { 
+      if (%szahl > %mzahl) { set %mzahl %szahl }
+    }
+    inc %statz
+  }
+  set %statz 1
+  while (%statz <= %filelines) {
+    set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,%statz)
+    set %position $pos(%statuser,$chr(32),1)
+    set %wuser $mid(%statuser,1,%position)
+    set %szahl $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,s,%wuser)
+    if (%szahl < %mzahl) {
+      if (%szahl > %kzahl) { set %kzahl %szahl }
+    }
+    inc %statz
+  }
+  set %statz 1
+  while (%statz <= %filelines) {
+    set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,%statz)
+    set %position $pos(%statuser,$chr(32),1)
+    set %wuser $mid(%statuser,1,%position)
+    set %szahl $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,s,%wuser)
+    if (%szahl < %kzahl) {
+      if (%szahl > %lzahl) { set %lzahl %szahl }
+    }
+    inc %statz
+  }
+  set %statz 1
+  while (%statz <= %filelines) {
+    set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,%statz)
+    set %position $pos(%statuser,$chr(32),1)
+    set %wuser $mid(%statuser,1,%position)
+    set %szahl $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,s,%wuser)
+    if (%szahl < %lzahl) {
+      if (%szahl > %nzahl) { set %nzahl %szahl }
+    }
+    inc %statz
+  }
+  set %statz 1
+  while (%statz <= %filelines) {
+    set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,%statz)
+    set %position $pos(%statuser,$chr(32),1)
+    set %wuser $mid(%statuser,1,%position)
+    set %szahl $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,s,%wuser)
+    if (%szahl < %nzahl) {
+      if (%szahl > %bzahl) { set %bzahl %szahl }
+    }
+    inc %statz
+  }
+  set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,w,* %hzahl )
+  set %position $pos(%statuser,$chr(32),1)
+  set %huser $mid(%statuser,1,%position)
+  set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,w,* %mzahl )
+  set %position $pos(%statuser,$chr(32),1)
+  set %muser $mid(%statuser,1,%position)
+  set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,w,* %kzahl )
+  set %position $pos(%statuser,$chr(32),1)
+  set %kuser $mid(%statuser,1,%position)
+  set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,w,* %lzahl )
+  set %position $pos(%statuser,$chr(32),1)
+  set %luser $mid(%statuser,1,%position)
+  set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,w,* %nzahl )
+  set %position $pos(%statuser,$chr(32),1)
+  set %nuser $mid(%statuser,1,%position)
+  set %statuser $read($mircdir $+ Database\wortzahl. $+ $chan $+ .txt,w,* %bzahl )
+  set %position $pos(%statuser,$chr(32),1)
+  set %buser $mid(%statuser,1,%position)
+  msg # 3:9:14]7 Gesamtstatistik von 4 $chan 14[9:3:
+  msg # 3:9:14]7 Quasselstrippe 14[9:3:12 %huser 7mit12 %hzahl 7Worten *gg
+  if ( %mzahl != 1 ) { msg # 3:9:14]7 Gefolgt von 14[9:3:12 %muser 7mit12 %mzahl 7Worten }
+  if ( %kzahl != 1 ) { msg # 3:9:14]7 und 14[9:3:12 %kuser 7mit12 %kzahl 7Worten. }
+  if ( %lzahl != 1 ) { msg # 3:9:14]7 verfolgt von 14[9:3:12 %luser 7mit12 %lzahl 7Worten. }
+  if ( %nzahl != 1 ) { msg # 3:9:14]7 Hinterher hinkt 14[9:3:12 %nuser 7mit12 %nzahl 7Worten. *sfg* }
+  if ( %bzahl != 1 ) { msg # 3:9:14]7 Ganz am ende kommt noch 14[9:3:12 %buser 7mit12 %bzahl 7Worten. *heul* }
+  unset %huser
+  unset %muser
+  unset %kuser
+  unset %luser
+  unset %nuser
+  unset %hzahl
+  unset %mzahl
+  unset %kzahl
+  unset %bzahl
+  unset %lzahl
+  unset %nzahl
+  unset %statuser
+  unset %position
+  unset %wuser
+  unset %szahl
+  unset %statz
+  unset %filelines
+}
+on *:TEXT:-stat*:#:{
+  write -a $mircdir $+ Database\Protokoll.txt $time : !stat $2 ( $nick )
+  if ( $2 == $null ) { msg # 4,0Falsche12 Parameter! Für Hilfe4 !help stat 12eingeben. }
+  elseif ( $2 == $me ) { msg # 12,0Ich darf nicht mitmachen 4*heul }
+  elseif ( $2 ison # ) {
+    set %euzahl $read($mircdir $+ Daten\wortzahl.  $+ $chan $+  .txt,s,$2)
+    if ( %euzahl == $null ) { msg # 4,0 $2 12scheint nichts gesagt zu haben *gg }
+    elseif ( %euzahl <= 100 ) { msg # 4,0 $2 12hat erst4 %euzahl 12worte zum besten gegeben *gg }
+    elseif ( %euzahl >= 101 && %euzahl <= 250 ) { msg # 4,0 $2 12hat sich mit4 %euzahl 12Worten am gespräch beteiligt }
+    elseif ( %euzahl >= 251 && %euzahl <= 500 ) { msg # 4,0 $2 12hat euch mit4 %euzahl 12Worten zugequatscht *lol }
+    elseif ( %euzahl >= 501 && %euzahl <= 1000 ) { msg # 4,0 $2 12hat den Raum mit4 %euzahl 12Worten zugemüllt ;-) }
+    else { msg # 4,0 $2 12hat den Raum mit4 %euzahl 12Worten gefloodet }
+    unset %euzahl
+  }
+  else { msg # 12,0Sorry aber4 $2 12scheint nicht hier zu sein. }
+}
+
+on !*:TEXT:**:#:{
+  var %woerter = $count($1-,$chr(32)) + 1
+  set %wortzahlalt $read($mircdir $+ Datenbase\wortzahl. $+ $chan $+ .txt,s,$nick)
+  %wortzahlneu = $calc(%wortzahlalt + %woerter)
+  write -s $+ $nick $mircdir $+ Database\wortzahl. $+ $chan $+ .txt $nick %wortzahlneu
+}

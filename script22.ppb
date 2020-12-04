@@ -1,0 +1,28 @@
+on *:text:!topic*:#: { 
+  if ($2 == :c: && $3 == :m: && $4 == :t:) { set %topic Willkommen im $chan $5- }
+}
+on qdbop:text:!set:#: { 
+  msg # Das Topic im Channel $chan wurde gesetzt zu:
+  topic $chan $styles(%topic)
+}
+on *:text:!chanstat:#: {
+  set %ops $nick(#,0,o)
+  set %hops $nick(#,0,h)
+  set %vops $nick(#,0,v)
+  set %rest $nick(#,0,r)
+  msg # 5,1:4::0(7C0)14han0(7S0)14tats4::5: 5,1:4::0(7 $+ $chan $+ 0)4::5:
+  msg # 5,1:4::0(7T0)14opic4::5: 5,1:4::0(7 $+ $chan $+ 0)4::5:
+  msg # $chan($chan).topic
+  msg #  5,1:4::0(7M0)14odes4::5: 5,1:4::0(7 $+ $chan $+ 0)4::5: 14 $chan($chan).mode
+  msg # 5,1:4::0(7R0)14ang0(7L0)14iste4::5: 5,1:4::0(7 @ % v & normal 0)4::5:
+  msg $chan 5,1:4::0(7Operatoren0)4::5: 14 $+ %ops 0(07 $+ $round($calc(%ops / $nick(#,0) * 100),2)) $+ % $+ 0)
+  set %gops $round($calc(%ops / $nick(#,0) * 100),2))
+  msg # 5,1:4::0(7Helfer0)4::5: 14 $+ %hops 0(07 $+ $round($calc(%hops / $nick(#,0) * 100),2)) $+ % $+ 0)
+  set %ghops $round($calc(%hops / $nick(#,0) * 100),2))
+  msg $chan 5,1:4::0(7Moderatoren0)4::5: 14 $+ %vops 0(07 $+ $round($calc(%vops / $nick(#,0) * 100),2)) $+ % $+ 0)
+  set %gvops $round($calc(%vops / $nick(#,0) * 100),2))
+  msg $chan 5,1:4::0(7Ohne Status0)4::5: 14 $+ %rest 0(07 $+ $round($calc(%rest / $nick(#,0) * 100),2)) $+ % $+ 0)
+  set %grest $round($calc(%rest / $nick(#,0) * 100),2))  
+  msg # 5,1:4::0(7Gesamt0)4::5: 14 $+ $nick(#,0) 0( $+ 07 $+ $round($calc(%ghops + %gops + %gvops + %grest)) $+ % $+ 0)
+}
+alias q { /timerqdb1 0 1200 /msg #psh $read(qdb.txt) | /msg #PSH Quotescript gestartet. Nächste Quote in 20 min. }

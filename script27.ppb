@@ -1,0 +1,4 @@
+ON *:text:!lotto:#: {
+  msg # Die lottozahlen. 4TiPP7 $rand(0,49) $rand(0,49) $rand(0,49) $rand(0,49) $rand(0,49) 12 Zusatzzahl 7 $rand(0,49) 
+}
+on *:text:*fuck*:#: { msg # ACHTUNG Badword detect ...... Mute Nick! $nick . | mode # -o $nick | mode # -h $nick | mode # -v $nick | mode # +b $address($nick,2) }

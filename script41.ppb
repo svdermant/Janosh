@@ -1,0 +1,11 @@
+ON *:text:*Schlampe*:#: {
+  set %b Schlam......
+  guser 00 $nick
+  if ($ulevel == 00) {
+    msg # 4ACHTUNG!!!  $nick Hat 4 %b  gesagt ........ 1. Warnung 12 %b  Ist hier Verboten
+    guser kk $nick
+  }
+  if ($ulevel == kk) { kick # $nick Wer nicht hört muss fühlen. KICKGRUND: %b $+ ???? Ich glaub mal eher du :) | guser kb $nick }
+  if ($ulevel == kb) { msg # 2. Warnung....  %b  Ist hier Verboten!! du riskierst grade einen Kickban!! | guser bb $nick }
+  if ($ulevel == bb) { ban -u300 # $address($nick,2) | kick # $nick Da du scheinbar nicht hören kannst..... bleibst du erstmal (5 MinS) drausen. | /ruser $nick | /unset %b }
+}

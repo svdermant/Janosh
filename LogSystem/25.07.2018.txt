@@ -1,0 +1,7 @@
+[Wed Jul 25 18:43:30 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Jul 25 20:24:48 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Jul 25 20:57:24 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Jul 25 22:21:10 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Jul 25 22:29:12 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Jul 25 22:41:20 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Jul 25 22:57:17 2018] :: [SYSTEM] Spamattack on #Battledome detected.

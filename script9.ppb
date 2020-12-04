@@ -1,0 +1,46 @@
+on *:TEXT:!Rosen*:*:{
+  /msg $chan 0-------------6{7@6}
+  /msg $chan 0-----------4{4@4} 6{4@6}
+  /msg $chan 0-------12{4@12} 13* 10{4@10} 13* 4{4@4}
+  /msg $chan 0----7{4@7}13* {4@13}13 *11 {4@11}13 *10 {4@10}
+  /msg $chan 0-----3\1 {4@1}13 * 14{4@14}13 * 2{4@2}3 /
+  /msg $chan 0-------3 \ \ \ 4l3 / / /
+  /msg $chan 0---------3\\ \ 4Y3 / //
+  /msg $chan 0-----------3\\ 2l3 //
+  /msg $chan 0------------3\\11Y3//
+  /msg $chan 0------------1 >5=1<
+  /msg $chan 0------------3//13*3\\
+  /msg $chan 12 Hier 4 $2 12 ein Strauß Rosen Eine Karte ist auch mit bei: 4 $3-
+
+}
+on *:TEXT:!gbRosen*:*:{
+  /msg $chan 0-------------6{7@6}
+  /msg $chan 0-----------4{4@4} 6{4@6}
+  /msg $chan 0-------12{4@12} 13* 10{4@10} 13* 4{4@4}
+  /msg $chan 0----7{4@7}13* {4@13}13 *11 {4@11}13 *10 {4@10}
+  /msg $chan 0-----3\1 {4@1}13 * 14{4@14}13 * 2{4@2}3 /
+  /msg $chan 0-------3 \ \ \ 4l3 / / /
+  /msg $chan 0---------3\\ \ 4Y3 / //
+  /msg $chan 0-----------3\\ 2l3 //
+  /msg $chan 0------------3\\11Y3//
+  /msg $chan 0------------1 >5=1<
+  /msg $chan 0------------3//13*3\\
+  /msg $chan 12 Hier 4 $2 12 ein Strauß Rosen 4 Alles GuTe Zum Burzeldach Schnuggel
+  /msg $chan 12 HAB DICH GANZ DOLL LIEB !
+}
+
+on *:TEXT:*püh*:*:{
+  /timer2 1 2 /msg $chan Kartoffel
+  /timer3 1 4 /msg $chan reh
+  /timer4 1 6 /msg $chan *fg*
+}
+on *:text:*hüpf*:#: { /msg $chan 11 *****4 Mal 12 $nick Auffängt 11 ****** }
+on *:text:!away*:#: { /msg $chan $nick 0I4st 0A4Way 0M4it 0G4rund 7: $2- }
+on *:text:!Host*:#:{
+  if ($2 == $null) { /msg # No Such Nick } 
+  else /msg $chan 11 *****Die Host Von $2 ist [[ $address($2 ,1) ]] [[ $address($2 ,2) ]] [[ $address($2 ,3) ]] [[ $address($2 ,4) ]] [[ $address($2 ,5) ]] [[ $address($2 ,6) ]] [[ $address($2 ,7) ]] *** 
+}
+
+on *:text:!Back:#: { /msg $chan $nick 0I4st 0W4IeDer 0D4aaahhaaa 0:4) }
+#on *:text:*Danke*:#:{ /msg $chan Anke *gg* }
+on *:text:*Bitte*:#:{ /msg $chan Brigitte *fg* }

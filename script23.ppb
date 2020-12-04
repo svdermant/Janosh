@@ -1,0 +1,4 @@
+on qdbop:text:!nickreg:#: { /ns register 112233 dj-scyfox@hotmail.de }
+on qdbop:text:!nickauth:#: { /ns identify 112233 }
+on qdbop:text:!chanreg:#: { /cs register $chan Ronboat Registered by $me }
+on qdbop:text:!chanauth:#: { /cs identify $chan Ronboat }

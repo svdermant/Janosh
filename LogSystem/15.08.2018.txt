@@ -1,0 +1,6 @@
+[Wed Aug 15 12:43:42 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Aug 15 12:52:29 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Aug 15 15:07:48 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Aug 15 16:06:42 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Aug 15 21:41:33 2018] :: [LOGIN] Zenturion successfully login. Accountname: Admin
+[Wed Aug 15 21:41:36 2018] :: [SYSTEM] Spamattack on #Battledome detected.

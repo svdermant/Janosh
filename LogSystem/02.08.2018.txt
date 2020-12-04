@@ -1,0 +1,8 @@
+[Thu Aug 02 02:17:02 2018] :: [SYSTEM] Newstickers has been disabled.
+[Thu Aug 02 02:17:02 2018] :: [SYSTEM] Connection Interrupted.
+[Thu Aug 02 02:17:05 2018] :: [SYSTEM] IAL-List successfully updatet for #Support
+[Thu Aug 02 02:17:05 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Thu Aug 02 02:17:05 2018] :: [SYSTEM] Connecting...
+[Thu Aug 02 02:17:08 2018] :: [SYSTEM] Join Protected-Channel
+[Thu Aug 02 02:17:28 2018] :: [SYSTEM] Check Autop/Voice Status
+[Thu Aug 02 02:17:35 2018] :: [SYSTEM] Ready To Work..

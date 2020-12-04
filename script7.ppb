@@ -1,0 +1,1 @@
+on *:text:!news:#: { .timerheise 0 120 sockopen heise www.heise.de 80 }

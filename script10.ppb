@@ -1,0 +1,78 @@
+alias Roulett {
+  /var %server = $server
+  /var %chan = $2
+  /var %nick = $1
+  if (%chan == $null) || (%nick == $null) {
+    /echo 3 -at * Either you didn't specify a nick or you are not on a channel
+    /return
+  }
+  if ([ % $+ Roulett $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] ] != $null) {
+    /echo 3 -at * The nick already got the choice on this channel ;)
+    /return
+  }
+  /msg $chan Willkommen beim Russischen Roulette | /msg $chan %nick $+ Das SPiel hat begonnen! Optionen -drehen -anlegen -abzug )
+  /set %Roulett $+ . $+ $server $+ . $+ %chan $+ . $+ %nick Roulett
+  /timer $+ Roulett $+ . $+ $server $+ . $+ %chan $+ . $+ %nick 1 20 /Roulettkick %server %chan %nick
+}
+on *:nick:{
+  if ([ % $+ Roulett $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] ] == Roulett) {
+    /unset % $+ Roulett $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ]
+    /timer $+ Roulett $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] off
+    /kick $chan $newnick Cheater ;) -> Roulett!! <-
+  }
+}
+alias -l Roulettkick {
+  /var %server = $1
+  /var %chan = $2
+  /var %nick = $3
+  /unset % $+ Roulett $+ . [ $+ [ %server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ]
+  /kick %chan %nick Sry, time is up ;) -> Roulett!! <-
+}
+on *:text:-abzug:#:{
+  /var %server = $server
+  /var %chan = $chan
+  /var %nick = $nick
+  if ([ % $+ Roulett $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] ] == Roulett) {
+    /timer $+ Roulett $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] off
+    /unset % $+ Roulett $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ]
+    /var %action = $rand(1, 6)
+    if (%action == 1) {
+      /msg %chan 4Klack 
+      /msg %chan %nick Puh ;)
+    }
+    elseif (%action == 2) {
+      /msg %chan %nick 4Klack
+    }
+    elseif (%action == 3) {
+      /msg %chan %nick 4Klack
+    }
+    elseif (%action == 4) {
+      /kick %chan %nick tRIPt
+    }
+    elseif (%action == 5) {
+      /kick %chan %nick tRIPt
+      /kick %chan %nick
+    }
+    elseif (%action == 6) {
+      /msg %chan %nick 4Klack
+    }
+  }
+}
+menu nicklist {
+  Slap
+  .-
+  .Roulett { /Roulett $1 }
+  .-
+}
+on *:text:-Spiel Roulett*:#:{
+  /Roulett $3 $chan
+}
+on *:text:-Drehen:#:{
+  /Msg $chan Die Kugel ist in Bewegung
+}
+on *:text:-anlegen:#:{
+  /msg $chan $nick legt die Pistole an.! :-)
+}
+on *:text:-revolver*:#:{
+  /Roulett $2 $chan
+}

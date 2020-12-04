@@ -1,0 +1,6 @@
+[Sun Dec 10 11:01:41 2017] :: [SYSTEM] Newstickers has been disabled.
+[Sun Dec 10 11:01:41 2017] :: [SYSTEM] Connection Interrupted.
+[Sun Dec 10 13:18:34 2017] :: [SYSTEM] Connecting...
+[Sun Dec 10 13:18:38 2017] :: [SYSTEM] Join Protected-Channel
+[Sun Dec 10 13:18:58 2017] :: [SYSTEM] Check Autop/Voice Status
+[Sun Dec 10 13:19:05 2017] :: [SYSTEM] Ready To Work..

@@ -1,0 +1,13 @@
+on !*:JOIN:#: { /msg $chan $read begruss.txt }
+off *:text:*BoSS*:#: { set %o1 $rand(0,$nick(#,0)) | /msg # $read Antwort.txt }
+on *:text:*BigRoN*:#: { set %o1 $rand(0,$nick(#,0)) | /msg # $read Antwort.txt }
+on *:text:*Janosh*:#: { set %o1 $rand(0,$nick(#,0)) | /msg # $read Antwort.txt }
+on *:text:**:#: { 
+  set %t $1- 
+  if (%nc4 isin %t) { set %o1 $rand(0,$nick(#,0)) | /msg # $read Antwort.txt }
+
+}
+
+on *:text:*BiGrON*:#: { set %o1 $rand(0,$nick(#,0)) | /msg # $read Antwort.txt }
+
+ON *:text:!t:#: { set %o1 $rand(0,$nick(#,0)) | msg # $nick(#,%o1) }

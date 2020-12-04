@@ -1,0 +1,5 @@
+[Sun Apr 09 19:12:35 2017] :: [SYSTEM] Connecting...
+[Sun Apr 09 19:12:39 2017] :: [SYSTEM] Join Protected-Channel
+[Sun Apr 09 19:12:59 2017] :: [SYSTEM] Check Autop/Voice Status
+[Sun Apr 09 19:13:01 2017] :: [SYSTEM] Newstickers has been disabled.
+[Sun Apr 09 19:13:01 2017] :: [SYSTEM] Connection Interrupted.

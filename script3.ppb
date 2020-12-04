@@ -1,0 +1,1 @@
+on *:text:!essen:#: { msg # $read es.txt | msg # $read es2.txt }

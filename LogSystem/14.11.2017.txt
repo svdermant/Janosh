@@ -1,0 +1,2 @@
+[Tue Nov 14 01:42:49 2017] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Tue Nov 14 02:19:20 2017] :: [SYSTEM] Spamattack on #Battledome detected.

@@ -1,0 +1,2 @@
+[Wed Apr 18 00:36:40 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Apr 18 23:21:01 2018] :: [SYSTEM] Spamattack on #Battledome detected.

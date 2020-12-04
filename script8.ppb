@@ -1,0 +1,8 @@
+on *:text:!news:#: { /timerheise2 1 1 sockopen heise2 www.heise.de 80 }
+#on *:text:*hatschi*:#: { msg # 4,0 NOTARTZT!!! 12,0 Glaub Da hat wer geniest *sfg* }
+#on *:text:Lach:#: { msg # 12,0 Verlerne Nie zu lachen, 12,4 Denn ein Leben Ohne lachen, 12,9 ist wie Frühling ohne Mai xD } }
+#on *:text:!drinkbar:#: {
+  msg # Hat da wer durst ??? Okay sie können wählen :)
+  msg # Alkoholfreie Getränke:
+  msg # 7!tee !milch !selter !kaffee !kakao !Fanta !cola !pepsi !sprite !Orangensaft !apfelsaft !Pfisichsaft !IceTee !icekAFFEE
+}

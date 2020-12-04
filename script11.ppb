@@ -1,0 +1,10 @@
+on qdbop:text:!rtopic:#: {
+  set %t1 $rand(A,i) $+ $rand(A,i) $+ $rand(a,z) $+ $rand(A,i)
+  set %t2 $rand(A,i) $+ $rand(A,i) $+ $rand(a,z) $+ $rand(A,i)
+  set %t3 $rand(A,i) $+ $rand(A,i) $+ $rand(a,z) $+ $rand(A,i)
+  set %t4 $rand(A,i) $+ $rand(A,i) $+ $rand(a,z) $+ $rand(A,i)
+  /topic # %t1 -|- %t2  -|- %t3  -|- %t4
+}
+on *:text:!code*:#: { 
+  msg # Verschlüssele $2- : $replace($2-,a,4,b,|>,c,<,d,<|,e,3,f,6,g,h,h,f,i,7,j,µ)
+}

@@ -1,0 +1,84 @@
+***************************
+* SHOUTCAST - RADIO-BOT
+*
+* v1.2 ©daGroove
+*
+***************************
+
+
+on *:text:!radio *:#:{
+  if ($2 == help) {
+    msg $chan 9radio-bot befehle:
+    msg $chan 9!radio setstream <url>:<port> 10setzt die stream-url
+    msg $chan 9!radio on 10startet das posten
+    msg $chan 9!radio off 10stoppt das posten
+  }
+  if ($nick isop $chan) {
+    if ($2 == on) && (%r.url) { radiostart $chan | msg $chan 10radio ist nun on... }
+    elseif ($2 == off) && (%r.url) { .timerradio off |  msg $chan 10radio ist nun off... }
+    elseif ($2 == on) || ($2 == off) && (!%r.url) { msg $chan 4fehler! bitte erst stream-url setzen (!radio help) }
+    elseif ($2 == setstream) && ($3) {
+      if ($regex($3,/^(.+\.\w+)\:(\d+)$/)) {
+        set %r.url $remove($regml(1),http://) $regml(2)
+        msg $chan 10stream:9 $gettok(%r.url,1,32) 10port:9 $gettok(%r.url,2,32) 10gesetzt!
+      }
+      else { msg $chan 4fehler! bitte 9!radio setstream <url>:<port> 4eingeben! (bsp.: euer-webradio.de:8888) }
+    }
+  }
+}
+
+alias radiostart { set %r.chan $1 | .timerradio 0 10 radio }
+alias radio { .remove $shortfn($mircdirradio.txt) | sockclose radio | sockopen radio $gettok(%r.url,1,32) $gettok(%r.url,2,32) }
+
+on *:SOCKOPEN:radio: {
+  sockwrite -n $sockname GET /index.html HTTP/1.1
+  sockwrite -n $sockname Host: $+($gettok(%r.url,1,32),:,$gettok(%r.url,2,32))
+  sockwrite -n $sockname User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7) Gecko/20040803 Firefox/0.9.3
+  sockwrite -n $sockname Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+  sockwrite -n $sockname Accept-Language: en-us,en;q=0.5
+  sockwrite -n $sockname Accept-Encoding: gzip,deflate
+  sockwrite -n $sockname Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+  sockwrite -n $sockname Keep-Alive: 300
+  sockwrite -n $sockname Connection: keep-alive
+  sockwrite -n $sockname $crlf
+}
+
+on *:SOCKREAD:radio: {
+  $event &radio
+  bwrite $qt($mircdirradio.txt) -1 -1 &radio
+}
+
+on *:sockclose:radio: {
+  var %i = $lines($shortfn($mircdirradio.txt))
+  while (%i) {
+    if ($regex(test,$read($shortfn($mircdirradio.txt),%i),/Listener Peak: [\S].*<b>([\S].*)</b>[\S].*Average Listen Time: [\S].*<b>([\S].*)</b></td></tr><tr><td width=100 nowrap><font class=default>Stream Title:/)) {
+      if ($remove($regml(test,2),$chr(32)) != %r.time) {
+        set %r.time $remove($regml(test,2),$chr(32))
+        msg %r.chan 9[R] 10durchschnittliche hördauer:9 $replace($regml(test,2),&nbsp;,$chr(32))
+      }
+      if ($remove($regml(test,1),$chr(32)) != %r.peak) {
+        set %r.peak $remove($regml(test,1),$chr(32))
+        msg %r.chan 9[R] 10listener-peak:9 $regml(test,1)
+      }
+    }
+    if ($regex(song,$read($shortfn($mircdirradio.txt),%i),/Current Song: [\S].*<b>([\S].*)</b></td></tr>/)) {
+      if ($remove($regml(song,1),$chr(32)) != %r.song) {
+        set %r.song $remove($regml(song,1),$chr(32))
+        msg %r.chan 9[R] 10song:9 $regml(song,1) 15*14 $+(http://,$+($gettok(%r.url,1,32),:,$gettok(%r.url,2,32)),/listen.pls)
+      }
+    }
+    if ($regex(stat,$read($shortfn($mircdirradio.txt),%i),/Stream Status: [\S].*<b>([\S].*)<B>([\S].*)</b></b>/)) {
+      if ($remove($regml(stat,2),$chr(32)) != %r.hörer) {
+        set %r.hörer $remove($regml(stat,2),$chr(32))
+        msg %r.chan 9[R] 10stream online mit:9 $gettok($regml(stat,1),5-6,32) 14*9 $replace($regml(stat,2),of,von,listeners,zuhörer)
+      }
+    }
+    if ($regex(title,$read($shortfn($mircdirradio.txt),%i),/Stream Title: </font></td><td><font class=default><b>(.*)</b>.*Content Type:/)) {
+      if ($remove($regml(title,1),$chr(32)) != %r.stitle) {
+        set %r.stitle $remove($regml(title,1),$chr(32))
+        msg %r.chan 9[R] 10stream titel:9 $regml(title,1)
+      }
+    }
+    dec %i 1
+  }
+}

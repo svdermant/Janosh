@@ -1,0 +1,17 @@
+[Fri Aug 10 01:29:24 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 01:35:28 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 07:44:33 2018] :: [SYSTEM] Newstickers has been disabled.
+[Fri Aug 10 07:44:33 2018] :: [SYSTEM] Connection Interrupted.
+[Fri Aug 10 07:44:37 2018] :: [SYSTEM] IAL-List successfully updatet for #Support
+[Fri Aug 10 07:44:37 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Fri Aug 10 07:44:37 2018] :: [SYSTEM] Connecting...
+[Fri Aug 10 07:44:41 2018] :: [SYSTEM] Join Protected-Channel
+[Fri Aug 10 07:45:01 2018] :: [SYSTEM] Check Autop/Voice Status
+[Fri Aug 10 07:45:08 2018] :: [SYSTEM] Ready To Work..
+[Fri Aug 10 11:04:27 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 11:08:53 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 11:13:56 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 11:23:45 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 11:52:25 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 23:48:05 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 10 23:54:35 2018] :: [SYSTEM] Spamattack on #Battledome detected.

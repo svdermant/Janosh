@@ -1,0 +1,34 @@
+on *:text:*hitler*:#: {
+  msg # Ich Dulde in Meinem Channel keine Nazis oder sonst welche KriegsLeute.
+  kick # $nick Krieg ist keine Lösung..... Frieden für alle!!!! 4RAUS HIER!!!!
+}
+ON qdbop:text:!badnick*:#: {
+  set %badnick $2
+  set %bc $chan
+  msg # 0,4 Achtung!!! 9,2 %badnick 8Bitte ändere deinen Nick!2_
+  msg # 12,0Gib dazu 4/nick neuerNickname 12ein.
+  timer1 1 10 /lw
+}
+alias lw {
+  if (%badnick ison %bc) {
+    msg %bc 0,4 Achtung!!! 9,2 %badnick 8Letzte Warnung!!!2_
+    timer2a 1 10 /NK
+  }
+}
+alias NK {
+  ban -u300 %bc $address(%badnick,2)
+  kick %bc %badnick 12,0Komm bitte nur mit 4anderen Nicknamen 12wieder!
+  unset %badnick
+  unset %bc
+}
+ON *:text:*schwuchtel*:#: {
+  set %b Schwu......
+  guser 11 $nick
+  if ($ulevel == 11) {
+    msg # 4ACHTUNG!!!  $nick Hat 4 %b  gesagt ........ 1. Warnung 12 %b  Ist hier Verboten
+    guser swkk $nick
+  }
+  if ($ulevel == swkk) { kick # $nick Wer nicht hört muss fühlen. KICKGRUND: %b $+ ???? Ich glaub mal eher du :) | guser swkb $nick }
+  if ($ulevel == swkb) { msg # 2. Warnung....  %b  Ist hier Verboten!! du riskierst grade einen Kickban!! | guser swbb $nick }
+  if ($ulevel == swbb) { ban -u300 # $address($nick,2) | kick # $nick Da du scheinbar nicht hören kannst..... bleibst du erstmal (5 MinS) drausen. | /ruser $nick | /unset %b }
+}

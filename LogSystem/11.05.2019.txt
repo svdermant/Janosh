@@ -1,0 +1,8 @@
+[Sat May 11 15:12:40 2019] :: [SYSTEM] Newstickers has been disabled.
+[Sat May 11 15:12:40 2019] :: [SYSTEM] Connection Interrupted.
+[Sat May 11 15:12:43 2019] :: [SYSTEM] IAL-List successfully updatet for #Support
+[Sat May 11 15:12:43 2019] :: [SYSTEM] IAL-List successfully updatet for #IgameRPG
+[Sat May 11 15:12:43 2019] :: [SYSTEM] Connecting...
+[Sat May 11 15:12:47 2019] :: [SYSTEM] Join Protected-Channel
+[Sat May 11 15:13:07 2019] :: [SYSTEM] Check Autop/Voice Status
+[Sat May 11 15:13:14 2019] :: [SYSTEM] Ready To Work..

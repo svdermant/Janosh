@@ -1,0 +1,10 @@
+[Thu Aug 09 22:08:16 2012] :: SoCId: !n sonstiges
+[Thu Aug 09 22:08:30 2012] :: SoCId: !nw sonstiges
+[Thu Aug 09 23:44:55 2012] :: Holgie: !N Beschwerde
+[Thu Aug 09 23:45:46 2012] :: Holgie: !N Beschwerde
+[Thu Aug 09 23:45:57 2012] :: Holgie: !n Fake
+[Thu Aug 09 23:46:36 2012] :: Holgie: !N Fake-nick Socid
+[Thu Aug 09 23:46:55 2012] :: Holgie: !N Fake-des Will mal nur testen Groﬂer :)
+[Thu Aug 09 23:47:04 2012] :: Holgie: !n send
+[Thu Aug 09 23:47:23 2012] :: SoCId: lol
+[Thu Aug 09 23:47:36 2012] :: SoCId: !n lesen

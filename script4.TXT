@@ -1,0 +1,444 @@
+on *:LOAD:{
+  if (!%MainChannel) { cF2 }
+}
+alias cF2 {
+  set %MainChannel $$?="Enter Main Channel Including #"
+  set %Password $$?="Enter nickname PASSWORD"
+}
+on *:CONNECT:{
+  join %MainChannel
+  ns identify %Password
+  join %LogChan
+}
+
+on *:JOIN:%MainChannel:{
+  if ($istok(%NPC.Names,$nick,32)) { mode %MainChannel +b $Nick | kick %MainChannel $Nick $Left You are on an NPC Name! $Right | halt }
+  notice $nick $Left Welcome to 15MegaRPG14. $Right
+  if ($readini(Players.ini,$nick,Registered) == Yes) { notice $nick $Left You are Already Registered. Please Login: /msg $me `Login <password> $Right }
+  else { notice $nick $Left You are Not registered. Please type: 15/msg $me `Register14 to Play $Right }
+}
+
+alias left { return 4,1[-14 }
+alias right { return 4-] }
+on *:NICK:{
+  if ($newnick ison %MainChannel) {
+    if ($istok(%NPC.Names,$newnick,32)) { mode %MainChannel +b $newNick | kick %MainChannel $newnick $Left NPC Nick Detected $Right }
+  }
+  if ($readini(Players.ini,$nick,LoggedIn) == Yes) { writeini Players.ini $nick LoggedIn No | leavearena $nick | mode %MainChannel -hv $newnick $newnick | msg %MainChannel $left 15 $+ $nick $+ 14(15 $+ $readini(Players.ini,$nick,Character_Name) $+ 14) has Logged out. $Right }
+}
+on *:TEXT:`Register*:?:{
+  if ($readini(Players.ini,$nick,Registered) == Yes) { notice $nick $Left You are Already Registered $Right | halt }
+  if (!$2) || (!$3) { 
+    notice $Nick $Left Syntax: 15/msg $me `Register <CharacterName> <Password>14. Once This is Complete i Will provide You with More Instructions. $Right
+  }
+  if ([ isin $nick) || (] isin $nick) { notice $nick $Left You cannot Register with 15[14 or 15]14 in your Name $Right | halt }
+  if ($2) && ($3) {
+    writeini Players.ini $Nick Registered Yes
+    writeini Players.ini $nick Character_Name $2
+    writeini Players.ini $Nick Password $3
+    writeini Players.ini $Nick Class -
+    writeini Players.ini $Nick HP -
+    writeini Players.ini $Nick MHP -
+    Writeini Players.ini $Nick SP -
+    writeini Players.ini $Nick MSP -
+    writeini Players.ini $Nick Attack -
+    writeini Players.ini $Nick Defence -
+    writeini Players.ini $nick Level 1
+    writeini Players.ini $nick EXP 0
+    writeini Players.ini $nick NextEXP 300
+    writeini Players.ini $nick LoggedIn No
+    writeini Admins.ini Admin $nick No
+    notice $Nick $Left You are Now Registered. Please Login:15 /msg $Me `Login <Password>14 $Right
+  }
+}
+on *:TEXT:`Login*:?:{
+  if ($nick !ison %MainChannel) { notice $nick $Left You must be in15 %MainChannel 14to Play $Right }
+  if ($readini(Players.ini,$nick,Registered) != Yes) { notice $nick $Left You are not Registered. Please type 15/msg $Me `Register14 $Right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == Yes) { notice $Nick $Left You are already Logged In $right | mode %MainChannel +v $nick | halt }
+  if ($readini(Players.ini,$nick,Password) != $2) { notice $nick $left Incorrect Password. $right | halt }
+  LoginNick $nick
+}
+alias LoginNick {
+  writeini Players.ini $1 LoggedIn Yes
+  mode %MainChannel +v $1
+  msg %MainChannel $Left $+ 15 $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) Has Logged In $Right
+  classCheck $1
+  checkModules $1
+  if ($readini(Admins.ini,Admin,$1) == Yes) { invite $1 %LogChan }
+}
+on *:QUIT:{
+  if ($readini(Players.ini,$nick,LoggedIn) == Yes) { writeini Players.ini $nick LoggedIn No }
+}
+
+on *:PART:%MainChannel:{
+  if ($readini(Players.ini,$nick,LoggedIn) == Yes) { writeini Players.ini $nick LoggedIn No }
+}
+alias ClassCheck {
+  if ($readini(Players.ini,$1,Class) == -) { 
+    notice $1 $Left You Must Set a Class. To Do this Type 15`Class <Class>14 In15 %MainChannel $Left
+    notice $1 $Left To see Class List type `ClassList $Right
+  }
+}
+on *:TEXT:`Class*:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) != -) { notice $nick $left You already have a Class. You are a15 $readini(Players.ini,$nick,Class) $right | halt }
+  if ($1 == `ClassList) {  
+    notice $nick $Left Classes as are as Follows: $Right
+    notice $Nick $Left 4Vampire 8Fairy 14Ninja 3Magician $right
+    notice $Nick $left Type 15`Class <class with no colors>14 to select $right
+  }
+  if ($1 == `Class) {
+    if ($2 == Vampire) {
+      writeini Players.ini $Nick Class Vampire
+      writeini Players.ini $Nick MHP $rand(50,100)
+      writeini Players.ini $Nick MSP $rand(50,100)
+      writeini Players.ini $Nick Attack $rand(20,50)
+      writeini Players.ini $Nick Defence $rand(20,50)
+      writeini Players.ini $Nick Level 1
+      setAttacks $nick
+    }
+    if ($2 == Fairy) {
+      writeini Players.ini $Nick Class Fairy
+      writeini Players.ini $Nick MHP $rand(50,100)
+      writeini Players.ini $Nick MSP $rand(50,100)
+      writeini Players.ini $Nick Attack $rand(20,50)
+      writeini Players.ini $Nick Defence $rand(20,50)
+      writeini Players.ini $Nick Level 1
+      setAttacks $nick
+    }
+    if ($2 == Ninja) {
+      writeini Players.ini $Nick Class Ninja
+      writeini Players.ini $Nick MHP $rand(50,100)
+      writeini Players.ini $Nick MSP $rand(50,100)
+      writeini Players.ini $Nick Attack $rand(20,50)
+      writeini Players.ini $Nick Defence $rand(20,50)
+      writeini Players.ini $Nick Level 1
+      setAttacks $Nick
+    }
+    if ($2 == Magician) {
+      writeini Players.ini $Nick Class Magician
+      writeini Players.ini $Nick MHP $rand(50,100)
+      writeini Players.ini $Nick MSP $rand(50,100)
+      writeini Players.ini $Nick Attack $rand(20,50)
+      writeini Players.ini $Nick Defence $rand(20,50)
+      writeini Players.ini $Nick Level 1 
+      setAttacks $Nick
+    }
+  }
+}
+alias SetAttacks {
+  if ($readini(Players.ini,$1,Class) == Vampire) {
+    writeini Attacks.ini $1 Attacks Bite
+    writeini Attacks.ini $1 Bite Yes
+    writeini Attacks.ini $1 FairyDust No
+    writeini Attacks.ini $1 Magic No
+    writeini Attacks.ini $1 Kill No
+  }
+  if ($readini(Players.ini,$1,Class) == Fairy) {
+    writeini Attacks.ini $1 Attacks FairyDust
+    writeini Attacks.ini $1 Bite No
+    writeini Attacks.ini $1 FairyDust Yes
+    writeini Attacks.ini $1 Magic No
+    writeini Attacks.ini $1 Kill No
+  }
+  if ($readini(Players.ini,$1,Class) == Ninja) {
+    writeini Attacks.ini $1 Attacks Kill
+    writeini Attacks.ini $1 Bite No
+    writeini Attacks.ini $1 FairyDust No
+    writeini Attacks.ini $1 Magic No
+    writeini Attacks.ini $1 Kill Yes
+  }
+  if ($readini(Players.ini,$1,Class) == Magician) {
+    writeini Attacks.ini $1 Attacks Magic
+    writeini Attacks.ini $1 Bite Yes
+    writeini Attacks.ini $1 FairyDust No
+    writeini Attacks.ini $1 Magic Yes
+    writeini Attacks.ini $1 Kill No
+  }
+  notice $1 $left Class Set. Type 15`Attacks14 to View your Attacks and 15`Stats14 to see your stats $right
+  heal $1
+}
+alias heal {
+  writeini Players.ini $1 HP $readini(Players.ini,$1,MHP)
+  writeini Players.ini $1 SP $readini(Players.ini,$1,MSP)
+  notice $1 $Left You are Fully Healed $Right
+}
+alias checkModules {
+  UpdateModule.Ranks $1
+  Module.Money $1
+}
+on *:TEXT:`Attacks:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  notice $nick $Left Your Attacks are: $readini(Attacks.ini,$nick,Attacks) $Right
+  notice $Nick $Left to Use an Attack type `<attackname> <target> While in Arena. $Right
+}
+on *:TEXT:`Heal:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if ($readini(Players.ini,$nick,Fighting) == Yes) { notice $Nick $Left You Must Leave the Arena First $Right | halt }
+  timerHeal $+ $Nick 1 10 heal $Nick
+  notice $Nick $Left you will be Healed in 10 Seconds $Right
+}
+on *:TEXT:`DelAccount:?:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  remini Players.ini $Nick
+  remini Attacks.ini $Nick
+  remini Admins.ini $nick
+  remini Bank.ini $Nick
+  notice $Nick $Left Account Deleted $Right
+  mode %MainChannel -v $Nick
+  msg %MainChannel $Left $Nick Has deleted their Account $Right
+}
+on *:TEXT:`Stats*:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if (!$2) {
+    notice $Nick $Left HP:15 $readini(Players.ini,$Nick,HP) $+ 14/15 $+ $readini(Players.ini,$Nick,MHP) 14|| SP:15 $readini(Players.ini,$Nick,SP) $+ 14/15 $+ $readini(Players.ini,$Nick,MSP) 14|| Character Name:15 $readini(Players.ini,$Nick,Character_Name) $Right
+    notice $Nick $Left Attack:15 $readini(Players.ini,$Nick,Attack) 14 || Defence:15 $readini(Players.ini,$Nick,Defence) 14|| Class:15 $readini(Players.ini,$Nick,Class) $Right
+    notice $Nick $Left Level:15 $readini(Players.ini,$Nick,Level) 14|| Experience:15 $Readini(Players.ini,$Nick,EXP) 14 || Next Level At:15 $readini(Players.ini,$Nick,NextEXP) 14|| EXP To Go:15 $calc($readini(Players.ini,$Nick,NextEXP) - $readini(Players.ini,$Nick,EXP)) 14|| Rank:15 $readini(Players.ini,$nick,Rank) $Right
+    notice $nick $Left Bot Admin: 15 $readini(Admins.ini,Admin,$nick) $right
+  }
+  if ($2) { 
+    notice $Nick $Left HP:15 $readini(Players.ini,$2,HP) $+ 14/15 $+ $readini(Players.ini,$2,MHP) 14|| SP:15 $readini(Players.ini,$2,SP) $+ 14/15 $+ $readini(Players.ini,$2,MSP) 14|| Character Name:15 $readini(Players.ini,$2,Character_Name) $Right
+    notice $Nick $Left Attack:15 $readini(Players.ini,$2,Attack) 14 || Defence:15 $readini(Players.ini,$2,Defence) 14|| Class:15 $readini(Players.ini,$2,Class) $Right
+    notice $Nick $Left Level:15 $readini(Players.ini,$2,Level) 14|| Experience:15 $Readini(Players.ini,$2,EXP) 14 || Next Level At:15 $readini(Players.ini,$2,NextEXP) 14|| EXP To Go:15 $calc($readini(Players.ini,$2,NextEXP) - $readini(Players.ini,$2,EXP)) 14|| Rank:15 $readini(Players.ini,$2,Rank) $Right
+    notice $nick $Left Bot Admin: 15 $readini(Admins.ini,Admin,$2) $right
+  }
+}
+on *:TEXT:`ShowStats*:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if (!$2) {
+    msg %MainChannel $Left HP:15 $readini(Players.ini,$Nick,HP) $+ 14/15 $+ $readini(Players.ini,$Nick,MHP) 14|| SP:15 $readini(Players.ini,$Nick,SP) $+ 14/15 $+ $readini(Players.ini,$Nick,MSP) 14|| Character Name:15 $readini(Players.ini,$Nick,Character_Name) $Right
+    msg %MainChannel $Left Attack:15 $readini(Players.ini,$Nick,Attack) 14 || Defence:15 $readini(Players.ini,$Nick,Defence) 14|| Class:15 $readini(Players.ini,$Nick,Class) $Right
+    msg %MainChannel $Left Level:15 $readini(Players.ini,$Nick,Level) 14|| Experience:15 $Readini(Players.ini,$Nick,EXP) 14 || Next Level At:15 $readini(Players.ini,$Nick,NextEXP) 14|| EXP To Go:15 $calc($readini(Players.ini,$Nick,NextEXP) - $readini(Players.ini,$Nick,EXP)) 14|| Rank:15 $readini(Players.ini,$nick,Rank) $Right
+    msg %MainChannel $Left Bot Admin: 15 $readini(Admins.ini,Admin,$nick) $right
+  }
+  if ($2) { 
+    msg %MainChannel $Left HP:15 $readini(Players.ini,$2,HP) $+ 14/15 $+ $readini(Players.ini,$2,MHP) 14|| SP:15 $readini(Players.ini,$2,SP) $+ 14/15 $+ $readini(Players.ini,$2,MSP) 14|| Character Name:15 $readini(Players.ini,$2,Character_Name) $Right
+    msg %MainChannel $Left Attack:15 $readini(Players.ini,$2,Attack) 14 || Defence:15 $readini(Players.ini,$2,Defence) 14|| Class:15 $readini(Players.ini,$2,Class) $Right
+    msg %MainChannel $Left Level:15 $readini(Players.ini,$2,Level) 14|| Experience:15 $Readini(Players.ini,$2,EXP) 14 || Next Level At:15 $readini(Players.ini,$2,NextEXP) 14|| EXP To Go:15 $calc($readini(Players.ini,$2,NextEXP) - $readini(Players.ini,$2,EXP)) 14|| Rank:15 $readini(Players.ini,$2,Rank) $Right
+    msg %MainChannel $Left Bot Admin: 15 $readini(Admins.ini,Admin,$2) $right
+  }
+}
+on *:TEXT:`Enter:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if ($readini(Players.ini,$nick,Fighting) == Yes) { notice $Nick $Left You are Already Fighting $Right | halt }
+  if ($readini(Players.ini,$nick,HP) <= 0) { notice $nick $left please `heal first $right | halt }
+  writeini Players.ini $Nick Fighting Yes
+  mode %MainChannel +h $Nick
+  msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) has entered the Battle Arena $Right
+  if ($readini(Admins.ini,Admin,$nick) != Yes) { set %BattleArena $addtok(%BattleArena,$nick,32) }
+  if ($readini(Admins.ini,Admin,$nick) == Yes) { set %BattleArena $Addtok(%BattleArena,12 $+ $nick $+ 15,32) }
+}
+on *:TEXT:`Leave:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if ($readini(Players.ini,$nick,Fighting) == No) { notice $Nick $Left You are not Currently Fighting $Right | halt }
+  timerleave $+ $Nick 1 20 LeaveArena $Nick
+  msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) is leaving the Arena in 20seconds $Right
+}
+alias LeaveArena {
+  writeini Players.ini $1 Fighting No
+  mode %MainChannel -h $1
+  msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) has left the Battle Arena $Right
+  if ($readini(Admins.ini,Admin,$1) == No) { set %BattleArena $remtok(%BattleArena,$1,32) }
+  if ($readini(Admins.ini,Admin,$1) == Yes) { set %BattleArena $remtok(%BattleArena,12 $+ $1 $+ 15,32) }
+}
+on *:Text:`Entered:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  msg %MainChannel $Left The Following are in the Arena:15 %BattleArena $right
+  msg %MainChannel $Left Key: 15Players 4NPC's 12Admins $right
+}
+on *:TEXT:`Bite *:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if ($readini(Players.ini,$nick,Fighting) != Yes) { notice $Nick $Left You are not Currently Fighting $Right | halt }
+  if ($readini(Attacks.ini,$Nick,Bite) == No) { Notice $nick $Left You cannot use this Attack! | halt }
+  if ($readini(Players.ini,$nick,SP) < 10) { notice $Nick $Left You do Not have Enough SP $Right | halt }
+  if (!$istok($strip(%BattleArena),$2,32)) { notice $nick $Left $2 is not Fighting. Try `entered $Right | halt }
+  if ($2 == $Nick) { notice $Nick $Left You can't attack yourself $Nick $+ ! $Right | halt }
+  if ($istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14 with 15Bite $Right }
+  if (!$istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) with 15Bite $Right }
+  timerAttack $+ $Nick 1 15 Bite $nick $2
+}
+alias Bite {
+  set %EXPGained $rand(1,15)
+  if (!$istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(Players.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) has Just Attacked15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) with 15Bite14 for15 %Damage 14HP of Damage $Right
+    notice $1 $Left You gained15 %EXPGained 14Experience for That Hit! $Right
+    writeini Players.ini $2 HP $calc($readini(Players.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    DeathCheck $2 $1
+  }
+  if ($istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(NPC.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) Attacked15 $2 14with 15Bite for15 %Damage 14Damage $Right   
+    notice $1 $left You Ganed15 %EXPGained 14Experience for that Hit. $right
+    writeini NPC.ini $2 HP $calc($readini(NPC.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    NPCDeathCheck $2 $1
+  }
+}
+alias LevelCheck {
+  if ($readini(Players.ini,$1,EXP) >= $readini(Players.ini,$1,NextEXP)) {
+    writeini Players.ini $1 Level $calc($readini(Players.ini,$1,Level) + 1)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) - $readini(Players.ini,$1,NextEXP))
+    writeini Players.ini $1 NextEXP $calc($readini(Players.ini,$1,Level) * 300)
+    writeini Players.ini $1 Attack $calc($readini(Players.ini,$1,Attack) + $rand(30,100))
+    writeini Players.ini $1 Defence $calc($readini(Players.ini,$1,Defence) + $rand(30,100))
+    writeini Players.ini $1 MHP $calc($readini(Players.ini,$1,MHP) + $rand(10,50))
+    writeini Players.ini $1 MSP $calc($readini(Players.ini,$1,MSP) + $rand(10,50))
+    notice $1 $Left You Have Gained a Level $Right
+    heal $1
+    rankcheck $1
+  }
+}
+alias DeathCheck {
+  if ($readini(Players.ini,$1,HP) <= 0) {
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) has been killed by15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) $right
+    mode %MainChannel -h $1
+    set %BattleArena $remtok(%BattleArena,$1,32)
+    set %EXPGained $rand(1,$calc($readini(Players.ini,$1,Level) * 75))
+    notice $2 $Left You have Gained15 %EXPGained 14Experience for your Kill $Right
+    writeini Players.ini $2 EXP $calc($readini(Players.ini,$2,EXP) + %EXPGained)
+    levelcheck $2
+    writeini Players.ini $1 Fighting No
+    timerattack $+ $1 off
+    DeathMoney $2 $1
+  }
+}
+on *:TEXT:`Kill *:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if ($readini(Players.ini,$nick,Fighting) != Yes) { notice $Nick $Left You are not Currently Fighting $Right | halt }
+  if ($readini(Attacks.ini,$Nick,Kill) == No) { Notice $nick $Left You cannot use this Attack! | halt }
+  if ($readini(Players.ini,$nick,SP) < 10) { notice $Nick $Left You do Not have Enough SP $Right | halt }
+  if (!$istok($strip(%BattleArena),$2,32)) { notice $nick $Left $2 is not Fighting. Try `entered $Right | halt }
+  if ($2 == $Nick) { notice $Nick $Left You can't attack yourself $Nick $+ ! $Right | halt }
+  if ($istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14 with 15Kill $Right }
+  if (!$istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) with 15Kill $Right }
+  timerAttack $+ $Nick 1 15 Kill $nick $2
+}
+alias Kill {
+  set %EXPGained $rand(1,15)
+  if (!$istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(Players.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) has Just Attacked15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) with 15Kill14 for15 %Damage 14HP of Damage $Right
+    notice $1 $Left You gained15 %EXPGained 14Experience for That Hit! $Right
+    writeini Players.ini $2 HP $calc($readini(Players.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    DeathCheck $2 $1
+  }
+  if ($istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(NPC.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) Attacked15 $2 $+ 14with 15Kill for15 %Damage 14Damage $Right
+    notice $1 $left You Ganed15 %EXPGained 14Experience for that Hit. $right
+    writeini NPC.ini $2 HP $calc($readini(NPC.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    NPCDeathCheck $2 $1
+  }
+}
+on *:TEXT:`Magic *:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if ($readini(Players.ini,$nick,Fighting) != Yes) { notice $Nick $Left You are not Currently Fighting $Right | halt }
+  if ($readini(Players.ini,$nick,SP) < 10) { notice $Nick $Left You do Not have Enough SP $Right | halt }
+  if ($readini(Attacks.ini,$Nick,Magic) == No) { Notice $nick $Left You cannot use this Attack! | halt }
+  if (!$istok($strip(%BattleArena),$2,32)) { notice $nick $Left $2 is not Fighting. Try `entered $Right | halt }
+  if ($2 == $Nick) { notice $Nick $Left You can't attack yourself $Nick $+ ! $Right | halt }
+  if ($istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14(15 $+ $readini(NPC.ini,$2,Name) $+ 14) with 15Magic $Right }
+  if (!$istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) 14with 15Magic $Right }
+  timerAttack $+ $Nick 1 15 Magic $nick $2
+}
+alias Magic {
+  set %EXPGained $rand(1,15)
+  if (!$istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(Players.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) has Just Attacked15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) with 15Magic14 for15 %Damage 14HP of Damage $Right
+    notice $1 $Left You gained15 %EXPGained 14Experience for That Hit! $Right
+    writeini Players.ini $2 HP $calc($readini(Players.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    DeathCheck $2 $1
+  }
+  if ($istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(NPC.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) Attacked15 $2 $+ 14(15 $+ $readini(NPC.ini,$2,Name) $+ 14) with 15Magic 14for15 %Damage 14Damage $Right  
+    notice $1 $left You Ganed15 %EXPGained 14Experience for that Hit. $right
+    writeini NPC.ini $2 HP $calc($readini(NPC.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    NPCDeathCheck $2 $1
+  }
+}
+on *:TEXT:`FairyDust *:%MainChannel:{
+  if (!$readini(Players.ini,$nick,Registered)) { notice $Nick $left You need to Register. $right | halt }
+  if ($readini(Players.ini,$nick,LoggedIn) == No) { notice $nick $Left You must login first. $right | halt }
+  if ($readini(Players.ini,$nick,Class) == -) { notice $nick $left You have to select a class first. Type `ClassList to see classes $right | halt }
+  if ($readini(Players.ini,$nick,Fighting) != Yes) { notice $Nick $Left You are not Currently Fighting $Right | halt }
+  if ($readini(Attacks.ini,$Nick,FairyDust) == No) { Notice $nick $Left You cannot use this Attack! | halt }
+  if ($readini(Players.ini,$nick,SP) < 10) { notice $Nick $Left You do Not have Enough SP $Right | halt }
+  if (!$istok($strip(%BattleArena),$2,32)) { notice $nick $Left $2 is not Fighting. Try `entered $Right | halt }
+  if ($2 == $Nick) { notice $Nick $Left You can't attack yourself $Nick $+ ! $Right | halt }
+  if ($istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14(15 $+ $readini(NPC.ini,$2,Name) $+ 14) with 15FairyDust $Right }
+  if (!$istok(%NPC.Names,$2,32)) { msg %MainChannel $Left 15 $+ $Nick $+ 14(15 $+ $readini(Players.ini,$Nick,Character_Name) $+ 14) Is about to Attack15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) with 15FairyDust $Right }
+  timerAttack $+ $Nick 1 15 FairyDust $nick $2
+}
+alias FairyDust {
+  set %EXPGained $rand(1,15)
+  if (!$istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(Players.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) has Just Attacked15 $2 $+ 14(15 $+ $readini(Players.ini,$2,Character_Name) $+ 14) with 15FairyDust14 for15 %Damage 14HP of Damage $Right
+    notice $1 $Left You gained15 %EXPGained 14Experience for That Hit! $Right
+    writeini Players.ini $2 HP $calc($readini(Players.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    DeathCheck $2 $1
+  }
+  if ($istok(%NPC.Names,$2,32)) {
+    set %Damage $rand(1,$calc(($readini(Players.ini,$1,Attack) - $readini(NPC.ini,$2,Defence)) * 2 ))
+    if (%Damage < 1) || (%Damage == $Null) { set %Damage 1 }
+    msg %MainChannel $Left 15 $+ $1 $+ 14(15 $+ $readini(Players.ini,$1,Character_Name) $+ 14) Attacked15 $2 $+ 14(15 $+ $readini(NPC.ini,$2,Name) $+ 14) with 15FairyDust for15 %Damage 14Damage $Right  
+    notice $1 $left You Gained15 %EXPGained 14Experience for that Hit. $right
+    writeini NPC.ini $2 HP $calc($readini(NPC.ini,$2,HP) - %damage)
+    writeini Players.ini $1 SP $calc($readini(Players.ini,$1,SP) - 10)
+    writeini Players.ini $1 EXP $Calc($readini(Players.ini,$1,EXP) + %EXPGained)
+    LevelCheck $1
+    NPCDeathCheck $2 $1
+  }
+}

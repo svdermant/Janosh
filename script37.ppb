@@ -1,0 +1,35 @@
+ON *:text:!Dejavue news:#: { set %cha $chan | /lpsh }
+alias lpsh { sockopen lpsh dejavue.selfip.info 80 | msg %cha Die Letzten 6 News }
+on *:SOCKOPEN:lpsh: {
+  sockwrite -n $sockname GET /rdf.php?fid=1,2&count=6 HTTP/1.0
+  sockwrite -n $sockname Host: dejavue.selfip.info
+  sockwrite -n $sockname $crlf
+}
+
+
+on *:SOCKREAD:lpsh: {
+  sockread %lpsh.temp
+  if (*<item>* iswm %lpsh.temp) { set %lpsh_i 1 }
+  if (%lpsh_i == 1) && (*<title>*</title>* iswm %lpsh.temp) { set %la $gettok($gettok(%lpsh.temp,2,62),1,60) }
+  if (*</item>* iswm %lpsh.temp) {
+    msg %cha 14News 7 %la 10 | halt
+  }
+}
+ON *:text:!dejavue posts:#: { set %cha $chan | /ppsh }
+alias ppsh { sockopen ppsh dejavue.selfip.info 80 | msg %cha Die Letzten 6 Posts: }
+on *:SOCKOPEN:ppsh: {
+  sockwrite -n $sockname GET /rdf.php?count=6 HTTP/1.0
+  sockwrite -n $sockname Host: dejavue.selfip.info
+  sockwrite -n $sockname $crlf
+}
+
+
+on *:SOCKREAD:ppsh: {
+  sockread %ppsh.temp
+  if (*<item>* iswm %ppsh.temp) { set %ppsh_i 1 }
+  if (%ppsh_i == 1) && (*<title>*</title>* iswm %ppsh.temp) { set %pa $gettok($gettok(%ppsh.temp,2,62),1,60) }
+  if (%ppsh_i == 1) && (*<link>*</link>* iswm %ppsh.temp) { set %li $gettok($gettok(%ppsh.temp,2,62),1,60) }
+  if (*</item>* iswm %ppsh.temp) {
+    msg %cha 14Posts 7 %pa 10 link 14 %li | halt
+  }
+}

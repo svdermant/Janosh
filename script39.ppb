@@ -1,0 +1,2 @@
+ON *:text:!Datum:#: { msg # Heute Haben wir den $fulldate }
+off *:text:*Roy*:#: { /msg # $read Antwort.txt }

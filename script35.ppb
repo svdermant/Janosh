@@ -1,0 +1,4 @@
+on *:text:!parkuhr:*: { /msg $chan  11,11_  4 die parkuhr lauft im 13 %£.idle.chanlist }
+on *:text:!parken:*: { /msg $chan 11,11_4die maximale parkezeit im 7 %£.idle.chanlist 4 Ist 13 %£.idle.#cest'la'vie.max_idle MiN }
+on *:text:!parkchek:*: { /msg $chan  11,11_4 parkplatz Check 12 im 13 %£.idle.chanlist 7straffzettel bekommen nur %£.idle.#Cest'la'vie.include  10  !!!! }
+raw 319:*: set %ch $2- 

@@ -1,0 +1,24 @@
+on *:text:!witz:#: {
+  set %n.1 4
+  if (%n.1 == 0) {
+    msg # Sitzt eine Kuh im Kino. Kommt ein Pferd rein und setzt sich vor die Kuh. Tippt die Kuh das Pferd an und sagt:
+    msg # ' Tschuldigung, könnten Sie bitte Ihre Ohren anlegen? Ich seh nämlich nix.' 
+    msg # Dreht sich das Pferd um, tippt sich an die Stirn und sagt: 
+    msg # 'So ein Quatsch, ne Kuh im Kino!' 
+  }
+  if (%n.1 == 1) { 
+    msg # Was ist tierqälerei?
+    msg # Einer Schlange Viagra zu geben.
+  }
+  if (%n.1 == 2) {
+    msg # Was hat sechs Beine, einen IQ von 100 und stinkt nach Bier? 
+    msg # Drei Männer vor der 'Sportschau'.
+  }
+  if (%n.1 == 3) {
+    msg # Sie: 'Du, Schatz, würdest du mit einer anderen schlafen, wenn ich gestorben bin?'
+    msg # Er: 'Dafür musst du nicht extra sterben!'
+  }
+  if (%n.1 == 4) {
+    msg # $read witz.txt 
+  }
+}

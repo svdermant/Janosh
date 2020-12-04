@@ -1,0 +1,16 @@
+[Mon Jun 10 08:05:50 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 09:54:29 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 09:56:41 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 10:41:56 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 10:49:24 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 11:02:32 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 11:04:35 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 11:08:10 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 11:13:42 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 11:16:43 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 13:03:30 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 13:05:59 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 13:07:57 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 13:29:50 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Mon Jun 10 13:49:22 2019] :: [SYSTEM] Spamattack on #igamerpg detected.
+[Mon Jun 10 14:43:49 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.

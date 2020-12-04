@@ -1,0 +1,16 @@
+[Sat Mar 17 09:19:50 2018] :: [SYSTEM] Newstickers has been disabled.
+[Sat Mar 17 09:19:50 2018] :: [SYSTEM] Connection Interrupted.
+[Sat Mar 17 09:19:54 2018] :: [SYSTEM] IAL-List successfully updatet for #Support
+[Sat Mar 17 09:19:54 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Sat Mar 17 09:19:54 2018] :: [SYSTEM] Connecting...
+[Sat Mar 17 09:19:58 2018] :: [SYSTEM] Join Protected-Channel
+[Sat Mar 17 09:20:18 2018] :: [SYSTEM] Check Autop/Voice Status
+[Sat Mar 17 09:20:25 2018] :: [SYSTEM] Ready To Work..
+[Sat Mar 17 11:02:51 2018] :: [SYSTEM] Newstickers has been disabled.
+[Sat Mar 17 11:02:51 2018] :: [SYSTEM] Connection Interrupted.
+[Sat Mar 17 11:03:19 2018] :: [SYSTEM] IAL-List successfully updatet for #Support
+[Sat Mar 17 11:03:19 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Sat Mar 17 11:03:19 2018] :: [SYSTEM] Connecting...
+[Sat Mar 17 11:03:23 2018] :: [SYSTEM] Join Protected-Channel
+[Sat Mar 17 11:03:43 2018] :: [SYSTEM] Check Autop/Voice Status
+[Sat Mar 17 11:03:50 2018] :: [SYSTEM] Ready To Work..

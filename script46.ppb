@@ -1,0 +1,67 @@
+on *:text:!m write:#: { 
+  msg $nick Willkommen $nick Beim Nachrichtendienst..
+  msg $nick Du kannst hier für xxx (Nick) eine Nachricht Hinterlassen dieser erhält sie dann von mir
+  msg $nick Sofern dieser Nick online oder Offline ist.
+  msg $nick Um eine Nachricht zu Versenden tippe !m <nick> <text> hier im Fenster
+  msg $nick Dann wird deine Nachricht erstmal gespeichert und du kannst sie mit !ja abschicken.
+}
+
+
+on *:text:!logs:#: {
+  set %i $findfile(C:\Battlebot\monsters\, *.char,0)
+  var %txt = .char
+  var %t = C:\Battlebot\monsters\
+  msg $chan Angemeldete user %i
+  :next
+  if (%i > 0) {
+    msg $chan $remove($findfile(%t, *.char, %i),%t,%txt)  
+  }
+  dec %i
+  if (%i == 0) { goto end }
+  else goto next
+  :end
+  halt
+}
+
+
+
+
+
+on *:text:!m*:?: {
+  if ($2 != send) || ($2 != dsend) && ($lines(messages- $+ $2 $+ .txt) == 5) { msg $nick Tut mir leid $2 Kann keine Weiteren nachrichten empfangen bis er Sein postfach geleert hat }
+  if ($2 != send) || ($2 != dsend) && ($lines(messages- $+ $2 $+ .txt) < 5) {
+    set %empfänger [ $+ [ $2 ] ] $2
+    set %e $2
+    /write messages- $+ $2 $+ .txt $nick Nachricht: $3-
+    /write messages-Archiv- $+ $nick $+ .txt --------- Nachrichtensystem -----------
+    /write messages-Archiv- $+ $nick $+ .txt Nachricht von: $nick
+    /write messages-Archiv- $+ $nick $+ .txt ---------- an: $2
+    /write messages-Archiv- $+ $nick $+ .txt $3-
+    /write messages-Archiv- $+ $nick $+ .txt Gesendet am : $date um $time
+    /write messages-Archiv- $+ $nick $+ .txt --------- Nachrichtensystem -----------
+
+    /write messages-Archiv- $+ $2 $+ .txt --------- Nachrichtensystem - Nachricht $lines(messages- $+ $2 $+ .txt) -----------
+    /write messages-Archiv- $+ $2 $+ .txt Nachricht von: $nick
+    /write messages-Archiv- $+ $2 $+ .txt $3-
+    /write messages-Archiv- $+ $2 $+ .txt Gesendet am : $date um $time
+    /write messages-Archiv- $+ $2 $+ .txt --------- Nachrichtensystem ----------- 
+
+    msg $nick Deine Nachricht wurde Gespeichert. Jetzt abschicken ? dann Tippe !ja
+  }
+}
+on *:text:!Ja:?: {
+  msg %empfänger [ $+ [ %e ] ] Du hast $lines(Messages- $+ %e $+ .txt) Nachrichten..
+}
+on *:text:!mLesen:#: { play $nick messages-archiv- $+ $nick $+ .txt } 
+on *:text:!mclear:#: { 
+  if ($exists(messages-archiv- $+ $nick $+ .txt) == $false) && ($exists(messages- $+ $nick $+ .txt) == $false) { msg # Du hast nix im Postfach! }
+  else {  
+    remove messages-archiv- $+ $nick $+ .txt | remove messages- $+ $nick $+ .txt | Msg  # Postfach Geleert
+  }
+}
+on *:join:#: {
+  if ($lines(messages- $+ $nick $+ .txt) == 0) && (battledome.eu !isin $address($nick,1)) { msg $chan Für dich liegen 0 Nachrichten in deinem Postfach! }
+  if ($lines(messages- $+ $nick $+ .txt) > 0) && (battledome.eu !isin $address($nick,1))  { msg $chan Für dich liegen $lines(messages- $+ $nick $+ .txt) Nachrichten in deinem Postfach! Lese sie mit !mLesen }
+}
+
+on *:text:!msend:#: { play $nick messages-archiv- $+ $nick $+ .txt }

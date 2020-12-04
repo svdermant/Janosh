@@ -1,0 +1,47 @@
+off *:text:* $+ $(*4has entered the battle!*):#: {
+  set %enemy $1
+  /os client join %enemy #battledome
+}
+
+on *:TEXT:*:#:{
+  if ($nick != Battledome) return
+  if (supply isin $1) {
+    var %supply supply_wagon
+    /os client join supply_wagon #battledome
+  }
+  if (* has entered the battle!* iswm $strip($1-)) {
+    var %enemy $strip($1)
+    /os client join %enemy #battledome
+  }
+  if (* has been defeated by* iswm $strip($1-)) {
+    var %enemy $strip($1)
+    /os client part %enemy #battledome
+    /os client part %supply #battledome
+  }  
+  if (* uses all of its health to perform this technique!* iswm $strip($1-)) {
+    var %enemy $strip($1)
+    /os client part %enemy #battledome
+  }  
+  if (* has been freed from its bonds* iswm $strip($1-)) {
+    var %enemy $strip($1)
+    /os client part %enemy #battledome
+  }  
+  if (* shatters into thousands of tiny* iswm $strip($1-)) {
+    var %enemy $strip($1)
+    /os client part %enemy #battledome
+  } 
+  if (* floats along as another_medusa_head* iswm $strip($1-)) {
+    var %enemy another_medusa_head
+    /os client join %enemy #battledome
+  }
+}
+
+Off *:ACTION:$(*4 $+ $1+ $+ *) $(*4has entered the battle!*):#: {
+  set %enemy2 $1
+  msg # ja erkannt %enemy2
+
+
+}
+
+
+off *:text:$(*4slaps $me $+ *):#: { /msg # Hallo was soll dass }

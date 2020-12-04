@@ -1,0 +1,5 @@
+[Fri Aug 17 00:04:27 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri Aug 17 00:57:09 2018] :: [LOGIN] Zenturion successfully login. Accountname: Admin
+[Fri Aug 17 01:54:26 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Fri Aug 17 01:55:10 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Fri Aug 17 21:23:03 2018] :: [SYSTEM] Spamattack on #Battledome detected.

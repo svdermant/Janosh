@@ -1,0 +1,78 @@
+ON *:text:!faq*:#: {
+  if ($2 == $null) { msg # Momentane Faqs: !faq Vhost, !faq Nick-wechsel, !faq nick-registrieren, !faq nick-profil, !faq channel-oeffnen, !faq channel-reg, !faq Channel-ops, !faq-Ops-Hops-Vops } 
+  if ($2 == vhost) {
+    msg # Frage: Was ist eine vHost, und wie bekomme ich sie?
+    msg # Antwort: Eine vHost ist eine virtuelle Hostmaske. Wenn du auf den IRC Server PSH verbindest, wird im Normalfall deine IP oder der damit verbundene Hostname als Hostmaske gesetzt. Zusätzlich wird diese IP beziehungsweise dieser Hostname noch unkenntlich gemacht, um mehr Sicherheit zu garantieren.
+    msg # Nun ist es uns allerdings auch möglich diesen Hostnamen zu ändern. Hierzu gibt es HostServ, bei dem die Operatoren in #help einen virtuellen Hostnamen für dich eintragen können. Auch kannst du selbst einen vHost beantragen der dann nur noch von den Operatoren freigeschaltet werden muss. Hierzu gibt es den Befehl: "/msg HostServ REQUEST <vHost>". Dieser virtuelle Hostname wird dann anstelle deiner normalen IP oder deines normalen Hostnames angezeigt, sobald du dich bei NickServ anmeldest.
+    msg # -------------
+    msg # 4 Regeln für eine vHost:
+    msg # 1. Keine Beleidigungen in den vHost, wie z.B. Musterman@ist.doof.de 
+    msg # Es muss sich um eine gültige TLD handeln, also der Hostname muss z.B. mit .de oder .com enden 
+    msg # Der vHost darf nur folgende Zeichen enthalten: A-Z, a-z, 0-9, . und - 
+    msg # Keine amtsanmaßende vHost (wie zum Beispiel "Polizei", "FBI" usw). 
+  }
+  if ($2 == nick-wechsel) { 
+    msg # Frage: Wie kann ich meinen Nick wechseln ?
+    msg # Antwort: Mit dem Befehl /nick Benutzername.
+    msg # Beispiel /nick Pille
+    msg # dieses würde deinen Nick in Pille umändern.
+  }
+  if ($2 == nick-registrieren) {
+    msg # Jeder sollte sich einen Nicknamen registrieren lassen. Es ist das wichtigste überhaupt.
+    msg # Benutze dazu den befehl: 4/msg nickserv register PassWort E-mail
+    msg # 4ACHTUNG: Beachte das du hierbei Passwort durch ein Beliebiges wort veränderst. und anstatt
+    msg # E-Mail Deine E-mail eingibst.
+    msg # Nach der Registrierung musst du dich immer wieder bei Nickserv anmelden wenn du diesen nick Benutzen willst. na jedem neuconnect
+    msg # Dieses Geschieht durch: 4 /msg nickserv identify PASSWORT
+  }
+  if ($2 == nick-profil) {
+    msg # Frage: Wie mach ich mein Nick-Profil
+    msg # Antwort: Im Irc gibt es kein Wirkliches lamerprofil. Wo das Alter Etc eingetragen wird.
+    msg # Wer Jedoch seinen Nick oder Channel über Services registriert, Muss damit rechnen das Teile Seiner Angaben gespeichert werden.
+    msg # Dazu gehören in der Regel: 4 Host, Nickname, email, Registrierdatum etc. 
+    msg # Jedes dieser Informationen kann von jedem einsehbar sein, wenn man dies nicht ausdrücklich wünscht. 
+    msg # Wer seinem Nick jedoch eine Url oder E-mail hinzufügen möchte kann das gerne tun.
+    msg # Machbar mit der SET funktion von Nickserv: 4/msg nickserv help set Gibt mehr infos.
+    msg # Um eine url zu setzen: 4/msg nickserv set url http://www.url.de
+    Msg # Abzurufen sind all diese informationen über:
+    msg # 4/msg nickserv info <nickname>
+  }
+  if ($2 == channel-oeffnen) {
+    msg # Frage: Wie Eröffne ich einen Channel/raum
+    msg # Antwort: Mit 4/join #Channel
+    msg # Kannst du einen Raum betreten bzw Eröffnen. Solltest du der erste sein der einen Unregistrierten Channel betritt, So Bekommst du automatisch ein @ - Status zugeteilt.
+    msg # Dann liegt es bei dir ob du diesen Raum sichern möchtest oder nicht.
+    msg # Sicher heist das der Raum auf deinen Namen Registriert wird. Somit wärst du der Alleinige Channelverwalter.
+    msg # Du Kannst von Da aus bestimmen wer Moderator wird und wer nicht. Vorausgesetzt wird jedoch ein registrierter Nickname.
+  }
+  if ($2 == channel-reg) {
+    msg # Frage: Wie registriere ich nun meinen eigenen Chatraum?
+    msg # Antwort: Und Zwar mit 4/msg Chanserv Register #Raumname passwort Beschreibung
+    msg # Beispiel: /msg Chanserv register #Meinraum Password284 Unser Hauptchannel
+  }
+  if ($2 == channel-ops) {
+    msg # Frage: Wie füge ich weitere Operator hinzu?
+    msg # Antwort: Chanserv ist daher unser Ansprechpartner. Weil Dieser PseudoClient für die ChannelDatebank zuständig ist.
+    msg # mit: 4 /msg Chanserv help Bekommt man die Komplette Struktur des Servs Zugeteilt.
+    msg # Wir benötigen daher für diesen zweck den Access Zweig. 
+    msg # Wie wir nun Ops usw hinzufügen erfahren wir über: 4/msg chanserv help Access
+    msg # Die Antwort wäre dann: -ChanServ- Syntax: ACCESS RAUM ADD [Chatname|stufe]
+    msg # Die Jeweilige Stufe Erfahrt ihr über 4/msg Chanserv levels #Chatraum list :)
+    msg # So Klingt nun Verwirrend, aber um einen Operator (Schutzgeist) im raum #meinraum anzulegen müsste man also folgendes tun:
+    msg # 4/msg chanserv access #meinraum add Schutzgeist 50
+    msg # Als Halfop: 4/msg chanserv access #meinraum add schutzgeist 40
+    msg # Als Mod: 4/msg chanserv access #meinraum add schutzgeist 30
+  }
+  if ($2 == Ops-Hops-VopS) {
+    Msg # Frage: Was sind Ops Vops HopS?
+    msg # Antwort: Ops sind Typischer Operator mit einem @
+    msg # Sie Können Topics setzen, User Kicken bzw Bannen und sämtliche channelmodes setzen.
+    msg # HOPs sind Halfops: also Halbe Operatoren diese können non Ops Kicken Bzw Bannen. Sie können keinen OP bzw HOP erteilen.
+    msg # Sie können Beschränkte Channelmodes setzen.
+    msg # VOPS sind Nichts :)
+    msg # VOPS können weder kicken bannen noch modes setzen
+    msg # Sie haben nur Rederecht wenn der channel auf +m /mode #channel +m ist.
+    msg # Der Raum ist also moderiert.
+    msg # Alle User die Keinen Status dan Haben können nixs Schreiben :)
+  }
+}

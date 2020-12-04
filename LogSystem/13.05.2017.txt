@@ -1,0 +1,4 @@
+[Sat May 13 09:04:54 2017] :: [SYSTEM] Connecting...
+[Sat May 13 09:04:58 2017] :: [SYSTEM] Join Protected-Channel
+[Sat May 13 09:05:18 2017] :: [SYSTEM] Check Autop/Voice Status
+[Sat May 13 09:05:25 2017] :: [SYSTEM] Ready To Work..

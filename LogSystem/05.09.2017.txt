@@ -1,0 +1,1 @@
+[Tue Sep 05 03:52:34 2017] :: [SYSTEM] Spamattack on #Battledome detected.

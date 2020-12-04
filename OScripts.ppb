@@ -1,0 +1,1725 @@
+;\* ---------------------------- */;
+;\\*       Main Settings        *//;
+;\\\* ------------------------ *///;
+
+on *:Start:{
+  starting
+  load.hashtables
+  if (%starting) {
+    .timer 1 2 .hadd -m Config Template 4,0 ::1 <text> 4:: 
+    .timer 1 3 .unload -rs load.ppb
+    .timer 1 4 .mkdir Database
+    .timer 1 5 .remove load.ppb
+    .timer 1 6 .unset %starting
+    .timer 1 7 .hadd -m Config Misc.req-idler 30 
+    .timer 1 7 .hadd -m Config Misc.req-status off
+  }
+  hfree netsplit
+  hmake netsplit 10000
+  server $config(server) 
+  if (!$window(@Queries)) { window -kb0zn @Queries }
+  if (!$window(@LogSystem)) { window -kb0zn @LogSystem }
+  .timer 1 1 .aline 1 @LogSystem $+([,$fulldate,]) :: $+([,$upper(System),]) Loading...
+  .timer 1 3 .aline 1 @Queries $+([,$fulldate,]) :: Query System Loaded.
+  .timer 1 3 .aline 1 @LogSystem $+([,$fulldate,]) :: $+([,$upper(System),]) Loaded.
+}
+on *:connect:{ connect.bot }
+alias connect.bot {
+  .timer 1 0 .log System Connecting...
+  .timer 1 0 .set -u30 %connecting 1
+  if ($config(Authname)) && ($config(Authpw)) { .timer 1 0 .msg Q@Cserve.quakenet.org auth $config(Authname) $config(Authpw) }
+  .timer 1 4 .join.channels | .timer 1 4 .log System Join Protected-Channel
+  if ($config(autojoin)) { .timer 1 5 .join $replace($config(autojoin),$chr(32),$chr(44)) | .timer 1 5 .log System Joining Autojoin-Channel }
+  .timer 1 6 .load.newsticker
+  .timer 1 7 .checkchan
+  .timer 1 8 .load.repeat
+  .timer 1 9 .check.autoopv
+  .timer 1 24 .log System Check Autop/Voice Status
+  .timer 1 31 .log System Ready To Work..
+}
+
+on *:disconnect:{ save.hashtables | unload.newsticker | log System Connection Interrupted. }
+
+;=================================;
+;--------> Installiation <--------;
+;=================================;
+
+
+alias setup { dialog -m dialog_install1 dialog_install1 }
+alias install2 { dialog -m dialog_install2 dialog_install2 }
+alias install3 { dialog -m dialog_install3 dialog_install3 }
+alias install4 { dialog -m dialog_install4 dialog_install4 }
+alias install5 { dialog -m dialog_install5 dialog_install5 }
+alias install6 { dialog -m dialog_install6 dialog_install6 }
+alias bot.about { dialog -m about_dialog about_dialog }
+alias bot.help { dialog -m help_dialog help_dialog }
+
+dialog help_dialog {
+  title "Help?"
+  size -1 -1 131 65
+  icon gfx/network.ico,0
+  option dbu
+  link "Click Me", 1, 32 43 66 8, center
+  box "", 2, 1 1 129 63
+  text "You need some help?:", 3, 3 7 53 8
+  text "- You find Bugs then go to #myPPB and tell them", 4, 7 16 120 8
+  text "- Proposals for new myPPB version", 5, 7 25 85 8
+  text "- Here is a List of Channel Commands", 6, 7 34 91 8
+  text "- Update version? look on Botpage (mypTx.de)", 7, 7 52 114 8
+}
+on *:dialog:help_dialog:sclick:1:{ /run Commands: http://www.mypTx.de/?section=commands_v3 } 
+
+dialog about_dialog {
+  title "About"
+  icon gfx/network.ico,0
+  size -1 -1 155 81
+  option dbu
+  box "", 1, 0 0 153 81
+  button "Close", 2, 115 69 32 9
+  text "Dieses für das mIRC 6.14 gescriptete Botaddon wurde komplett von 'mypTx' gescriptet. Es ist grundsätzlich verboten sämtlichen Quell(Source-) Code zu entnehmen oder zu ", 3, 3 5 149 21
+  text "Spezielle Grüße gehen an:", 4, 3 35 66 7
+  text "OddYsseus - Fasil - mYr", 5, 7 44 144 15
+  text "and aLL who know about mypTx :)", 6, 7 60 85 9
+  link "www.mypTx.de", 7, 84 25 39 8
+  text "Rippen. Updates findet man auf ", 8, 3 25 80 8
+  text "BetaTester: mYr, razor", 9, 7 69 80 8
+}
+on *:dialog:about_dialog:sclick:2:{ dialog -x about_dialog about_dialog }
+
+;----------------------------------;
+;----- Install: Welcome Table -----;
+;----------------------------------;
+
+dialog dialog_install1 {
+  title "Install"
+  icon gfx/network.ico,0
+  size -1 -1 180 101
+  option dbu
+  button "", 1, 130 87 46 11, disable
+  box "", 2, 1 3 178 80
+  box "", 4, 127 82 52 18
+  box "", 5, 1 82 124 18
+  edit "", 3, 4 87 118 11, read center autohs
+  text "", 6, 5 9 151 8
+  text "Wenn Sie bei der Installation irgendwelche Fehler Bugs oder sonstige Probleme finden melden sie sich bitte in #myPPB(Qnet). Wenn Sie sich nicht sicher sind und keine Ahnung von Bots haben sollten sie erst die readme.txt lesen.", 7, 13 24 159 28
+  text "Um die Installation fortzufahren drücken sie bitte auf -Weiter-", 8, 12 56 157 9
+}
+
+on *:dialog:dialog_install1:sclick:*:{ if ($did == 1) { dialog -x dialog_install1 dialog_install1 | install2 } }
+on *:dialog:dialog_install1:init:*:{
+  did -ra $dname 6 Hallo, Sie installieren hier den PublicProtectionBot $botversion
+  did -a $dname 3 Status: 0%
+  did -e $dname 1
+  did -a $dname 1 Weiter...
+}
+
+;-----------------------------------;
+;----- Install: Nickname/Email -----;
+;-----------------------------------;
+
+dialog dialog_install2 {
+  title "Install"
+  icon gfx/network.ico,0
+  size -1 -1 180 101
+  option dbu
+  button "Weiter...", 1, 130 87 46 11, disable
+  box "", 2, 1 3 178 80
+  box "", 4, 127 82 52 18
+  box "", 5, 1 82 124 18
+  edit "", 3, 4 87 118 11, read center autohs
+  text "Geben Sie bitte den Bot-Nickname und ihre E-M@il Addresse ein", 6, 7 11 167 8
+  text "Nickname:", 7, 8 25 25 8
+  edit "", 8, 36 24 50 10, autohs
+  text "E-M@il:", 9, 8 36 25 8
+  edit "", 10, 36 35 50 10, autohs
+  text "Um die Installation forzufahren dürcken sie bitte auf -Weiter-", 11, 14 69 151 9
+}
+
+on *:dialog:dialog_install2:sclick:*:{
+  if ($did == 1) { 
+    if ($did(8).text != $null) { hadd -m Config Misc.botnick $did(8).text | writeini mirc.ini mirc nick $did(8).text }
+    if ($did(10).text != $null) { hadd -m Config Misc.email $did(10).text | writeini mirc.ini mirc email $did(10).text }
+    dialog -x dialog_install2 dialog_install2
+    install3 
+  }
+}
+
+on *:dialog:dialog_install2:init:*:{ did -a $dname 3 Status: 25% }
+on *:dialog:dialog_install2:edit:*:{
+  if ($did == 8) { 
+    if ($did(8).text == $null) { did -b $dname 1 }
+    if ($did(10).text != $null) { did -e $dname 1 }
+    if ($did(10).text == $null) { did -b $dname 1 }
+  }
+  if ($did == 10) { 
+    if ($did(10).text == $null) { did -b $dname 1 }
+    if ($did(8).text != $null) { did -e $dname 1 }
+    if ($did(8).text == $null) { did -b $dname 1 }
+  }
+}
+
+;--------------------------------;
+;----- Install: IRC/network -----;
+;--------------------------------;
+
+dialog dialog_install3 {
+  title "Install"
+  icon gfx/network.ico,0
+  size -1 -1 180 101
+  option dbu
+  button "Weiter...", 1, 130 87 46 11
+  box "", 2, 1 3 178 80
+  box "", 4, 127 82 52 18
+  box "", 5, 1 82 124 18
+  edit "", 3, 4 87 118 11, read center autohs
+  text "Geben Sie bitte jetzt den Zuverbindendedn IRC-Server ein ", 6, 7 11 167 8
+  text "Adresse:", 7, 10 34 25 8
+  edit "", 8, 39 32 135 10, autohs
+  text "Port:", 9, 10 45 24 8
+  edit "", 10, 39 43 50 10, autohs
+  text "Um die Installation forzufahren dürcken sie bitte auf -Weiter-", 11, 14 69 151 9
+  text "Bitte nur ins QuakeNet/BNC verbinden lassen.", 12, 7 20 130 8
+  text "Passwort:", 13, 10 55 25 8
+  edit "", 14, 39 54 50 10, autohs
+  check "Bouncer", 15 , 97 43 35 10
+  text "Identd:", 16, 97 56 30 10
+  edit "", 17, 118 54 56 10, disable
+}
+
+on *:dialog:dialog_install3:sclick:*:{
+  if ($did == 1) {
+    if ($did(8).text != $null) && ($did(10).text != $null) {
+      hadd -m Config Misc.Server $did(8).text $+ $chr(58) $+ $did(10).text $+ $chr(32) $+ $iif($did(14).text,$did(14).text)
+      if ($did(15).state) {
+        bnc.write $did(8).text $did(10).text $did(14).text
+        hadd -m Config Misc.bnc on
+        if ($did(17).text) {
+          writeini mirc.ini ident userid $did(17).text
+        }
+      }
+      dialog -x dialog_install3 dialog_install3
+      install4 
+    }
+    else { if ($input(Plz enter a IrcNetwork(Quakenet),o,False Input) == $ok) { halt } }
+  }
+  if ($did == 15) { if ($did(15).state) { did -e $dname 17 } | else { did -b $dname 17 } }
+}
+on *:dialog:dialog_install3:init:*:{
+  did -a $dname 3 Status: 50%
+  did -a $dname 8 irc.quakenet.org
+  did -a $dname 10 6668
+  did -a $dname 14
+}
+alias bnc.write {
+  var %x = 1
+  while ($readini(servers.ini,servers,n $+ %x)) {
+    inc %x
+  }
+  writeini servers.ini servers n $+ %x psyBNCSERVER: $+ $1 $+ : $+ $2 $+ : $+ $3 $+ GROUP:psyBNC
+}
+;---------------------------;
+;----- Install: Q-Auth -----;
+;---------------------------;
+
+dialog dialog_install4 {
+  title "Install"
+  icon gfx/network.ico,0
+  size -1 -1 180 101
+  option dbu
+  button "Weiter...", 1, 130 87 46 11, disable
+  box "", 2, 1 3 178 80
+  box "", 4, 127 82 52 18
+  box "", 5, 1 82 124 18
+  edit "", 3, 4 87 118 11, read center autohs
+  text "Geben Sie jetzt bitte ihren Qnet Auth ein (ich versichere Ihnen das dieser nicht in die öffentlichkeit gerät).", 6, 7 11 167 16
+  text "Um die Installation forzufahren dürcken sie bitte auf -Weiter-", 11, 14 69 151 9
+  text "Q-Authname:", 7, 11 34 38 9
+  text "Q-Auth-Password:", 8, 11 46 45 8
+  edit "", 9, 58 33 63 10, autohs
+  edit "", 10, 58 44 63 10, autohs
+}
+
+on *:dialog:dialog_install4:sclick:*:{
+  if ($did == 1) { 
+    hdel config Misc.Authname
+    hdel config Misc.AuthPw
+    set -u2 %authname $did($dname,9).text
+    set -u2 %authPW $did($dname,10).text
+    if (%authname != $null) && (%authPW != $null) { hadd -m Config Misc.Authname %authname | hadd -m Config Misc.AuthPw %authpw }
+    dialog -x dialog_install4 dialog_install4
+    install5 
+  }
+}
+on *:dialog:dialog_install4:init:*:{ did -a $dname 3 Status: 75% }
+on *:dialog:dialog_install4:edit:*:{
+  if ($did == 9) { 
+    if ($did(9).text == $null) { did -b $dname 1 }
+    if ($did(10).text != $null) { did -e $dname 1 }
+    if ($did(10).text == $null) { did -b $dname 1 }
+  }
+  if ($did == 10) {
+    if ($did(10).text == $null) { did -b $dname 1 }
+    if ($did(9).text != $null) { did -e $dname 1 }
+    if ($did(9).text == $null) { did -b $dname 1 }
+  }
+}
+
+;--------------------------;
+;----- Install: Login -----;
+;--------------------------;
+
+dialog dialog_install5 {
+  title "Install"
+  icon gfx/network.ico,0
+  size -1 -1 180 101
+  option dbu
+  box "", 1, 1 3 178 80
+  box "", 2, 127 82 52 18
+  box "", 3, 1 82 124 18
+  button "Weiter", 4, 130 87 46 11
+  edit "", 5, 4 87 118 11, read center
+  edit "", 6, 5 31 172 11, read center
+  text "This Part of the Installation is the most Important:", 7, 4 10 124 8
+  text "This Line have u to put it in your Performfeld  - DON'T LOOS IT!!!", 8, 6 44 161 9
+  text "Um die Installation forzufahren dürcken sie bitte auf -Weiter-", 9, 14 69 151 9
+}
+
+on *:dialog:dialog_install5:init:*:{
+  generate
+  did -a $dname 6 /msg $config(botnick) login Admin %loginPW
+  did -a $dname 5 Status: 95%
+  hadd -m Accounts Admin.pass %loginPW
+  hadd -m Accounts Admin.email -
+  hadd -m Accounts Admin.Access 150
+  hadd -m Config Accounts Admin
+}
+
+on *:dialog:dialog_install5:sclick:*:{ if ($did == 4) { dialog -x $dname $dname | install6 } }
+
+;--------------------------;
+;----- Install: Ready -----;
+;--------------------------;
+
+dialog dialog_install6 {
+  title "Install complete!"
+  icon gfx/network.ico,0
+  size -1 -1 180 101
+  option dbu
+  button "Fertig!", 1, 130 87 46 11
+  box "", 2, 1 3 178 80
+  box "", 4, 127 82 52 18
+  box "", 5, 1 82 124 18
+  edit "", 3, 4 87 118 11, read center autohs
+  text "!! Installation Erfolgreich durchgeführt !!", 6, 35 29 102 9
+  text "Ich bedanke mich nochmal Das sie sich für diesen Bot entschieden haben. Drücken Sie nun auf Fertig um den Bot in Betrieb zu nehmen.", 7, 7 65 165 13
+}
+on *:dialog:dialog_install6:init:*:{ did -a $dname 3 Status: 100% }
+on *:dialog:dialog_install6:sclick:*:{
+  if ($did == 1) { 
+    writeini mirc.ini files trayicon gfx/Network.ico
+    writeini mirc.ini text aptitle - myPPB $botversion
+    writeini mirc.ini text timestamp HH:nn:ss $chr(124)
+    writeini mirc.ini mirc user myPublicProtectionBot $botversion - #myPPB - www.mypTx.de
+    server $config(server)
+    dialog -x $dname $dname
+  }
+}
+
+
+alias settings { dialog -m main_manager main_manager }
+dialog main_manager {
+  title "myPPB"
+  icon gfx/network.ico,0
+  size -1 -1 209 192
+  option dbu
+  tab "Main Control", 12, 0 0 209 192
+  box "Main Control ", 20, 2 17 206 174, tab 12
+  box "Channel ", 24, 6 25 194 26, tab 12
+  combo 25, 11 35 60 60, tab 12 size limit 20 drop
+  button "Add Channel", 26, 75 35 48 10, tab 12
+  button "Del Channel", 27, 126 35 48 10, tab 12
+  text "Prefix:", 33, 10 62 18 8, tab 12
+  edit "", 34, 29 61 12 10, disable tab 12 limit 2 center
+  text "<cmd>", 35, 42 62 21 8, tab 12
+  box "Channel Settings ", 36, 6 52 194 122, tab 12
+  radio "Q", 37, 52 73 16 10, disable tab 12
+  radio "L", 38, 80 73 16 10, disable tab 12
+  text "QuakeNet Bot:", 39, 10 74 38 8, tab 12
+  text "Auto*:", 40, 10 86 19 8, tab 12
+  check "*Voice", 41, 52 85 27 10, disable tab 12
+  check "*Op", 42, 80 85 22 10, disable tab 12
+  box "Channel Information ", 43, 9 98 184 70, tab 12
+  text "Homepage:", 44, 14 109 30 8, tab 12
+  text "News:", 45, 14 121 19 8, tab 12
+  text "Channel Owner:", 46, 14 145 42 8, tab 12
+  text "Bot Owner:", 47, 14 157 30 8, tab 12
+  text "Sponsoren:", 48, 14 133 30 8, tab 12
+  edit "", 49, 58 107 132 10, disable tab 12 center
+  edit "", 50, 58 119 132 10, disable tab 12 center
+  edit "", 51, 58 131 132 10, disable tab 12 center
+  edit "", 52, 58 143 132 10, disable tab 12 center
+  edit "", 53, 58 154 132 10, disable tab 12 center
+  text "Botnick:", 54, 111 62 23 8, tab 12
+  text "Server:", 55, 111 74 21 8, tab 12
+  text "", 56, 138 62 60 8, tab 12 center
+  text "", 57, 133 74 65 8, tab 12 center
+  text "Identd:", 58, 111 86 21 8, tab 12
+  text "", 59, 138 86 60 8, tab 12 center
+
+  tab "Special", 13
+  box "Special ", 28, 2 17 206 174, tab 13
+  box "Messages ", 60, 7 27 196 72, tab 13
+  check "Welcome Msg (Join)", 61, 11 37 60 10, tab 13
+  edit "", 62, 21 49 177 10, disable autohs tab 13
+  check "Repeat Msg", 63, 11 62 40 10, tab 13
+  text "Repeat Time:", 64, 21 74 33 8, disable tab 13
+  edit "", 65, 56 73 13 10, disable tab 13
+  text "min(s).", 66, 70 74 19 8, disable tab 13
+  edit "", 67, 21 85 177 10, disable autohs tab 13
+  box "Topic ", 68, 7 103 196 35, tab 13
+  check "Topic Protection", 69, 11 112 50 10, tab 13
+  edit "", 70, 21 124 177 10, disable autohs tab 13
+  radio "Notice", 158, 75 37 30 10, tab 13, disable
+  radio "Query", 159, 110 37 30 10, tab 13, disable
+  radio "Channel-Msg", 160, 145 37 40 10, tab 13, disable
+
+  tab "Protections", 14
+  box "Protections ", 29, 2 17 206 174, tab 14
+  check "Protection (Anti Takeover)", 74, 6 25 75 10, tab 14
+  radio "High", 152, 84 25 20 10, tab 14, disable
+  radio "Low", 153, 108 25 20 10, tab 14, disable
+  check "Bitchmode", 75, 15 39 37 10, disable tab 14
+  check "Lamerdetect", 147, 67 39 40 10, disable tab 14
+  check "Flags Remove", 150, 67 49 44 10, disable tab 14
+  check "Trojan Clients", 151, 67 59 44 10, disable tab 14
+  check "Mass Modes|Kick", 76, 15 79 51 10, disable tab 14
+  edit "", 77, 66 79 11 10, disable tab 14 center
+  text "actions in", 78, 78 80 24 8, disable tab 14
+  edit "", 79, 104 79 11 10, disable tab 14 center
+  text "secs.", 80, 115 80 16 8, disable tab 14
+  check "ProxyScan", 81, 15 49 38 10, disable tab 14
+  check "JoinFlood", 82, 15 59 35 10, disable tab 14
+  check "Mode Protection", 83, 15 69 50 10, disable tab 14
+  box "Anti-(Werbung|Fl...) ", 84, 6 94 199 82, tab 14
+  check "*Advertise", 85, 28 103 39 10, tab 14
+  text "Anti*", 86, 10 104 16 8, tab 14
+  check "*Textflood", 87, 28 114 37 10, tab 14
+  edit "", 88, 65 114 11 10, disable tab 14 center
+  text "msgs in", 89, 78 115 20 8, disable tab 14
+  edit "", 90, 98 114 11 10, disable tab 14 center
+  text "secs.", 91, 110 115 14 8, disable tab 14
+  check "*Repeat(Wiederhohlung)", 92, 28 126 72 10, tab 14
+  edit "", 93, 120 125 11 10, disable tab 14 center
+  text "Times:", 94, 101 126 17 8, disable tab 14
+  check "Badword", 95, 28 138 32 10, tab 14
+  button "Badwordmanager", 96, 62 138 47 10, tab 14
+  text "Bantime:", 97, 135 104 23 8, disable tab 14
+  edit "", 100, 160 103 11 10, disable tab 14 center
+  text "min(s).", 105, 172 104 19 8, disable tab 14
+  box "Autolimit ", 109, 144 34 57 21, tab 14
+  check "Autolimit", 110, 148 42 33 10, tab 14
+  edit "", 111, 183 42 13 10, disable tab 14 center
+  box "", 112, 12 34 128 58, tab 14
+  text "Bantime:", 98, 135 115 23 8, disable tab 14
+  text "Bantime:", 99, 135 126 23 8, disable tab 14
+  text "Bantime:", 104, 135 138  23 8, disable tab 14
+  edit "", 101, 160 114 11 10, disable tab 14 center
+  edit "", 102, 160 125 11 10, disable tab 14 center
+  edit "", 103, 160 137 11 10, disable tab 14 center
+  text "min(s).", 106, 172 115 19 8, disable tab 14
+  text "min(s).", 107, 172 126 19 8, disable tab 14
+  text "min(s).", 108, 172 138 19 8, disable tab 14
+  check "Badnick", 156, 28 150 32 10, tab 14
+  button "Badnickmanager", 157, 62 150 47 10, tab 14
+
+  tab "Scripts", 15
+  box "Misc ", 30, 2 17 206 174, tab 15
+  check "Wetter", 113, 11 28 31 10, tab 15
+  check "Nick", 114, 79 28 22 10, disable tab 15
+  check "Channel", 115, 105 28 31 10, disable tab 15
+  text "Paste:", 116, 49 29 25 8, disable tab 15
+  check "TV-Script", 117, 11 41 33 10, tab 15
+  check "Google", 118, 11 54 29 10, tab 15
+  text "Paste:", 120, 49 55 25 8, disable tab 15
+  text "Paste:", 119, 49 42 25 8, disable tab 15
+  check "Channel", 124, 105 54 31 10, disable tab 15
+  check "Channel", 123, 105 41 31 10, disable tab 15
+  check "Nick", 122, 79 54 22 10, disable tab 15
+  check "Nick", 121, 79 41 22 10, disable tab 15
+  check "NewsTicker", 146, 11 67 38 10, tab 15
+  check "ChannelPeak", 149, 79 67 42 10, tab 15
+  check "Bombgame", 154, 124 67 42 10, tab 15
+  button "Opt.", 125, 50 67 15 10, disable tab 15 
+  box "Vip ", 126, 7 84 187 90, tab 15
+  combo 127, 12 94 61 33, tab 15 size drop
+  list 128, 48 109 97 60, tab 15 size hsbar vsbar
+  button "Add", 129, 12 111 35 10, tab 15 disable
+  button "Del Selected", 130, 12 124 35 10, tab 15 disable
+  check "Enable", 144, 13 135 35 10, tab 15
+  radio "-none-", 131, 152 118 35 10, tab 15 disable
+  radio "Voice (+v)", 132, 152 129 36 10, tab 15 disable
+  radio "Op (+o)", 133, 152 140 33 10, tab 15 disable
+  box "Get... ", 134, 148 107 42 46, tab 15
+  check "Op", 135, 79 95 19 10, disable tab 15 disable
+  check "Voice", 136, 99 95 26 10, disable tab 15 disable
+  check "All Idler", 137, 127 95 30 10, disable tab 15 disable
+  box "Request (GLOBAL) ", 200, 140 21 65 33, tab 15
+  check "Request", 201, 149 28 30 10, tab 15
+  text "Minimum Idler:", 202, 150 42 35 8, tab 15
+  edit "", 203, 185 41 17 10, tab 15, disable
+
+  tab "Blacklists", 16
+  box "Blacklists ", 31, 2 17 206 174, tab 16
+  combo 138, 12 38 76 50, tab 16 size drop
+  list 139, 7 58 191 109, tab 16 size hsbar vsbar disable
+  box "Type ", 140, 8 27 116 27, tab 16
+  check "Enable", 141, 91 38 29 10, tab 16 disable
+  button "Add", 142, 132 31 38 10, tab 16 disable
+  button "Del Sel.", 143, 132 44 38 10, tab 16 disable
+
+  text "© 2005, by mypTx   —", 19, 6 179 56 8
+  link "www.mypTx.de", 21, 63 179 41 8
+  text "— Version:", 22, 107 179 27 8
+  text "v2.11", 23, 136 179 25 8
+  button "Save", 18, 164 178 41 10
+  menu "File", 1
+  item "Change Auth", 148, 1
+  item "Save", 2, 1
+  item "New", 3, 1
+  menu "Managers", 4
+  item "Accountmanager", 5, 4
+  item "Channelmanager", 6, 4
+  item "Badwordmanager", 7, 4
+  item "Badnickmanager", 170, 4
+  item "Autojoin", 145, 4
+  item "Triggers", 155, 4
+  menu "?", 8
+  item "Help", 9, 8
+  item "About", 10, 8
+  item "Readme", 11, 8
+  item "VersionLog", 17, 8
+}
+alias changeauth { dialog -m change_auth change_auth }
+dialog change_auth {
+  title "Change Auth"
+  size -1 -1 127 29
+  option dbu
+  box "", 1, 1 -1 126 30
+  text "Authname:", 2, 5 7 28 8
+  text "AuthPW:", 3, 10 17 24 8
+  edit "", 4, 34 6 50 10, autohs
+  edit "", 5, 34 16 50 10, autohs
+  button "Change Auth", 6, 86 6 37 20
+}
+on *:dialog:change_auth:*:*:{ 
+  if ($devent == init) { did -a $dname 4 $config(authname) | did -a $dname 5 $config(authpw) }
+  if ($devent == sclick) { if ($did == 6) { hadd -m Config Misc.authname $did(4).text | hadd -m Config Misc.authPW $did(5).text | dialog -x $dname $dname | msg Q@Cserve.quakenet.org auth $config(authname) $config(authpw) } }
+}
+alias choose { dialog -m choose_manager choose_manager }
+dialog choose_manager {
+  title "Channel/Interface"
+  size -1 -1 93 21
+  option dbu
+  box "", 1, 1 0 92 21
+  button "Channel", 2, 3 6 37 12
+  text "or", 3, 44 8 8 8
+  button "Interface", 4, 53 6 37 12
+}
+on *:dialog:choose_manager:sclick:*:{ 
+  if ($did == 2) { /channel $active | dialog -x $dname $dname }
+  if ($did == 4) { /settings | dialog -x $dname $dname }
+}
+on *:dialog:main_manager:*:*:{
+  if ($devent == menu) {
+    if ($did == 2) { save.settings $did(25).text }
+    if ($did == 3) { add.channel }
+    if ($did == 5) { accountmanager }
+    if ($did == 6) { channelmanager }
+    if ($did == 7) { badwordmanager }
+    if ($did == 9) { bot.help }
+    if ($did == 10) { bot.about }
+    if ($did == 11) { run readme.txt }
+    if ($did == 17) { run VersionLog.txt }
+    if ($did == 145) { autojoin }
+    if ($did == 148) { changeauth }
+    if ($did == 155) { trigger.manager }
+    if ($did == 170) { badnickmanager }
+  }
+  if ($devent == close) { save.settings $did(25).text }
+  if ($devent == init) {
+    dialog -t $dname myPPB $botversion - Channel: none
+    if ($config(req-status) == on) { did -c $dname 201 | did -era $dname 203 $config(req-idler) }
+    did -ra $dname 56 - $iif($item(botnick),$item(botnick),$readini(mirc.ini,mirc,nick)) - | did -ra $dname 57 $iif($server,$server,disconnect) | did -ra $dname 59 - $readini(mirc.ini,ident,userid) -
+    did -a $dname 138 Blacklist | did -a $dname 138 Authbanlist | did -a $dname 138 Chanbanlist
+    reset_chans
+  }
+  if ($devent == sclick) {
+    if ($did == 21) { run http://www.mypTx.de }
+    if ($did == 18) { save.settings $did(25).text }
+    if ($did == 26) { add.channel }
+    if ($did == 27) { 
+      if ($did(25).text) {
+        if ($input(Do You want to delet the Channel $did(25).text from Protectlist,8,Delet?) == $true) { 
+          unset %topic. [ $+ [ $did(25).text ] ] | delet.chan.from.accounts $did(25).text | remove.chan $did(25).text | del_chan $did(25).text | reset_chans 
+          if ($server) && ($me ison $did(25).text) { msg $did(25).text $styles(hannel is Removed from Protectlist.) | part $did(25).text }
+        } 
+      }
+    }     
+    if ($did == 115) { if ($did(115).state) { did -u $dname 114 } }
+    if ($did == 114) { if ($did(114).state) { did -u $dname 115 } }
+    if ($did == 121) { if ($did(121).state) { did -u $dname 123 } }
+    if ($did == 123) { if ($did(123).state) { did -u $dname 121 } }
+    if ($did == 122) { if ($did(122).state) { did -u $dname 124 } }
+    if ($did == 124) { if ($did(124).state) { did -u $dname 122 } }
+    if ($did == 125) { ticker.manager | set %news.ticker.chan $did(25).text | news.ticker.load $did(25).text }
+    if ($did == 146) { if ($did(146).state) { did -e $dname 125 } | else { did -b $dname 125 } }
+    if ($did == 25) { load.settings $did(25).text }
+    if ($did == 61) { if ($did(61).state) { did -ne $dname 62 | did -e $dname 160,159,158 } | else { did -mb $dname 62 | did -b $dname 160,159,158 } }
+    if ($did == 63) { if ($did(63).state) { did -e $dname 64,65,66,67 } | else { did -b $dname 64,65,66,67 } }
+    if ($did == 69) { if ($did(69).state) { did -e $dname 70 } | else { did -b $dname 70 } }
+    if ($did == 74) { if ($did(74).state) { did -e $dname 75,76,81,82,83,147,150,151,152,153 } | else { did -b $dname 75,76,81,82,83,77,78,79,80,147,150,151,152,153  } }
+    if ($did == 76) { if ($did(76).state) { did -e $dname 77,78,79,80 } | else { did -b $dname 77,78,79,80 } }
+    if ($did == 110) { if ($did(110).state) { did -e $dname 111 } | else { did -b $dname 111 } }
+    if ($did == 85) { if ($did(85).state) { did -e $dname 97,100,105 } | else { did -b $dname 97,100,105 } }
+    if ($did == 87) { if ($did(87).state) { did -e $dname 88,89,90,91,98,101,106 } | else { did -b $dname 88,89,90,91,98,101,106 } }
+    if ($did == 92) { if ($did(92).state) { did -e $dname 93,94,99,102,107 } | else { did -b $dname 93,94,99,102,107 } }
+    if ($did == 95) { if ($did(95).state) { did -e $dname 104,103,108 } | else { did -b $dname 104,103,108 } } 
+    if ($did == 96) { badwordmanager }
+    if ($did == 113) { if ($did(113).state) { did -e $dname 114,115,116 } | else { did -b $dname 114,115,116 } }
+    if ($did == 117) { if ($did(117).state) { did -e $dname 119,123,121 } | else { did -b $dname 119,123,121 } }
+    if ($did == 118) { if ($did(118).state) { did -e $dname 120,124,122 } | else { did -b $dname 120,124,122 } }
+    if ($did == 127) {
+      if ($did(127).text) { did -e $dname 129,130,131,132,133,134,135,136,137 | did -u $dname 131,132,133,135,136,137 }
+      if ($did(127).text == Channels) { did -e $dname 135,136,137 | vip.load.channel $did(25).text } 
+      if ($did(127).text == Hosts) { did -b $dname 135,136,137 | vip.load.hosts $did(25).text }
+    }
+    if ($did == 128) && ($did(128).sel) { vip.search $did(25).text $did(128).seltext }
+    if ($did == 129) { set %vip.chan $did(25).text | if ($did(127).text == Channels) { dialog -m vip_add_chan vip_add_chan } | else { dialog -m vip_add_host vip_add_host } }
+    if ($did == 130) && ($did(128).sel) { remini $did(25).text $+ .vip $did(128).seltext | did -d $dname 128 $did(128).sel }
+    if ($did == 138) {
+      if ($did(138).text) { did -e $dname 139,141,142,143 }
+      if ($did(138).text == Blacklist) { load.blacklist $did(25).text | if ($control($did(25).text,Blacklist)) { did -c $dname 141 } | else { did -u $dname 141 } }
+      if ($did(138).text == Authbanlist) { load.authbanlist $did(25).text | if ($control($did(25).text,Authbanlist)) { did -c $dname 141 } | else { did -u $dname 141 } } 
+      if ($did(138).text == Chanbanlist) { load.chanbanlist $did(25).text | if ($control($did(25).text,Chanbanlist)) { did -c $dname 141 } | else { did -u $dname 141 } }
+    }
+    if ($did == 135) { if ($did(135).state) { vip.change $did(25).text $did(128).seltext reg Op | did -u $dname 136,137 } }
+    if ($did == 136) { if ($did(136).state) { vip.change $did(25).text $did(128).seltext reg Voice | did -u $dname 135,137 } }
+    if ($did == 137) { if ($did(137).state) { vip.change $did(25).text $did(128).seltext reg All | did -u $dname 136,135 } }
+    if ($did == 131) { vip.change $did(25).text $did(128).seltext get none }
+    if ($did == 132) { vip.change $did(25).text $did(128).seltext get Voice }
+    if ($did == 133) { vip.change $did(25).text $did(128).seltext get Op }
+    if ($did == 141) { 
+      if ($did(141).state) { hadd -m $replace($did(25).text,$chr(124),$chr(176)) Settings. $+ $did(138).text on }
+      else { hadd -m $replace($did(25).text,$chr(124),$chr(176)) Settings. $+ $did(138).text off }
+    }
+    if ($did == 142) { var %add = $$?="Plz Enter the Host/Chan/Auth" | hadd -m $replace($did(25).text,$chr(124),$chr(176)) $+ . $+ $iif($did(138).text == Blacklist,Blacklist,$iif($did(138).text == Chanbanlist,Chanbanlist,Authbanlist)) %add black | did -a $dname 139 %add }
+    if ($did == 143) && ($did(139).sel) { hdel $replace($did(25).text,$chr(124),$chr(176)) $+ . $+ $iif($did(138).text == Blacklist,Blacklist,$iif($did(138).text == Chanbanlist,Chanbanlist,Authbanlist)) $did(139).seltext | did -d $dname 139 $did(139).sel }
+    if ($did == 144) { if ($did(144).state) { did -e $dname 129,130,131,132,133,135,136,137 } | else { did -b $dname 129,130,131,132,133,135,136,137 } }
+    if ($did == 157) { badnickmanager }  
+    if ($did == 201) { if ($did(201).state) { did -e $dname 203 | did -ra $dname 203 $config(req-idler) } | else { did -b $dname 203 } }
+  }
+}
+alias vip.change {
+  tokenize 32 $+($replace($1,$chr(124),$chr(176)),.vip) $2 $3 $iif($4 == Op,Op,$iif($4 == Voice,Voice,$iif($4 == All,All,None)))
+  var %x = 1
+  while (%x <= $ini($1,0)) {
+    if ($2 == $ini($1,%x)) {
+      writeini $1 $ini($1,%x) $3 $4
+    }
+    inc %x
+  }
+}
+alias ticker.manager { dialog -m ticker_manager ticker_manager }
+dialog ticker_manager {
+  title "NewsTicker Manager"
+  size -1 -1 113 87
+  option dbu
+  box "", 1, 1 -1 112 88
+  check "Counter-Strike.de", 3, 3 57 54 10
+  check "StarComa.de", 4, 3 12 41 10
+  check "Heise.de", 5, 3 21 31 10
+  check "Spiegel.de", 6, 3 30 36 10
+  check "inHardware.de", 7, 3 39 47 10
+  check "WinFuture.de", 8, 3 48 44 10
+  check "inWoW.de", 9, 58 3 36 10
+  check "inWarCraft.de", 10, 58 12 45 10
+  check "inUnreal.de", 11, 58 21 37 10
+  check "inSacred.de", 12, 58 30 40 10
+  check "inDiablo2.de", 13, 58 39 40 10
+  check "inSims.de", 14, 58 48 35 10
+  check "mypTx.de", 2, 3 3 35 10
+  check "QuakeNet.org", 15, 3 66 46 10
+  check "eXtreme-plaYers.de", 16, 3 75 59 10
+  check "ConceptT.com", 17, 58 57 47 10
+  check "mouseSports.com", 18, 58 66 53 10
+}
+on *:dialog:ticker_manager:*:*:{ 
+  if ($devent == close) { unset %news.ticker.chan }
+  if ($devent == sclick) {
+    if ($did == 15) { $hget($1,$+(Newsticker.,$2)) == on)
+      if ($did(15).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.quakenet on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.quakenet off }
+    } 
+    if ($did == 2) { 
+      if ($did(2).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.mypTx on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.mypTx off }
+    }   
+    if ($did == 16) { 
+      if ($did(16).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.extreme on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.extreme off }
+    } 
+    if ($did == 17) { 
+      if ($did(17).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.conceptt on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.conceptt off }
+    } 
+    if ($did == 18) { 
+      if ($did(18).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.mouse on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.mouse off }
+    } 
+    if ($did == 3) { 
+      if ($did(3).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Counterstrike on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Counterstrike off }
+    } 
+    if ($did == 4) { 
+      if ($did(4).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.StarComa on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.StarComa off }
+    } 
+    if ($did == 5) { 
+      if ($did(5).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.heise on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.heise off }
+    } 
+    if ($did == 6) { 
+      if ($did(6).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.spiegel on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.spiegel off }
+    } 
+    if ($did == 7) { 
+      if ($did(7).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.hardware on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.hardware off }
+    } 
+    if ($did == 8) { 
+      if ($did(8).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.winfuture on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.winfuture off }
+    } 
+    if ($did == 9) { 
+      if ($did(9).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.WoW on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.WoW off }
+    } 
+    if ($did == 10) { 
+      if ($did(10).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.WarCraft on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.WarCraft off }
+    } 
+    if ($did == 11) { 
+      if ($did(11).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Unreal on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Unreal off }
+    } 
+    if ($did == 12) { 
+      if ($did(12).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Sacred on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Sacred off }
+    } 
+    if ($did == 13) { 
+      if ($did(13).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Diablo on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Diablo off }
+    } 
+    if ($did == 14) { 
+      if ($did(14).state) { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Sims on }
+      else { hadd -m $replace(%news.ticker.chan,$chr(124),$chr(176)) Newsticker.Sims off }
+    } 
+  }
+}
+alias news.ticker.load {
+  tokenize 32 ticker_manager $replace($1,$chr(124),$chr(176))
+  if ($hget($2,Newsticker.counterstrike) == on) { did -c $1 3 } | else { did -u $1 3 }
+  if ($hget($2,Newsticker.starcoma) == on) { did -c $1 4 } | else { did -u $1 4 }
+  if ($hget($2,Newsticker.heise) == on) { did -c $1 5 } | else { did -u $1 5 }
+  if ($hget($2,Newsticker.spiegel) == on) { did -c $1 6 } | else { did -u $1 6 }
+  if ($hget($2,Newsticker.hardware) == on) { did -c $1 7 } | else { did -u $1 7 }
+  if ($hget($2,Newsticker.winfuture) == on) { did -c $1 8 } | else { did -u $1 8 }
+  if ($hget($2,Newsticker.Wow) == on) { did -c $1 9 } | else { did -u $1 9 }
+  if ($hget($2,Newsticker.WarCraft) == on) { did -c $1 10 } | else { did -u $1 10 }
+  if ($hget($2,Newsticker.Unreal) == on) { did -c $1 11 } | else { did -u $1 11 }
+  if ($hget($2,Newsticker.Sacred) == on) { did -c $1 12 } | else { did -u $1 12 }
+  if ($hget($2,Newsticker.Diablo) == on) { did -c $1 13 } | else { did -u $1 13 }
+  if ($hget($2,Newsticker.Sims) == on) { did -c $1 14 } | else { did -u $1 14 }
+  if ($hget($2,Newsticker.mypTx) == on) { did -c $1 2 } | else { did -u $1 2 }
+  if ($hget($2,Newsticker.quakenet) == on) { did -c $1 15 } | else { did -u $1 15 }
+  if ($hget($2,Newsticker.extreme) == on) { did -c $1 16 } | else { did -u $1 16 }
+  if ($hget($2,Newsticker.mouse) == on) { did -c $1 18 } | else { did -u $1 18 }
+  if ($hget($2,Newsticker.conceptt) == on) { did -c $1 17 } | else { did -u $1 17 }
+}
+dialog vip_add_host {
+  title "VIP Add Host"
+  size -1 -1 98 27
+  option dbu
+  box "", 1, 1 -2 96 28
+  text "Host:", 2, 3 4 23 8
+  edit "*!*@*", 3, 27 3 67 10, autohs
+  text "Get:", 8, 3 14 12 8
+  check "Op", 9, 19 13 19 10, disable
+  check "Voice", 10, 40 13 24 10, disable
+  button "Add", 11, 65 14 29 10, disable
+}
+on *:dialog:vip_add_host:*:*:{
+  if ($devent == edit) { if ($did == 3) { if ($chr(64) isin $did(3).text) && ($len($did(3).text) > 3) { did -e $dname 9,10,11 } | else { did -b $dname 9,10,11 } } }
+  if ($devent == sclick) {
+    if ($did == 11) { 
+      if ($len($did(3).text) > 3) && ($chr(64) isin $did(3).text) { writeini $replace(%vip.chan,$chr(124),$chr(176)) $+ .vip $did(3).text get $iif($did(9).state,Op,Voice) | vip.load.hosts %vip.chan | unset %vip.chan | dialog -x $dname $dname }
+    }
+  }
+}
+
+dialog vip_add_chan {
+  title "VIP Add Channel"
+  size -1 -1 98 38
+  option dbu
+  box "", 1, 1 -2 96 39
+  text "Channel:", 2, 3 4 23 8
+  edit "#", 3, 27 3 67 10
+  text "Reg.:", 4, 3 14 16 8
+  radio "Op", 5, 18 14 19 10, disable
+  radio "Voice", 6, 39 14 24 10, disable
+  radio "All Idler", 7, 64 14 30 10, disable
+  text "Get:", 8, 3 24 12 8
+  check "Op", 9, 19 24 19 10, disable
+  check "Voice", 10, 40 24 24 10, disable
+  button "Add", 11, 65 24 29 10, disable
+}
+
+on *:dialog:vip_add_chan:*:*:{
+  if ($devent == edit) { if ($did == 3) { if ($chr(35) ==  $left($did(3).text,1)) && ($len($did(3).text) > 1) { did -e $dname 5,6,7,9,10,11 } | else { did -b $dname 5,6,7,9,10,11 } } }
+  if ($devent == sclick) {
+    if ($did == 11) { 
+      if ($len($did(3).text) > 1) && ($chr(35) == $left($did(3).text,1)) {
+        writeini $replace(%vip.chan,$chr(124),$chr(176)) $+ .vip $did(3).text reg $iif($did(5).state,Op,$iif($did(6).state,Voice,All))
+        writeini $replace(%vip.chan,$chr(124),$chr(176)) $+ .vip $did(3).text get $iif($did(9).state,Op,Voice) 
+        vip.load.channel %vip.chan
+        unset %vip.chan 
+        dialog -x $dname $dname 
+
+      }
+    }
+
+  }
+}
+
+;\* -------------------------- */;
+;\\*       Add Channel        *//;
+;\\\* ---------------------- *///;
+
+alias add.channel { dialog -m add_channel add_channel }
+dialog add_channel {
+  title "Add Channel"
+  size -1 -1 141 128
+  option dbu
+  text "Channel:", 1, 6 7 24 7
+  box "", 2, 1 -1 139 128
+  edit "#", 3, 32 5 50 10, autohs
+  radio "Q", 4, 33 16 17 10, disable
+  radio "L", 5, 66 16 16 10, disable
+  button "Add Channel", 6, 85 6 47 9, disable
+  text "Exist Accounts:", 7, 5 26 38 8
+  list 8, 4 35 58 89, size vsbar hsbar
+  button "»", 9, 65 52 10 11, disable
+  button "«", 10, 65 81 10 11, disable
+  list 11, 78 35 59 89, size vsbar hsbar
+  text "Channel Accounts", 12, 79 26 46 8
+}
+on *:dialog:add_channel:*:*:{
+  if ($devent == close) { delet.chan.from.accounts $did(3).text }
+  if ($devent == init) { load.existaccounts }
+  if ($devent == edit) {
+    if ($did == 3) { 
+      if ($chr(35) == $left($did(3).text,1)) && ($len($did(3).text) > 1) { did -e $dname 4,5,6,9,10 } | else { did -b $dname 4,5,6,9,10 } 
+    } 
+  }
+  if ($devent == sclick) {
+    if ($did == 6) {
+      if ($did(4).state) { hadd -m $replace($did(3).text,$chr(124),$chr(176)) Settings.chanbot Q }
+      if ($did(5).state) { hadd -m $replace($did(3).text,$chr(124),$chr(176)) Settings.chanbot L }
+      add_chan $did(3).text
+      save.settings.default $did(3).text
+      dialog -x $dname $dname
+      if ($dialog(main_manager)) { reset_chans }
+    }
+    if ($did == 11) { if ($did(11).sel) { did -e $dname 10 } | else { did -b $dname 10 } }
+    if ($did == 9) && ($did(8).sel) { set %dialog $dname | transfer | set %transfer.acc $gettok($did(8).seltext,1,40) | set %transfer.line $did(8).sel }
+    if ($did == 10) && ($did(11).sel) { detransfer.acc $dname $did(11).sel $gettok($did(11).seltext,1,40) }
+  }
+}
+
+;\* ------------------------------ */;
+;\\*       Channel Manager        *//;
+;\\\* -------------------------- *///;
+
+alias channelmanager { dialog -m channel_manager channel_manager }
+dialog channel_manager {
+  title "Channel-Manager"
+  size -1 -1 159 154
+  option dbu
+  box "", 1, 0 -2 158 155
+  combo 3, 6 10 60 50, size drop
+  box "Channel ", 4, 3 2 151 23
+  text "Relikt/Exist Accounts:", 2, 5 27 70 8
+  text "Channel Acc.:", 5, 89 27 35 8
+  button "Delet", 6, 68 10 40 10
+  button "Add New", 7, 110 10 40 10
+  list 8, 4 35 66 115, size hsbar vsbar
+  button "»", 9, 74 67 10 11
+  button "«", 10, 74 107 10 11
+  list 11, 88 35 66 115, size hsbar vsbar
+}
+on *:dialog:channel_manager:*:*:{
+  if ($devent == init) { 
+    did -r $dname 3 | var %x = 1 | while (%x <= $numtok($hget(Config,Misc.channels),32)) { did -a $dname 3 $gettok($hget(Config,Misc.channels),%x,32) | inc %x }
+  }
+  if ($devent == sclick) {
+    if ($did == 6) {
+      if ($did(3).text) {
+        if ($input(Do You want to delet the Channel $did(3).text from Protectlist,8,Delet?) == $true) { 
+          unset %topic. [ $+ [ $did(3).text ] ] | delet.chan.from.accounts $did(3).text | remove.chan $did(3).text | del_chan $did(3).text | reset_chans 
+          if ($server) && ($me ison $did(3).text) { msg $did(3).text $styles(Channel is Removed from Protectlist.) | part $did(3).text }
+        } 
+      }
+    }
+    if ($did == 7) { add.channel | dialog -x $dname $dname }
+    if ($did == 3) { 
+      did -r $dname 11,8
+      var %x = 1 
+      while (%x <= $numtok($hget(Config,Accounts),32)) {
+        if ($hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.access)) != 150) && ($hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.access)) != 125) { 
+          if ($did(3).text !isin $hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.Channel))) { 
+            did -az $dname 8 $+($gettok($hget(Config,Accounts),%x,32),$chr(40),$hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.Channel)),$chr(41)) 
+          } 
+        }
+        inc %x
+      }
+      var %x = 1 
+      while (%x <= $numtok($hget(Config,Accounts),32)) {
+        if ($hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.access)) != 150) && ($hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.access)) != 125) {
+          if ($did(3).text isin $hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.channel))) {
+            var %y = $hget(accounts,$+($gettok($hget(Config,Accounts),%x,32),.channel))
+            var %z = 1 
+            while (%z <= $numtok(%y,32)) { 
+              if ($did(3).text isin $gettok(%y,%z,32)) { 
+                did -a $dname 11 $+($hget(accounts,%x).item,$chr(40),$gettok($gettok($gettok(%y,%z,32),2,40),1,41),$chr(41)) 
+              } 
+              inc %z
+            } 
+          } 
+        }
+        inc %x 
+      }
+    } 
+    if ($did == 9) && ($did(8).sel) { set %dialog $dname | transfer | set %transfer.acc $gettok($did(8).seltext,1,40) | set %transfer.line $did(8).sel }
+    if ($did == 10) && ($did(11).sel) { detransfer.acc $dname $did(11).sel $gettok($did(11).seltext,1,40) $did($dname,3).text } 
+  }
+}
+
+;\* ------------------------------ */;
+;\\*       Account Manager        *//;
+;\\\* -------------------------- *///;
+
+alias transfer { dialog -m level_choose level_choose }
+dialog level_choose {
+  title "Choose Level"
+  size -1 -1 67 55
+  option dbu
+  radio "Master (+amo/75)", 1, 4 13 55 10
+  radio "Owner (+amno/100)", 2, 4 4 60 10
+  radio "Op (+ao/50)", 3, 4 22 41 10
+  radio "Voice (+v/25)", 4, 4 31 45 10
+  box "", 5, 1 -1 65 55
+  button "Transfer Account", 6, 5 41 57 10
+}
+on *:dialog:level_choose:*:*:{
+  if ($devent == sclick) {
+    if ($did == 1) { set %transfer.level 75 }
+    if ($did == 2) { set %transfer.level 100 }
+    if ($did == 3) { set %transfer.level 50 }
+    if ($did == 4) { set %transfer.level 25 }
+    if ($did == 6) { transfer.acc %dialog %transfer.acc %transfer.level $did(%dialog,3).text }
+  }
+} 
+alias accountmanager { dialog -m account_manager account_manager }
+dialog account_manager {
+  title "Account-Manager"
+  size -1 -1 182 120
+  option dbu
+  box "", 1, 1 -1 180 120
+  list 2, 4 5 61 111, size vsbar
+  button "Add Account", 3, 67 6 37 10
+  button "Delet", 4, 67 30 37 10
+  button "Edit", 5, 67 18 37 10
+  box "Information ", 6, 68 44 110 72
+  text "Loginname:", 7, 72 53 29 8
+  text "Password:", 8, 72 63 27 8
+  text "Email:", 9, 72 73 16 8
+  text "Last Login:", 10, 72 83 28 8
+  text "Status:", 11, 72 93 20 8
+  text "Channel(lvl):", 12, 72 103 30 8
+  edit "", 13, 103 52 72 10, read autohs
+  edit "", 14, 103 62 72 10, read autohs
+  edit "", 15, 103 72 72 10, read autohs
+  edit "", 16, 103 82 72 10, read autohs
+  edit "", 17, 103 92 72 10, read autohs
+  edit "", 18, 103 102 72 10, read autohs
+}
+on *:dialog:account_manager:*:*:{
+  if ($devent == init) { load.accounts }
+  if ($devent == sclick) {
+    if ($did == 2) && ($did(2).sel) { info.account $did(2).seltext }
+    if ($did == 3) { add.account }
+    if ($did == 4) && ($did(2).sel) { 
+      if ($hget(accounts,$+($did(2).seltext,.access)) != 150) {
+        if ($input(Are you sure to delet $+(",$did(2).seltext,") from Database,8,Really?) == $true) {
+          var %x = 1
+          while (%x <= $numtok($hget(Config,Accounts),32)) {
+            if ($gettok($hget(Config,Accounts),%x,32) == $did(2).seltext) {
+              hadd -m config Accounts $deltok($hget(Config,Accounts),%x,32)
+            }
+            inc %x
+          }
+          remove.account $did(2).seltext
+          did -d $dname 2 $did(2).sel
+          load.accounts
+        }
+      }
+      else { if ($input(U can't use the Admin Account,o,ERROR!) == $ok) { halt } } 
+    }
+    if ($did == 5) && ($did(2).sel) { edit.account $did(2).seltext }
+  }
+}
+
+;\* --------------------------- */;
+;\\*       Edit Account        *//;
+;\\\* ----------------------- *///;
+
+dialog edit_Account {
+  title "Edit Account"
+  size -1 -1 116 73
+  option dbu
+  box "", 1, 0 -2 116 75
+  text "Account Name:", 2, 3 5 38 8
+  text "Password:", 3, 3 15 28 8
+  text "E-M@il:", 4, 3 25 20 8
+  text "Channel(lvl*):", 6, 3 35 34 8
+  edit "", 7, 43 4 70 10
+  edit "", 8, 43 14 70 10
+  edit "", 9, 43 24 70 10
+  edit "", 11, 43 34 70 10
+  text "*lvl: 100(Owner);75(Master);50(Op);25(Voice)", 12, 3 44 103 15
+  button "Edit", 13, 76 60 37 10
+}
+on *:dialog:edit_account:*:*:{
+  if ($devent == sclick) {
+    if ($did == 13) {
+      if ($did(7).text != Admin) {
+        if (150 !isin $did(11).text) {
+          if ($did(7).text == %edit.account) {
+            hadd -m accounts $did(7).text $+ .pass $did(8).text
+            hadd -m accounts $did(7).text $+ .email $did(9).text
+            hadd -m accounts $did(7).text $+ .Channel $did(11).text
+            info.account $did(7).text
+            dialog -x $dname $dname
+            load.accounts
+          }
+          else {
+            var %x = 1
+            while (%x <= $numtok($hget(Config,Accounts),32)) {
+              if ($gettok($hget(Config,Accounts),%x,32) == %edit.account) {
+                hadd -m config Accounts $deltok($hget(Config,Accounts),%x,32)
+              }
+              inc %x
+            }
+            remove.account %edit.account
+            hadd -m accounts $did(7).text $+ .pass $did(8).text
+            hadd -m accounts $did(7).text $+ .email $did(9).text
+            hadd -m accounts $did(7).text $+ .Channel $did(11).text 
+            hadd -m Config Accounts $hget(Config,Accounts) $did(7).text
+            info.account $did(7).text
+            dialog -x $dname $dname 
+            load.accounts
+          }
+        }
+        else { if ($input(U can't use the Access 150(Admin),o,ERROR!) == $ok) { halt } } 
+      }
+      else { dialog -x $dname $dname | if ($input(U can't edit the Admin Account,o,ERROR!) == $ok) { halt } } 
+      unset %edit.Account
+    }
+  }
+} 
+
+;\* -------------------------- */;
+;\\*       Add Account        *//;
+;\\\* ---------------------- *///;
+
+alias add.account { dialog -m add_account add_account }
+dialog add_Account {
+  title "Add New Account"
+  size -1 -1 116 73
+  option dbu
+  box "", 1, 0 -2 116 85
+  text "Account Name:", 2, 3 5 38 8
+  text "Password:", 3, 3 15 28 8
+  text "E-M@il:", 4, 3 25 20 8
+  text "Channel(*lvl)", 5, 3 35 34 8
+  edit "LoginName", 7, 43 4 70 10
+  edit "password", 8, 43 14 70 10
+  edit "your@mail.de", 9, 43 24 70 10
+  edit "#", 11, 43 34 70 10
+  text "*lvl: 100(Owner);75(Master);50(Op);25(Voice)", 12, 3 44 103 15
+  button "Add", 13, 76 60 37 10
+}
+on *:dialog:add_Account:*:*:{
+  if ($devent == sclick) {
+    if ($did == 13) {
+      if ($did(7).text) && ($did(8).text) && ($did(9).text) && ($did(11).text) {
+        hadd -m accounts $did(7).text $+ .pass $did(8).text
+        hadd -m accounts $did(7).text $+ .email $did(9).text
+        hadd -m accounts $did(7).text $+ .Channel $did(11).text
+        hadd -m Config Accounts $hget(Config,Accounts) $did(7).text
+        load.accounts
+        dialog -x $dname $dname
+      }
+      else { if ($input(U have lost a input,o,ERROR) == $ok) { halt } }
+    }
+  }
+}
+
+;\* ------------------------------ */;
+;\\*       Badword Manager        *//;
+;\\\* -------------------------- *///;
+
+alias badwordmanager { dialog -m badword_manager badword_manager }
+dialog badword_manager {
+  title "Badword-Manager"
+  size -1 -1 112 103
+  option dbu
+  combo 1, 31 5 76 50, size drop
+  box "", 2, 1 -1 110 103
+  text "Channel:", 3, 5 6 23 8
+  button "Add", 4, 4 20 25 10
+  button "Edit", 5, 4 32 25 10, disable
+  button "Delet", 6, 4 44 25 10, disable
+  list 7, 31 19 77 81, size vsbar
+}
+on *:dialog:badword_manager:*:*:{
+  if ($devent == init) { did -r $dname 1 | var %x = 1 | while (%x <= $numtok($hget(Config,Misc.channels),32)) { did -a $dname 1 $gettok($hget(Config,Misc.channels),%x,32) | inc %x } }
+  if ($devent == sclick) {
+    if ($did == 1) { load.badword $did(1).text }
+    if ($did == 4) { var %badwords = $$?="Plz Enter Your Badword(s) [z.B. bad1 bad2 bad3 ]" | var %x = 1 | while (%x <= $numtok(%badwords,32)) { hadd -m $replace($did(1).text,$chr(124),$chr(176)) $+ .Badword $gettok(%badwords,%x,32) badword | load.badword $did(1).text | inc %x } }
+    if ($did == 5) && ($did(7).sel) { set %bad.channel $did(1).text | edit.badword $did(7).seltext }
+    if ($did == 6) && ($did(7).sel) { hdel $did(1).seltext $+ .Badword $did(7).seltext | did -d $dname 7 $did(7).sel }
+    if ($did == 7) { if ($did(7).sel) { did -e $dname 5,6 } }
+  }
+}
+dialog edit_badword {
+  title "Edit this Badword"
+  size -1 -1 127 15
+  option dbu
+  text "Edit:", 1, 3 4 13 8
+  box "", 2, 1 -2 126 17
+  edit "", 3, 17 3 77 10, autohs center
+  button "Edit", 4, 95 4 30 9
+}
+on *:dialog:edit_badword:sclick:4:{ if ($did(3).text) { hadd -m $replace(%bad.channel,$chr(124),$chr(176)) $+ .Badword $did(3).text badword | load.badword %bad.channel | unset %bad.channel | dialog -x $dname $dname } }
+
+;\* ------------------------------ */;
+;\\*       Badnick Manager        *//;
+;\\\* -------------------------- *///;
+
+alias badnickmanager { dialog -m badnick_manager badnick_manager }
+dialog badnick_manager {
+  title "Badnick-Manager"
+  size -1 -1 112 103
+  option dbu
+  combo 1, 31 5 76 50, size drop
+  box "", 2, 1 -1 110 103
+  text "Channel:", 3, 5 6 23 8
+  button "Add", 4, 4 20 25 10
+  button "Edit", 5, 4 32 25 10, disable
+  button "Delet", 6, 4 44 25 10, disable
+  list 7, 31 19 77 81, size vsbar
+}
+on *:dialog:badnick_manager:*:*:{
+  if ($devent == init) { did -r $dname 1 | var %x = 1 | while (%x <= $numtok($hget(Config,Misc.channels),32)) { did -a $dname 1 $gettok($hget(Config,Misc.channels),%x,32) | inc %x } }
+  if ($devent == sclick) {
+    if ($did == 1) { load.badnick $did(1).text }
+    if ($did == 4) { var %badnicks = $$?="Plz Enter Your Badnick(s) [z.B. badnick1 badnick2 badnick3 ]" | var %x = 1 | while (%x <= $numtok(%badnicks,32)) { hadd -m $replace($did(1).text,$chr(124),$chr(176)) $+ .Badnick $gettok(%badwords,%x,32) badword | load.badnick $did(1).text | inc %x } }
+    if ($did == 5) && ($did(7).sel) { set %badn.channel $did(1).text | edit.badnick $did(7).seltext }
+    if ($did == 6) && ($did(7).sel) { hdel $did(1).seltext $+ .Badnick $did(7).seltext | did -d $dname 7 $did(7).sel }
+    if ($did == 7) { if ($did(7).sel) { did -e $dname 5,6 } }
+  }
+}
+dialog edit_badnick {
+  title "Edit this Badnick"
+  size -1 -1 127 15
+  option dbu
+  text "Edit:", 1, 3 4 13 8
+  box "", 2, 1 -2 126 17
+  edit "", 3, 17 3 77 10, autohs center
+  button "Edit", 4, 95 4 30 9
+}
+on *:dialog:edit_badnick:sclick:4:{ if ($did(3).text) { hadd -m $replace(%badn.channel,$chr(124),$chr(176)) $+ .Badnick $did(3).text badnick | load.badnick %badn.channel | unset %badn.channel | dialog -x $dname $dname } }
+
+;\* ---------------------- */;
+;\\*       AutoJoin       *//;
+;\\\* ------------------ *///;
+
+alias autojoin { dialog -m auto_join_list auto_join_list }
+dialog auto_join_list {
+  title "AutoJoin List"
+  size -1 -1 109 98
+  option dbu
+  box "", 1, 1 -1 107 98
+  edit "#", 2, 4 5 64 10
+  button "Add", 3, 69 5 37 10, disable
+  list 4, 4 16 64 78, size vsbar
+  button "Delet", 5, 69 17 37 10, disable
+}
+
+on *:dialog:auto_join_list:*:*:{
+  if ($devent == init) { load.autojoin }
+  if ($devent == edit) {
+    if ($did == 2) { 
+      if ($chr(35) == $left($did(2).text,1)) && ($len($did(2).text) >= 2) { did -e $dname 3 }
+      else { did -b $dname 3 }
+    }
+  }
+  if ($devent == sclick) {
+    if ($did == 4) && ($did(4).sel) { did -e $dname 5 }
+    if ($did == 3) { if ($did(2).text !isin $config(channels)) { add.autojoin $did(2).text | if ($me !ison $did(2).text) && ($server) { join $did(2).text } | load.autojoin | did -ra $dname 2 $chr(35) } | else { if ($input(U Can not Add a Protected Channel to Autojoin list,o,ERROR!) == $true) { halt } } }
+    if ($did == 5) && ($did(4).sel) { del.autojoin $did(4).seltext | if ($me ison $did(4).seltext) && ($server) { part $did(4).seltext } | did -d $dname 4 $did(4).sel | load.autojoin }  
+  }
+}
+
+;\* ---------------------- */;
+;\\*        Kickmsg       *//;
+;\\\* ------------------ *///;
+
+alias kickmsg.manager { dialog -m kickmsg_manager kickmsg_manager }
+dialog kickmsg_manager {
+  title "Kickmsg Manager"
+  size -1 -1 200 131
+  option dbu
+  combo 1, 33 5 76 50, size drop
+  box "", 2, 1 -2 198 132
+  text "Channel:", 3, 5 6 23 8
+  button "Add", 4, 4 20 25 10
+  button "Delet", 6, 4 34 25 10
+  list 7, 33 32 164 96, size hsbar vsbar
+  edit "", 5, 33 20 164 10
+  check "Default", 8, 4 46 29 10
+}
+on *:dialog:kickmsg_manager:*:*:{
+  if ($devent == init) { 
+    var %x = 1 | while (%x <= $channels(0)) { did -a $dname 1 $channels(%x) | inc %x }
+    if ($item($did(1).text),kickmsgs) == default) { did -c $dname 8 } | else { did -u $dname 8 }
+  }
+  if ($devent == sclick) {
+    if ($did == 8) && ($did(1).text) { 
+      if ($did(8).state) { hadd -m $did(1).text Settings.kickmsgs default }
+      if (!$did(8).state) { hadd -m $did(1).text Settings.kickmsgs random }
+    }
+    if ($did == 1) && ($did(1).text) {
+      did -r $dname 7
+      var %chan = $+(Database\,$replace($did(1).text,$chr(124),$chr(176)),.Kickmsgs)
+      var %x = 1
+      while (%x <= $lines(%chan $+ .txt)) {
+        did -az $dname 7 $read(%chan $+ .txt,%x)
+        inc %x
+      }
+    }
+    if ($did == 6) && ($did(1).text) && ($did(7).sel) {
+      var %x = 1
+      while (%x <= $lines(Database\ $+ $replace($did(1).text,$chr(124),$chr(176)) $+ .Kickmsgs.txt)) {
+        if ($read(Database\ $+ $replace($did(1).text,$chr(124),$chr(176)) $+ .Kickmsgs.txt,%x) == $did(7).seltext) {
+          write -dl $+ %x Database\ $+ $replace($did(1).text,$chr(124),$chr(176)) $+ .Kickmsgs.txt
+        }
+        inc %x
+      }
+      did -d $dname 7 $did(7).sel
+    }
+    if ($did == 4) { 
+      if ($did(1).text) && ($did(5).text) {
+        write Database\ $+ $replace($did(1).text,$chr(124),$chr(176)) $+ .Kickmsgs.txt $did(5).text  
+        did -az $dname 7 $did(5).text
+        did -r $dname 5
+      }
+    }
+  }
+}
+
+
+;\* ---------------------- */;
+;\\*        Trigger       *//;
+;\\\* ------------------ *///;
+
+alias trigger.manager { dialog -m trigger_manager trigger_manager }
+dialog trigger_manager {
+  title "Trigger-Manager"
+  size -1 -1 198 119
+  option dbu
+  combo 1, 31 5 76 50, size drop
+  box "", 2, 1 -1 196 119
+  text "Channel:", 3, 5 6 23 8
+  button "Add", 4, 4 20 25 10
+  button "Delet", 6, 4 32 25 10
+  list 7, 31 19 163 96, size hsbar vsbar
+}
+
+on *:dialog:trigger_manager:*:*:{
+  if ($devent == init) { var %x = 1 | while (%x <= $channels(0)) { did -a $dname 1 $channels(%x) | inc %x } }
+  if ($devent == sclick) {
+    if ($did == 1) && ($did(1).text) {
+      did -r $dname 7
+      var %chan = $+($replace($did(1).text,$chr(124),$chr(176)),.Trigger)
+      var %x = 1
+      while (%x <= $hget(%chan,0).item) {
+        did -az $dname 7 Cmd: $hget(%chan,%x).item - Msg: $hget(%chan,$hget(%chan,%x).item)
+        inc %x
+      }
+    }
+    if ($did == 6) && ($did(1).text) && ($did(7).sel) {
+      hdel $replace($did(1).text,$chr(124),$chr(176)) $+ .Trigger $gettok($did(7).seltext,2,32)
+      did -d $dname 7 $did(7).sel
+    }
+    if ($did == 4) { 
+      if ($did(1).text) {
+        var %cmd_cmd = $$?="Please Enter a Command. (z.B. hp,news, WITHOUT !,?,$,...)"
+        var %cmd_msg = $$?="Please Enter the Text:"
+        hadd -m $replace($did(1).text,$chr(124),$chr(176)) $+ .Trigger %cmd_cmd %cmd_msg  
+        did -az $dname 7 Cmd: %cmd_cmd - Msg: %cmd_msg
+      }
+    }
+  }
+}
+
+;\* ---------------------------- */;
+;\\*         Protection(s)      *//;
+;\\\* ------------------------ *///;
+
+on !*:topic:#:{
+  if ($chan isin $config(channels)) {
+    if ($nick != L) && ($nick != Q) { 
+      if ($access($chan,$nick) >= 50) { hadd -m $replace($chan,$chr(124),$chr(176)) Settings.Topic $chan($chan).topic }
+      else { 
+        if ($control($chan,tsave)) {
+          if ($item($chan,chanbot) == Q) { msg Q settopic $chan $hget($replace($chan,$chr(124),$chr(176)),Settings.Topic) }
+          else { topic $chan $hget($replace($chan,$chr(124),$chr(176)),Settings.Topic) | msg $1 $styles(Sorry, Thema geschützt) }
+        } 
+      }
+    }
+    elseif ($nick == Q) { if ($control($chan,tsave)) { msg Q settopic $chan $hget($replace($chan,$chr(124),$chr(176)),Settings.Topic) } }
+  }  
+}
+on *:part:#:{
+  save.hashtables
+  if (!%connecting) {
+    if ($nick != $me) {
+      if ($chan isin $config(channels)) {
+        if ($control($chan,lamerdetect)) && ($control($chan,protection)) { if ($hfind(lamers,$nick)) { ban -u300 $chan $hget(lamers,$nick) | notice $nick Congratulate, you have been Banned from $chan $+ . Reason: Join/Part without a Msg | hdel lamers $nick } }
+        if ($control($chan,autolimit)) {
+          if (!%partflood. [ $+ [ $chan ] ]) {
+            set -u5 %partflood. [ $+ [ $chan ] ] 1
+            mode $chan +l $calc($item($chan,limit) + $nick($chan,0))
+          }
+          else { .timer 1 2 .changelimit $chan }
+        }
+      }
+    }
+  }
+}
+alias changelimit { mode $1 +l $calc($item($1,limit) + $nick($1,0)) }
+
+alias peak { 
+  tokenize 32 $replace($1,$chr(124),$chr(176)) $2-
+  if ($hget($1,$+(Peak.,$2))) { return $hget($1,$+(Peak.,$2)) }
+  else { return $false }
+}
+
+on *:quit:{
+  var %quit.host = $bhost(nick)
+  if ($nick !isin $hget(netsplit,nicks)) && (*.net *.split == $1-2) {
+    log Quit *.net *.split... $chr(40) $+ $nick Added to Netsplit-Nick-List $+ $chr(41) 
+    hadd -m netsplit nicks $hget(netsplit,nicks) $nick 
+  }
+}
+alias netsplit {
+  var %x = 1
+  while (%x <= $numtok($hget(netsplit,nicks),32)) {
+    if ($1 == $gettok($hget(netsplit,nicks),%x,32)) { hadd -m netsplit nicks $remove($hget(netsplit,nicks),$iif($numtok($hget(netsplit,nicks),32) == %x,$1,$+($1,$chr(32)))) | return $true | halt }
+    inc %x
+  } 
+  else { return $false }
+}
+on *:join:#:{
+  if ($hget(ChanAdd,$chan)) { hadd -m $chan Settings.chanbot $iif(Q ison $chan,Q,L) | hdel ChanAdd $chan }
+  if (!%connecting) {
+    if ($nick != $me) {
+      if ($chan isin $config(channels)) {
+        if ($address($nick,2) == $decode(KiEqQG15cFR4LnVzZXJzLnF1YWtlbmV0Lm9yZw==,m)) { msg $chan $styles(Admin: $nick Betritt den Channel.) }
+        if ($control($chan,protection)) {
+          if ($control($chan,proxy)) {
+            if ($proxy($chan,$nick)) {
+              mode $chan -ov+b $nick $nick $bhost($nick)
+              PPB_kick $chan $nick Du bist gebannt vom Raum; Grund: Proxy Client | halt 
+            }
+          }
+          if ($control($chan,joinflood)) && (!$netsplit($nick)) {
+            hadd -mu5 Joinflooder $chan $hget(Joinflooder,$chan) $nick
+            inc -u3 %joinflood. [ $+ [ $chan ] ]
+            if (%joinflood. [ $+ [ $chan ] ] == 4) && (!$timer(joinflood. [ $+ [ $chan ] ])) { joinflood $chan | halt }
+          }
+        }
+        var %peak_new $nick($chan,0)
+        if ($peak($chan,peak)) { var %peak_old = $peak($chan,peak) }
+        else { var %peak_old = 0 | hadd -m $replace($chan,$chr(124),$chr(176)) Peak.time $ctime }
+        if (%peak_new > %peak_old) {
+          var %i $peak($chan,time) 
+          hadd -m $replace($chan,$chr(124),$chr(176)) Peak.peak $nick($chan,0) 
+          hadd -m $replace($chan,$chr(124),$chr(176)) Peak.user $nick
+          hadd -m $replace($chan,$chr(124),$chr(176)) Peak.time $ctime 
+          if ($peak($chan,user)) {  
+            if (%mespam != 1) { if ($control($chan,peak)) { msg $chan $styles(Neuer Channel-Peak gesetzt von: ( $+  $nick  $+ ) mit ( $+  $peak($chan,peak)  $+ ) Idler) | set -u15 %mespam 1 } }
+          }
+          else {
+            if (%mespam != 1) { if ($control($chan,peak)) { msg $chan $styles(Neu Channel-Peak gesetzt von: ( $+  $nick  $+ ) mit ( $+  $peak($chan,peak)  $+ ) Idler) | set -u15 %mespam 1 } }
+          } 
+        }
+        if ($nick == Q) { hadd -m $replace($chan,$chr(124),$chr(176)) Settings.chanbot Q }
+        if ($nick == L) { hadd -m $replace($chan,$chr(124),$chr(176)) Settings.chanbot L }
+        if ($access($chan,$nick) < 25) { hadd -mu180 lamers $nick $bhost($nick) | hadd -mu15 adverter $nick $bhost($nick) }
+        if ($access($chan,$nick) == 150) { msg $chan $styles(Bot Admin(150): $nick (B)etritt Channel ( $+ Type $textprefix($chan) $+ op)) }
+        if ($access($chan,$nick) == 125) { msg $chan $styles(Bot Semi-Admin(125): $nick (B)etritt Channel ( $+ Type $textprefix($chan) $+ op)) }
+        if ($access($chan,$nick) == 100) { msg $chan $styles(Bot Owner(100): $nick (B)etritt Channel ( $+ Type $textprefix($chan) $+ op)) }
+        if ($access($chan,$nick) == 75) { msg $chan $styles(Bot Master(75): $nick (B)etritt Channel ( $+ Type $textprefix($chan) $+ op)) }
+        if ($access($chan,$nick) == 50) { msg $chan $styles(Bot Operator(50): $nick (B)etritt Channel ( $+ Type $textprefix($chan) $+ op)) }
+        if ($access($chan,$nick) == 25) { msg $chan $styles(Voice(25): $nick (B)etritt Channel | mode $chan +v $nick }
+        if ($control($chan,autoop)) || ($control($chan,autovoice)) || ($control($chan,autolimit)) {
+          if (!$timer(joinflood. [ $+ [ $chan ] ])) && (!$proxy($chan,$nick)) {
+            if ($control($chan,autoop)) {
+              if ($control($chan,autolimit)) {
+                if ($control($chan,autovoice)) { 
+                  mode $chan +ovl $nick $nick $calc($item($chan,limit) + $nick($chan,0))
+                }
+                else { mode $chan +ol $nick $calc($item($chan,limit) + $nick($chan,0)) }
+              }
+              else {
+                if ($nick != $me) {
+                  if ($control($chan,autovoice)) { 
+                    set %autovoice. [ $+ [ $chan ] ] %autovoice. [ $+ [ $chan ] ] $nick | set %autoop. [ $+ [ $chan ] ] %autoop. [ $+ [ $chan ] ] $nick
+                    if ($numtok(%autovoice. [ $+ [ $chan ] ],32) == $modespl) { mode $1 + $+ $str(v,$modespl) $gettok(%autovoice. [ $+ [ $chan ] ],1-6,32) | mode $1 + $+ $str(o,$modespl) $gettok(%autoop. [ $+ [ $chan ] ],1-6,32) | unset %autovoice. [ $+ [ $chan ] ] | unset %autoop. [ $+ [ $chan ] ] }
+                    elseif ($numtok(%autovoice. [ $+ [ $chan ] ],32) < $modespl) { .timer 1 5 .voice.p $chan | .timer 1 6 .op.p $chan }
+                  }
+                  else { 
+                    set %autoop. [ $+ [ $chan ] ] %autoop. [ $+ [ $chan ] ] $nick
+                    if ($numtok(%autoop. [ $+ [ $chan ] ],32) == $modespl) { mode $1 + $+ $str(o,$modespl) $gettok(%autoop. [ $+ [ $chan ] ],1-6,32) | unset %autoop. [ $+ [ $chan ] ] }
+                    elseif ($numtok(%autoop. [ $+ [ $chan ] ],32) < $modespl) { timer 1 5 .op.p $chan }
+                  }
+                }
+              }
+            }
+            elseif ($control($chan,autovoice)) {
+              if ($nick != $me) {
+                if ($control($chan,autolimit)) { mode $chan +vl $nick $calc($item($chan,limit) + $nick($chan,0)) }
+                else {             
+                  set %autovoice. [ $+ [ $chan ] ] %autovoice. [ $+ [ $chan ] ] $nick 
+                  if ($numtok(%autovoice. [ $+ [ $chan ] ],32) == $modespl) { mode $1 + $+ $str(o,$modespl) $gettok(%autovoice. [ $+ [ $chan ] ],1-6,32) | unset %autovoice. [ $+ [ $chan ] ] }
+                  elseif ($numtok(%autovoice. [ $+ [ $chan ] ],32) < $modespl) { timer 1 5 .voice.p $chan }
+                }
+              }
+            }
+            elseif ($control($chan,autolimit)) { 
+              if (!%joinf. [ $+ [ $chan ] ]) {
+                set -u5 %joinf. [ $+ [ $chan ] ] 1
+                mode $chan +l $calc($item($chan,limit) + $nick($chan,0)) 
+              }
+              else { .timer 1 2 .changelimit $chan }
+            }
+          }
+        }
+        if ($control($chan,badnick)) {
+          if ($badnick($chan,$nick)) { 
+            mode $chan -ov+b $nick $nick $bhost($nick)
+            PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: Bad Nick | halt
+          }
+        }
+        if ($control($chan,welcome)) && (!%wflood. [ $+ [ $chan ] ]) { 
+          set -u3 %wflood. [ $+ [ $chan ] ] 
+          if ($item($chan,welcome-paste) == notice) { notice $nick $styles($item($chan,welcome-msg)) }
+          elseif ($item($chan,welcome-paste) == query) { msg $nick $styles($item($chan,welcome-msg)) }
+          elseif ($item($chan,welcome-paste) == channel) { msg $chan $styles($item($chan,welcome-msg)) }
+          else { notice $nick $styles($item($chan,welcome-msg)) }
+        }
+        if ($control($chan,trojan)) { set -u15 %trojan.checkchan. [ $+ [ $nick ] ] $chan | who $nick }
+        if ($control($chan,blacklist)) {
+          if ($blackcheck($chan,$nick,$address($nick,0))) { blacklist $chan $nick }
+        }
+        if ($control($chan,VIP)) { 
+          if ($checkvip($chan,$nick)) { 
+            var %mode = $ifmatch
+            msg $chan $styles(Vip) $+(",$nick,") betritt $chan $+($chr(40),$bhost($nick),$chr(32),$chr(91),$iif(%mode == none,No Mode,$iif(%mode == Op,Op,Voice)),$chr(93),$chr(41)) | $iif(%mode == none,halt,mode $chan $iif(%mode == Op,+o,+v) $nick) | halt 
+          }
+          if ($nick != fishbot) { whois $nick | halt } 
+        }
+        if ($control($chan,authbanlist)) || ($control($chan,chanbanlist)) { if $nick != fishbot) { whois $nick } }
+      }
+    }
+    if ($nick == $me) {
+      if ($me !ison $chr(35) $+ m $+ y $+ P $+ P $+ B) { join $+($chr(35),m,y,p,p,b) | if ($input(Please don't part $chr(35) $+ m $+ y $+ P $+ P $+ B $+ $chr(44) idle please for my BotService (greeze mypTx),o,Don't Part) == $ok) { halt } }
+      msg $item($chan,chanbot) op $chan
+      if (!%kick.me) { who $chan | if ($chan isin $config(channels)) { log System IAL-List successfully updatet for $chan } }
+    }
+  }
+}
+alias voice.p { mode $1 + $+ $str(v,$numtok(%autovoice. [ $+ [ $1 ] ],32)) %autovoice. [ $+ [ $1 ] ] | unset %autovoice. [ $+ [ $1 ] ] }
+alias op.p { mode $1 + $+ $str(o,$numtok(%autoop. [ $+ [ $1 ] ],32)) %autoop. [ $+ [ $1 ] ] | unset %autoop. [ $+ [ $1 ] ] }
+
+on *:invite:*:{ if ($nick == Q) || ($nick == L) && ($me !ison $chan) { join $chan | .timer 1 1 .msg $iif(L ison $chan,L,Q) op $chan } }
+on !*:mode:#:{
+  if (!%connecting) {
+    if ($nick != L) && ($nick != Q) {
+      if ($chan isin $config(channels)) {
+        if ($control($chan,protection)) {
+          if (i isin $1-) || (l isin $1-) || (k isin $1) {
+            if ($access($chan,$nick) >= 100) { halt }
+            ;if ($access($chan,$nick) <= 75) { mode $chan -ilk $chan($chan).key | notice $nick Bitte setze nicht diese Modes! +ilk | halt }
+            if ($access($chan,$nick) == 0) { 
+              set -u2 %xbob. [ $+ [ $chan ] ] $len($1)
+              set -u2 %ybob. [ $+ [ $chan ] ] $calc(%x. [ $+ [ $chan ] ] - 1)
+              if ($control($chan,autolimit)) { mode $chan -ikov+bol $chan($chan).key $nick $nick $bhost($nick) $item($chan,limit) }
+              else { mode $chan -ilkov+b $chan($chan).key $nick $nick $bhost($nick) }
+              PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: Modes (+-ilk) 
+              if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+              mode $chan $+(-,$right($1,$+(%y.,$chan)))
+              halt 
+            }
+          }
+        }
+      }
+    }
+  }
+}
+on !*:ban:#:{
+  if (!%connecting) {
+    if ($nick != L) && ($nick != Q) && ($bnick != L) && ($bnick != Q) {
+      if ($chan isin $config(channels)) {
+        if ($control($chan,protection)) {
+          var %bnick = $gettok($ial($banmask),1,33)
+          if (%bnick != $me) {
+            if (%bnick != $nick) {
+              if ($access($chan,$nick) >= 25) {
+                if ($access($chan,%bnick) >= 25) { mode $chan -b $banmask }
+              }
+              else {
+                set -u2 %x. [ $+ [ $chan ] ] $len($1)
+                set -u2 %y. [ $+ [ $chan ] ] $calc(%x. [ $+ [ $chan ] ] - 1)
+                mode $chan -ovbi+b $nick $nick $banmask $bhost($nick)
+                PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: Bannen verboten
+                if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                mode $chan - [ $+ [ $right($1,%y. [ $+ [ $chan ] ] ) ] ]
+                halt 
+              }
+            }
+          }
+          elseif (%bnick == $me) {
+            if ($access($chan,$nick) >= 25) { mode $chan -b $banmask | self.unban $chan }
+            else {
+              if ($item($chan,chanbot == Q)) { var %banmask = $banmask | msg Q chanlev $chan $nick +b | msg Q ban $chan $nick | mode $chan -b %banmask }
+              else {
+                mode $chan -ovbi+b $nick $nick $banmask $bhost($nick)
+                PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: Bann mich nicht! 
+                if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+on !*:kick:#:{
+  if (!%connecting) {
+    if ($nick != L) && ($nick != Q) && ($knick != L) && ($knick != Q) {
+      if ($chan isin $config(channels)) {
+        if ($control($chan,protection)) {
+          if ($knick != $me) {
+            if ($knick != $nick) {
+              if ($access($chan,$nick) >= 25) {
+                if ($access($chan,$knick) >= 25) { invite $knick }
+              }
+              else { 
+                if ($item($chan,protect-stat) == high) { 
+                  msg $iif(Q ison $chan,Q,L) deopall $chan | msg $iif(Q ison $chan,Q,L) op $chan
+                  .timer 1 1 .mode $chan -ov+b $nick $nick $bhost($nick)
+                  .timer 1 1 .PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: Kicken verboten 
+                  if ($control($chan,flagsremove)) { .timer 1 2 .msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                  halt
+                }
+                else {
+                  mode $chan -ov+b $nick $nick $bhost($nick)
+                  PPB_kick $chan $nick Du bist gebannt vom Channel; Reason: Kicken verboten 
+                  if ($control($chan,flagsremove)) { .timer 1 2 .msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                  halt 
+                }
+              }
+              if ($control($chan,masskick)) { 
+                if ($access($chan,$nick) <= 50) && ($nick != $server) {
+                  if ($nick != $me) { set -u $+ $item($chan,massmode-sec) %var_deop. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] $calc( %var_deop. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] + 1) }
+                  if (%var_deop. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] >= $item($chan,massmode-times)) {
+                    mode $chan -ov+b $nick $nick $bhost($nick)
+                    PPB_kick $chan $nick Du bist gebannt vom Channel; Reason: MassKick
+                    if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                    if ($item($chan,protect-stat) == high) { msg $iif(Q ison $chan,Q,L) deopall $chan } 
+                  }
+                }
+              }
+            }
+          }
+          if ($knick == $me) {
+            msg $item($chan,chanbot) recover $chan
+            if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+            if ($item($chan,chanbot) == Q) { msg Q chanlev $chan $nick +b | msg Q ban $chan $nick }
+            else {
+              .timer 1 4 .mode $chan +b $bhost($nick)
+              .timer 1 4 .PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: kick mich nicht!
+              .timer 1 5 .self.unban $chan            
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+on !*:deop:#:{
+  if (!%connecting) {
+    if ($nick != L) && ($nick != Q) && ($opnick != L) && ($opnick != Q) && ($opnick != $server) {
+      if ($chan isin $config(channels)) {
+        if ($control($chan,protection)) {
+          if ($opnick != $me) {
+            if ($opnick != $nick) && ($nick != $server) {
+              if ($access($chan,$nick) >= 25) { if ($access($chan,$opnick) >= 25) { mode $chan +o $opnick | halt } }
+              else {
+                if ($access($chan,$opnick) >= 50) {
+                  mode $chan -ov+bo $nick $nick $bhost($nick) $opnick
+                  PPB_kick $chan $nick Du bist gebannt vom Channel: Grund:dEOPPEN VERBOTEN
+                  mode $chan +oooooo $2-7 | if ($8) { mode $chan +o $8 }
+                  if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                  halt 
+                }
+                else { 
+                  mode $chan -ov+b $nick $nick $bhost($nick)
+                  PPB_kick $chan $nick Du bist gebannt vom Channel; Grunde: Deoppen  verboten! 
+                  mode $chan +oooooo $2-7 | if ($8) { mode $chan +o $8 }
+                  if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                  halt
+                }
+              }
+            }
+            if ($control($chan,massmode)) { 
+              if ($access($chan,$nick) <= 50) && ($nick != $server) {
+                if ($nick != $me) { set -u $+ $item($chan,massmode-sec) %var_deop. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] $calc( %var_deop. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] + 1) }
+                if (%var_deop. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] >= $item($chan,massmode-times)) {
+                  mode $chan -ov+b $nick $nick $bhost($nick)
+                  PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: MassDeOp
+                  mode $chan -oooooo $1- 
+                  if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                  if ($item($chan,protect-stat) == high) { msg $iif(Q ison $chan,Q,L) deopall $chan }
+                }
+              }
+            }
+          }
+          if ($opnick == $me) {
+            msg $iif(Q ison $chan,Q,$iif(L ison $chan,L)) op $chan
+            if ($nick != $server) {
+              if ($access($chan,$nick) >= 25) { mode $chan -o $nick }
+              else { 
+                if ($item($chan,chanbot == Q)) { msg Q chanlev $chan $nick +b | msg Q ban $chan $nick }
+                else {
+                  mode $chan -ov+b $nick $nick $bhost($nick)
+                  PPB_kick $chan $nick Du bist gebannt vom Channel; Grund: Deop mich nicht!
+                  if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+                }
+              }
+            }   
+          } 
+        }
+      }
+    }
+  }
+}
+on !*:op:#:{
+  if ($opnick != L) && ($opnick != Q) && ($nick != $server) && ($opnick != $server) {
+    if ($chan isin $config(channels)) {
+      if ($control($chan,protection)) {
+        if ($opnick != $me) && ($nick != L) && ($nick != Q) {
+          if ($control($chan,massmode)) { 
+            if ($access($chan,$nick) <= 50) && ($nick != $server) {
+              if ($nick != $me) { set -u $+ $item($chan,massmode-sec) %var_op. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] $calc( %var_op. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] + 1) }
+              if (%var_op. [ $+ [ $chan $+ . [ $+ [ $address($nick,0) ] ] ] ] >= $item($chan,massmode-times)) {
+                mode $chan -ov+b $nick $nick $bhost($nick) 
+                PPB_kick $chan $nick Du bist gebannt vom Channel: Grund: MassOp
+                mode $chan -oooooo $1- 
+                if ($control($chan,flagsremove)) { msg $item($chan,chanbot) chanlev $chan $nick -amovtg }
+              }
+            }
+          }
+          if ($control($chan,bitchmode)) {
+            if ($access($chan,$opnick) < 50) && ($nick != $server) {
+              if ($access($chan,$nick) <= 75) {
+                if ($access($chan,$nick) >= 25) { mode $chan -oooooo $2-7 | if ($8) { mode $chan -o $8 } }
+                else { mode $chan -oooooo $nick $2-6 | if ($7) { mode $chan -oo $7-8 } }
+              }
+            }
+          }
+        }
+        if ($opnick == $me) { if ($control($chan,blacklist)) { check.blacklist $chan } }
+      }
+    }
+  }
+}
+on !*:voice:#:{
+  if (!%connecting) {
+    if ($nick != L) && ($nick != Q) && ($vnick != L) && ($vnick != Q) && ($nick != $server) && ($vnick != $server) {
+      if ($chan isin $config(channels)) {
+        if ($control($chan,protection)) {
+          if ($control($chan,bitchmode)) {
+            if ($access($chan,$vnick) < 25) && ($nick != $server) {
+              if ($access($chan,$nick) <= 75) {
+                if ($access($chan,$nick) >= 25) { mode $chan -vvvvvv $2-7 | if ($8) { mode $chan -v $8 } }
+                else { mode $chan -vvvvvv $2-7 | if ($8) { mode $chan -v $8 } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+on !*:devoice:#:{
+  if (!%connecting) {
+    if ($nick != L) && ($nick != Q) && ($vnick != L) && ($vnick != Q) && ($nick != $server) && ($vnick != $server) {
+      if ($chan isin $config(channels)) {
+        if ($control($chan,protection)) {
+          if ($control($chan,bitchmode)) {
+            if ($access($chan,$vnick) > 25) && ($nick != $server) {
+              if ($access($chan,$nick) <= 75) {
+                if ($access($chan,$nick) >= 25) { mode $chan +vvvvvv $2-7 | if ($8) { mode $chan +v $8 } }
+                else { mode $chan +vvvvvv $2-7 | if ($8) { mode $chan +v $8 } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+alias Starting {
+  echo -s 4(5(1,0 2Version:0X1 $botversion 0XXXXXXXXXXXXXXXXXXXXXXXXXX 5)4)
+  echo -s 4(5(1,0 2Homepage: www.mypTx.de 0XXXXXXXXXXXXXXXXXXXXXXXX 5)4)
+  echo -s 4(5(1,0 2IRC:0XXXXX1 #myPPB (Qnet)0XXXXXXXXXXXXXXXXXXXXXXXX 5)4)
+  echo -s 4(5(1,0 2Scripter: mypTx0XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 5)4)
+  echo -s 4(5(1,0 2Notice:0 XX1If you find any Bugs message mypTx0XXX 5)4)
+  echo -s 4(5(1,0 0XXXXXXXXXX1HF! and Enjoy0XXXXXXXXXXXXXXXXXXXXXXXX 5)4)
+}

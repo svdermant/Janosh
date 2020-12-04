@@ -1,0 +1,31 @@
+ON *:text:!posts:#: { 
+  set %cha $chan 
+  timerpsh1 0 120 /psh 
+  msg %cha Dejavue ForumPosts Gestartet:
+}
+
+alias psh { 
+  sockopen psh dejavue.selfip.info 80 
+}
+
+ON *:sockopen:psh: {
+  sockwrite -n psh GET /rdf.php?count=6 HTTP/1.0
+  sockwrite -n psh Host: dejavue.selfip.info 80
+  sockwrite -n psh $crlf
+}
+ON *:sockread:psh: {
+  sockread %psh.temp
+  if (*<item>* iswm %psh.temp) { set %o 1 }
+  if (%o == 1) && (*<title>*</title>* iswm %psh.temp) { write f.txt $gettok($gettok(%psh.temp,2,62),1,60) }
+  if (%o == 1) && (*<link>*</link>* iswm %psh.temp) { write f.txt $gettok($gettok(%psh.temp,2,62),1,60) }
+  if (*</item>* iswm %psh.temp) { sockclose psh }
+}
+on *:sockclose:psh: {
+  if (%new.psh != $read(f.txt,3)) { 
+    set %psh-2 14,1::10:::11( 14Dejavue 7- 14News 11)10::14::10::11(14 $read(f.txt,3) 11)(::.7  $read(f.txt,4) 11.::)
+    set %new.psh $read(f.txt,3)
+    scon -a amsg %psh-2 
+  }
+  write -c f.txt
+  unset %psh*
+}

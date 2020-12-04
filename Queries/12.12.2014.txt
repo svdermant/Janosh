@@ -1,0 +1,2 @@
+[Fri Dec 12 02:27:08 2014] :: Oscar: Success! Account Sasuke created. You have 600 seconds idleness until you reach level 1.
+[Fri Dec 12 02:27:08 2014] :: Oscar: NOTE: The point of the game is to see who can idle the longest. As such, talking in the channel, parting, quitting, and changing nicks all penalize you.

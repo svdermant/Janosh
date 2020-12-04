@@ -1,0 +1,7 @@
+[Sat Aug 18 01:08:00 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sat Aug 18 19:37:34 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sat Aug 18 20:38:35 2018] :: [SYSTEM] IAL-List successfully updatet for #Battledome
+[Sat Aug 18 22:00:24 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sat Aug 18 22:05:45 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sat Aug 18 23:07:28 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Sat Aug 18 23:14:08 2018] :: [SYSTEM] Spamattack on #Battledome detected.

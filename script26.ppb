@@ -1,0 +1,75 @@
+alias zonk {
+  /var %server = $server
+  /var %chan = $2
+  /var %nick = $1
+  if (%chan == $null) || (%nick == $null) {
+    /echo 3 -at * Either you didn't specify a nick or you are not on a channel
+    /return
+  }
+  if ([ % $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] ] != $null) {
+    /echo 3 -at * The nick already got the choice on this channel ;)
+    /return
+  }
+  /msg $chan %nick $+ ! Sie haben die Wahl zwischen !Tor1, !Tor2 !Tor3 !tor4. (Vorsicht, hinter einem lauert der Zonk!)
+  /set %zonk $+ . $+ $server $+ . $+ %chan $+ . $+ %nick zonk
+  /timer $+ zonk $+ . $+ $server $+ . $+ %chan $+ . $+ %nick 1 20 /zonkkick %server %chan %nick
+}
+on *:nick:{
+  if ([ % $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] ] == zonk) {
+    /unset % $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ]
+    /timer $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] off
+    /kick $chan $newnick Cheater ;) -> Zonk!! <-
+  }
+}
+alias -l zonkkick {
+  /var %server = $1
+  /var %chan = $2
+  /var %nick = $3
+  /unset % $+ zonk $+ . [ $+ [ %server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ]
+  /kick %chan %nick Sry, time is up ;) -> Zonk!! <-
+}
+on tu:text:!Tor*:#:{
+  /var %server = $server
+  /var %chan = $chan
+  /var %nick = $nick
+  if ([ % $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] ] == zonk ) { msg $chan Sind sie sich Wirklich sicher oder Wollen sie doch lieber : !tor $+ $rand(1,4) ? | /auser tu2 $nick }
+}
+on tu2:text:!Tor*:#:{
+  /var %server = $server
+  /var %chan = $chan
+  /var %nick = $nick
+  if ([ % $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] ] == zonk) {
+    /timer $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ] off
+    /unset % $+ zonk $+ . [ $+ [ $server ] ] $+ . [ $+ [ %chan ] ] $+ . [ $+ [ %nick ] ]
+    /var %action = $rand(1, 4)
+    if (%action == 1) {
+      /msg %chan 4Zonk!! Pech gehabt...
+      /kick %chan %nick Vielleicht beim nächsten mal ;)
+    }
+    elseif (%action == 2) {
+      /msg %chan %nick $+ ! Leider war nichts hinter diesem Tor :((
+    }
+    elseif (%action == 3) {
+      /msg %chan Glückwunsch, %nick $+ . Sie gewinnen ein niegelnagelneues @.
+      /mode %chan +o %nick
+    }
+    elseif (%action == 4) {
+      ./msg %chan noch ein zonk, %nick $+ . :(
+      ./mode %chan -o %nick
+    }
+    unset %zuse
+    /ruser $nick
+  }
+}
+
+
+menu nicklist {
+  Slap
+  .-
+  .Zonk { /zonk $1 }
+  .-
+}
+on *:text:-Heiser Preis*:#:{
+  /zonk $3 $chan
+  /auser tu $3
+}

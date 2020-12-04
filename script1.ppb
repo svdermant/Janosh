@@ -1,0 +1,27 @@
+on *:text:!news:#: { /timerheise 1 1 sockopen heise www.heise.de 80 }
+on *:text:*hatschi*:#: { msg # 4,0 NOTARTZT!!! 12,0 Glaub Da hat wer geniest *sfg* }
+on *:text:Lach:#: { msg # 12,0 Verlerne Nie zu lachen, 12,4 Denn ein Leben Ohne lachen, 12,9 ist wie Frühling ohne Mai xD }
+on *:text:!drinkbar:#: {
+  msg # Hat da wer durst ??? Okay sie können wählen :)
+  msg # Alkoholfreie Getränke:
+  msg # 7!tee !milch !selter !kaffee !kakao !Fanta !cola !pepsi !sprite !Orangensaft !apfelsaft !Pfisichsaft !IceTee !icekAFFEE
+}
+on *:text:!tee:#: {
+
+  msg # MomentZ Mal Schnell Tee Koch *gg*
+  play # tee.txt 20
+  msg # Gutes Drinken :)
+}
+on *:text:!milch:#: {
+
+  msg # MomentZ Mal Schnell Milch Hol :)
+  play # milch.txt 20
+  msg # Milch ist Gesund.
+}
+on *:text:!kaffee:#: {
+
+  msg # <-- Mal in die Küche geht 
+  msg # <-- Wasser aufsetz und kaffe koch.
+  msg # dauert leider 5 minuten $nick.
+  /timerk1 1 300 /msg # Mal $nick einen Heisen Kaffee c[5,5o]~ Bring...... :) *guten durst*
+}

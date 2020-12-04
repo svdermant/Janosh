@@ -1,0 +1,54 @@
+on *:text:!nLesen:?:{
+  if (%not == on) {
+    msg $nick Nachdem du alles Gelesen hast kannst du dich nochmal dazu Äusern durch !stellung <text>
+    /play $nick $nick $+ .txt
+  }
+}
+on *:text:!stellung*:?: {
+  if (%not == on) {
+    set %stell $2-
+    msg $nick Okay dein Notruf wird jetzt bearbeitet. bitte warte biss sich er Entsprechende Operator bei dir meldet um den Vorfall zu Prüfen.
+    write -l8 $nick $+ .txt Stellungname des Beschuldigten: $2-
+    /timernotrufsend1 1 5 /msg #hilfe Achtung Es Liegt ein Notruf vor . !n-lesen zum Lesen
+    write notruf.txt ----- Notrufsystem ----
+    write notruf.txt Beschwerde gegen %nv-nick
+    write notruf.txt Beschwerdeführer %bführer
+    write notruf.txt Notrufnummer %nummer
+    write notruf.txt ---------Grund--------
+    write notruf.txt %grund
+    write notruf.txt ---------Vorfallschilderung----
+    write notruf.txt Beschwerde: %nv-besch
+    write notruf.txt Stellungnahme des Beschuldigten: %stell
+    write notruf.txt --------Notrufsystem----------
+  }
+}
+
+on *:text:!N-Lesen:#opers: {
+  if ($nick isop $chan) { play $chan Notruf.txt }
+}
+
+on *:text:!nstellung*:#opers: {
+  if ($nick isop $chan)  {
+    set %nstellung $4-
+    write -l7 $2 $+ .txt Stellungname des Ops und Handlung $3 $4-
+    write notruf.txt Stellungname des Ops und Handlung $3 $4-
+  }
+}
+on *:text:!clear:#opers: {
+  remove notruf.txt
+}
+on *:text:!nja:#hilfe: {
+  if ($nick == Kamerot) {
+    write -l10 %nv-nick $+ .txt Zustimmgung: Ja
+    write notruf.txt Zustimmung: Ja
+    /msg %nv-nick Dein Notruf wurde Bearbeitet und du wirst in wenigen Minuten Kontaktiert
+  }
+}
+
+on *:text:!nein*:#: {
+  if ($nick == Kamerot) {
+    write -l10 %nv-nick $+ .txt Zustimmgung: Nein
+    write notruf.txt Zustimmung: Nein
+    /msg %nv-nick Dein Notruf wurde Bearbeitet und du wirst in wenigen Minuten Kontaktiert
+  }
+}

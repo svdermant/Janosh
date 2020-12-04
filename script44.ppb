@@ -1,0 +1,15 @@
+on *:TEXT:!quote *:#:{
+  if ($read(qdbchans.txt, w, $chan) != $null) {
+    if ($read(qdb.txt, $2) == $null) {
+      msg $chan 0,1 Sorry, Quote $2 exitiert nicht! Es sind nur $lines(qdb.txt) quotes verfügbar.
+    }
+    else {
+      if ($2 !isnum) {
+        msg $chan 0,1 Sorry, Benutze nur zahlen ! :)
+      }
+      else {
+        msg $chan 11::12:15[ 10 Quote $2 15]12:11:: 0 $read(qdb.txt, $2)
+      }
+    }
+  }
+}

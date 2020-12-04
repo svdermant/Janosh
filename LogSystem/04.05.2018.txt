@@ -1,0 +1,9 @@
+[Fri May 04 08:11:02 2018] :: [SYSTEM] Connecting...
+[Fri May 04 08:11:06 2018] :: [SYSTEM] Join Protected-Channel
+[Fri May 04 08:11:26 2018] :: [SYSTEM] Check Autop/Voice Status
+[Fri May 04 08:11:33 2018] :: [SYSTEM] Ready To Work..
+[Fri May 04 20:01:12 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri May 04 20:34:45 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri May 04 20:49:29 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri May 04 22:27:39 2018] :: [SYSTEM] Spamattack on #Battledome detected.
+[Fri May 04 23:18:01 2018] :: [SYSTEM] Spamattack on #Battledome detected.

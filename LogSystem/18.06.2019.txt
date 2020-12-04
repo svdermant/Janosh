@@ -1,0 +1,2 @@
+[Tue Jun 18 08:16:06 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.
+[Tue Jun 18 08:18:19 2019] :: [SYSTEM] Spamattack on #IgameRPG detected.

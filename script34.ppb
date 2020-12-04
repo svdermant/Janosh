@@ -1,0 +1,15 @@
+on !*:join:#passwort:{ set %pchan $chan | set %pnick $nick | /guser 3 $nick | msg # Herzlich willkommen .... Bitte errate das kennwort du hast 30 secunden Zeit..... /notice James <passowrt> | /timer.p1 1 30 /pkick }
+alias pkick { 
+  /kick %pchan %pnick schade das passwort war leider falsch.... bye 
+  /mode %pchan +b $address(%pnick,2)
+}
+
+on 1:NOTICE:**:?:{
+  if ($1 == podolski) && (%pnick == $nick) { /msg %pchan Herzlich Willkommen $nick :) | /timer.p1 off  | /ruser $nick | /mode %pchan +v %pnick | /unset %p* }
+  if ($1 != podolski) && (%pnick == $nick) { /kick %pchan %pnick Schaden das war leider falsch... Bye | /mode # +b $address(%pnick,2) }
+}
+#on 1:NOTICE:*:?:{
+  if ($1 == hallo) {
+    /msg $nick I'm AFK, back in a moment! 
+  }
+}

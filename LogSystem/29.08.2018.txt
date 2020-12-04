@@ -1,0 +1,8 @@
+[Wed Aug 29 11:07:54 2018] :: [SYSTEM] Newstickers has been disabled.
+[Wed Aug 29 11:07:54 2018] :: [SYSTEM] Connection Interrupted.
+[Wed Aug 29 19:51:46 2018] :: [SYSTEM] Connecting...
+[Wed Aug 29 19:51:50 2018] :: [SYSTEM] Join Protected-Channel
+[Wed Aug 29 19:52:10 2018] :: [SYSTEM] Check Autop/Voice Status
+[Wed Aug 29 19:52:17 2018] :: [SYSTEM] Ready To Work..
+[Wed Aug 29 20:35:32 2018] :: [LOGIN] Zenturion successfully login. Accountname: Admin
+[Wed Aug 29 21:37:55 2018] :: [SYSTEM] Spamattack on #battledome detected.

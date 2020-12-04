@@ -1,0 +1,251 @@
+on *:nick:{ if ($hget(login,$+($bhost($nick),.nick))) { hadd -m login $bhost($nick) $+ .nick $newnick } }
+on *:open:?:*:{ close -m $nick }
+on *:text:*:?:{
+  query-log $nick $1-
+  if ($1 == hello) || ($1 == registry) {
+    if (!$hget(accounts,$+($2,.pass))) {
+      if ($2 != $null) && ($3 != $null) && ($4 != $null) {
+        if ($3 != $4) && ($chr(64) !isin $3) { notice $nick /msg $me HELLO Loginname your@mail.de your@mail.de }
+        if ($3 == $4) && ($chr(64) isin $3) && ($chr(64) isin $4) {
+          if ($hget(authen,$+($bhost($nick),.Access)) == 125) {
+            var %nick_pass $rand(a,z) $+ $rand(a,z) $+ $rand(A,Z) $+ $rand(0,9) $+ $rand(a,z) $+ $rand(0,9) $+ $rand(A,Z) $+ $rand(a,z)
+            hadd -m Accounts $2 $+ .pass %nick_pass
+            hadd -m Accounts $2 $+ .email $3
+            hadd -m Accounts $2 $+ .Access 125
+            hadd -m Config Accounts $iif($hget(Config,Accounts),$ifmatch) $2
+            hdel authen $bhost($nick) $+ .Access
+            hdel authen $bhost($nick) $+ .email
+            hdel authen $bhost($nick) $+ .Channel
+            .timer 1 0 .msg $nick Registration complete. Status: "Semi-Admin(125)".
+            .timer 1 1 .msg $nick Loginname: $nick - AuthPW: %nick_pass - Email: $3
+            .timer 1 2 .msg $nick Type "/msg $me login $2 %nick_pass $+ "
+            .timer 1 3 .log Registration $nick successfully registry. Status: "Semi-Admin(125)".
+          }
+          if ($hget(authen,$+($bhost($nick),.Access)) == 100) {
+            var %nick_pass $rand(a,z) $+ $rand(a,z) $+ $rand(A,Z) $+ $rand(0,9) $+ $rand(a,z) $+ $rand(0,9) $+ $rand(A,Z) $+ $rand(a,z)
+            hadd -m Accounts $2 $+ .pass %nick_pass
+            hadd -m Accounts $2 $+ .email $3
+            hadd -m Accounts $2 $+ .Channel $+($hget(authen,$+($bhost($nick),.channel)),$chr(40),100,$chr(41))
+            hadd -m Config Accounts $iif($hget(Config,Accounts),$ifmatch) $2
+            hdel authen $bhost($nick) $+ .Access
+            hdel authen $bhost($nick) $+ .email
+            hdel authen $bhost($nick) $+ .Channel
+            .timer 1 0 .msg $nick Registration complete. Status: "Owner(100)".
+            .timer 1 1 .msg $nick Loginname: $nick - AuthPW: %nick_pass - Email: $3
+            .timer 1 2 .msg $nick Type "/msg $me login $2 %nick_pass $+ "
+            .timer 1 3 .log Registration $nick successfully registry. Status: "Owner(100)". Channel: $hget(Accounts,$+($3,.Channel))
+          }
+          if ($hget(authen,$+($bhost($nick),.Access)) == 75) {
+            var %nick_pass $rand(a,z) $+ $rand(a,z) $+ $rand(A,Z) $+ $rand(0,9) $+ $rand(a,z) $+ $rand(0,9) $+ $rand(A,Z) $+ $rand(a,z)
+            hadd -m Accounts $2 $+ .pass %nick_pass
+            hadd -m Accounts $2 $+ .email $3
+            hadd -m Accounts $2 $+ .Channel $+($hget(authen,$+($bhost($nick),.channel)),$chr(40),75,$chr(41))
+            hadd -m Config Accounts $iif($hget(Config,Accounts),$ifmatch) $2
+            hdel authen $bhost($nick) $+ .Access
+            hdel authen $bhost($nick) $+ .email
+            hdel authen $bhost($nick) $+ .Channel
+            .timer 1 0 .msg $nick Registration complete. Status: "Master(75)".
+            .timer 1 1 .msg $nick Loginname: $nick - AuthPW: %nick_pass - Email: $3
+            .timer 1 2 .msg $nick Type "/msg $me login $2 %nick_pass $+ "
+            .timer 1 3 .log Registration $nick successfully registry. Status: "Master(75)". Channel: $hget(Accounts,$+($3,.Channel))
+          }
+          if ($hget(authen,$+($bhost($nick),.Access)) == 50) {
+            var %nick_pass $rand(a,z) $+ $rand(a,z) $+ $rand(A,Z) $+ $rand(0,9) $+ $rand(a,z) $+ $rand(0,9) $+ $rand(A,Z) $+ $rand(a,z)
+            hadd -m Accounts $2 $+ .pass %nick_pass
+            hadd -m Accounts $2 $+ .email $3   
+            hadd -m Accounts $2 $+ .Channel $+($hget(authen,$+($bhost($nick),.channel)),$chr(40),50,$chr(41))
+            hadd -m Config Accounts $iif($hget(Config,Accounts),$ifmatch) $2
+            hdel authen $bhost($nick) $+ .Access
+            hdel authen $bhost($nick) $+ .email
+            hdel authen $bhost($nick) $+ .Channel
+            .timer 1 0 .msg $nick Registration complete. Status: "Operator(50)".
+            .timer 1 1 .msg $nick Loginname: $nick - LoginPW: %nick_pass - Email: $3
+            .timer 1 2 .msg $nick Type "/msg $me login $2 %nick_pass $+ "
+            .timer 1 3 .log Registration $nick successfully registry. Status: "Operator(50)". Channel: $hget(Accounts,$+($3,.Channel))
+          }
+          if ($hget(authen,$+($bhost($nick),.Access)) == 25) {
+            var %nick_pass $rand(a,z) $+ $rand(a,z) $+ $rand(A,Z) $+ $rand(0,9) $+ $rand(a,z) $+ $rand(0,9) $+ $rand(A,Z) $+ $rand(a,z)
+            hadd -m Accounts $2 $+ .pass %nick_pass
+            hadd -m Accounts $2 $+ .email $3
+            hadd -m Accounts $2 $+ .Channel $+($hget(authen,$+($bhost($nick),.channel)),$chr(40),25,$chr(41))
+            hadd -m Config Accounts $iif($hget(Config,Accounts),$ifmatch) $2
+            hdel authen $bhost($nick) $+ .Access
+            hdel authen $bhost($nick) $+ .email
+            hdel authen $bhost($nick) $+ .Channel
+            .timer 1 0 .msg $nick Registration complete. Status: "Voice(25)"
+            .timer 1 1 .msg $nick Loginname: $nick - LoginPW: %nick_pass - Email: $3
+            .timer 1 2 .msg $nick Type "/msg $me login $2 %nick_pass $+ "
+            .timer 1 3 .log Registration $nick successfully registry. Status: "Voice(25)". Channel: $hget(Accounts,$+($3,.Channel))
+          }
+        }
+      }
+      else { notice $nick /msg $me HELLO Loginname your@mail.de your@mail.de } 
+    }
+    else { notice $nick Account already exist! Plz Try login with an Other Loginname }
+  }
+  if ($1 == login) || ($1 == auth) || ($1 == register) {
+    if (!%loginf) {
+      set -u3 %loginf 1
+      if ($hget(accounts,$+($2,.pass))) {
+        if (!$alreadylogin($2)) {
+          if ($hget(accounts,$+($2,.pass)) == $3) {
+            log Login $nick successfully login. Accountname: $2
+            give.account.modes $2 $nick
+            msg $nick Login Successfully! Type "/msg $me logout" to logout. 
+            hadd -m Accounts $2 $+ .Status Online
+            hadd -m Accounts $2 $+ .login $fulldate
+            hadd -m login $bhost($nick) $+ .nick $nick
+            hadd -m login $bhost($nick) $+ .loginname $2
+            if ($hget(accounts,$+($2,.Access)) == 150) { hadd -m login $bhost($nick) $+ .Access 150 }
+            if ($hget(accounts,$+($2,.Access)) == 125) { hadd -m login $bhost($nick) $+ .Access 125 }
+            else { hadd -m Login $bhost($nick) $+ .Channel $hget(accounts,$+($2,.channel)) }
+          }
+          else { notice $nick Access Denied, False Password. }
+        }
+
+        elseif ($alreadylogin($2)) { notice $nick There is anybody Login with that AccountName. His Nickname is $ifmatch } 
+      }
+      else { notice $nick Access Denied. }
+    }
+  }
+  if ($1 == changePW) || ($1 == newpw) || ($1 == newpass) {
+    if ($2-4 != $null) {
+      if $hget(login,$+($bhost($nick),.loginname)) {
+        if ($2 == $hget(accounts,$+($hget(login,$+($bhost($nick),.loginname)),.pass))) {
+          if ($3 == $4) {
+            hadd -m Accounts $hget(login,$+($bhost($nick),.loginname)) $+ .pass $3
+            msg $nick Password changed to " $+ $3 $+ "
+            log Change $nick changed his Password to $3
+          }
+          else { notice $nick Plz check your Email input }
+        }
+        else { notice $nick Sorry, but your "OldPW" is false, type /msg $me info }
+      }
+      else { notice $nick Sorry, you aren't logged in my registry. }
+    }
+  }
+  if ($1 == changemail) || ($1 == newmail) {
+    if ($2-4 != $null) {
+      if $hget(login,$+($bhost($nick),.loginname)) {
+        if ($2 == $hget(accounts,$+($hget(login,$+($bhost($nick),.loginname)),.email))) {
+          if ($3 == $4) {
+            hadd -m Accounts $hget(login,$+($bhost($nick),.loginname)) $+ .email $3
+            msg $nick Email changed to " $+ $3 $+ "
+            log Change $nick changed his Email to $3
+            close -m $nick
+          }
+          else { notice $nick Plz check your Email input }
+        }
+        else { notice $nick Sorry, but your "old-email" is false, type /msg $me info }
+      }
+      else { notice $nick Sorry, you aren't logged in my registry. }
+    }
+  }
+  if ($1 == requestpassword) || ($1 == requestPW) {
+    if (!%requestflood) {
+      set -u5 %requestflood 1
+      if ($2) && ($chr(64) isin $2) {
+        if ($checkemail($2)) { 
+          .timer 1 0 .search.email $2 
+          .timer 1 2 .msg $nick OK, login information sent to $2
+          .timer 1 3 .log Request $nick Requestet information about $2 (Email send...)
+        }
+        else { notice $nick Can't Find an Account with that Email. }
+      }
+      else { notice $nick Usage: "/msg $me requestpassword my@email.de" }
+    }
+  }
+  if ($1 == info) || ($1 == data) {
+    if ($hget(accounts,$+($hget(login,$+($bhost($nick),.loginname)),.Access))) {
+      .timer 1 0 .msg $nick Account Data:    
+      .timer 1 1 .msg $nick - Authname: " $+ $hget(login,$+($bhost($nick),.loginname)) $+ "
+      .timer 1 2 .msg $nick - Password: " $+ $hget(accounts,$+($hget(login,$+($bhost($nick),.loginname)),.pass)) $+ "
+      .timer 1 3 .msg $nick - Email: " $+ $hget(accounts,$+($hget(login,$+($bhost($nick),.loginname)),.email)) $+ "
+      .timer 1 5 .msg $nick - Channel: " $+ $hget(accounts,$+($hget(login,$+($bhost($nick),.loginname)),.channel)) $+ "
+      .timer 1 6 .msg $nick - Last Login: " $+ $hget(accounts,$+($hget(login,$+($bhost($nick),.loginname)),.login)) $+ "
+      .timer 1 7 .log Information $nick requested his Account Information.
+    }
+  }
+  if ($1 == logout) || ($1 == unauth) {
+    if $hget(login,$+($bhost($nick),.loginname)) {
+      var %name = $hget(login,$+($bhost($nick),.loginname))
+      if ($hget(login,$+($bhost($nick),.access)) >= 125) {
+        hadd -m accounts %name $+ .Status Offline
+        hdel login $bhost($nick) $+ .Access
+        hdel login $bhost($nick) $+ .Channel
+        hdel login $bhost($nick) $+ .pass
+        hdel login $bhost($nick) $+ .loginname
+        hdel login $bhost($nick) $+ .nick
+        msg $nick You have been successfully Logout.
+        log Admin-Log Closed.
+        save.hashtables
+      }
+      else {
+        hdel login $bhost($nick) $+ .Access
+        hdel login $bhost($nick) $+ .Channel
+        hdel login $bhost($nick) $+ .pass
+        hdel login $bhost($nick) $+ .loginname
+        hdel login $bhost($nick) $+ .nick
+        hdel accounts %name $+ .Status Offline
+        msg $nick You have been successfully Logout.
+        log Logout $nick successfully Logout. Host/Nick: $+($bhost($nick),$chr(40),$nick,$chr(41))
+        save.hashtables
+      }
+    }
+    else { if (!%logouts) { set -u4 %logouts | notice $nick [Error404] Host not Found - Reason: You aren't logged! } }
+  }
+}
+alias checkemail {
+  var %x = 1
+  while ($hget(accounts,0).item) {
+    if ($hget(accounts,$+($hget(accounts,%x).item,.email)) == $1) {
+      return $true
+    }
+    inc %x
+  }
+}
+
+alias search.email {
+  var %x = 1
+  while ($hget(accounts,0).item) {
+    if ($hget(accounts,$+($hget(accounts,%x).item,.email)) == $1) {
+      set %ln $hget(accounts,%x).item
+      set %pw $hget(accounts,$+($hget(accounts,%x).item,.pass))
+      set %email $hget(accounts,$+($hget(accounts,%x).item,.email))
+      set %channel $hget(accounts,$+($hget(accounts,%x).item,.channel))
+      set %mail_msg Password Request from $+(",$replace($me,$chr(124),$chr(95)),") ~~ Data: ~ ------- ~~ - Loginname: %ln ~ - Password: %pw ~ - Email: %email ~ - Channels(lvl): %channel ~~ Loginmsg: /msg $replace($me,$chr(124),$chr(95)) login %ln %pw ~~ [myPublicProtectionBot© scriptet by mypTx - Version: $botversion - Download: www.mypTx.de - IRC: §myPPB] ~~ Mail System © Sebastian 'mypTx' Ordner [Q-net: §myPPB]
+      set %mail_to $1
+      set %mail_from $+(myPPB,$chr(46),Support,$chr(64),mypTx.de) 
+      set %mail_subject Your Bot Account
+      send_mail
+    }
+    inc %x
+  }
+}
+;=============================================================================
+; open socket too mypTx.de
+;
+
+alias send_mail { sockopen mail mypTx.de 80 }
+
+;=============================================================================
+; send mail
+;
+
+on *:SOCKOPEN:mail: {
+  var %send_url = /mail.php?to= $+ %mail_to $+ &from= $+ %mail_from $+ &subject= $+ $replace(%mail_subject,$chr(32),$+(%,20)) $+ &msg= $+ $replace(%mail_msg,$chr(32),$+(%,20))
+  sockwrite -n $sockname GET %send_url HTTP/1.1
+  sockwrite -n $sockname Host: mypTx.de
+  sockwrite -n $sockname User-Agent: IE
+  sockwrite -n $sockname
+}
+
+;=============================================================================
+; check if mail was sended and unset all variables
+; ALL DONE! SPIT OUT THE MSL AND LET'S GET OUTA HERE...
+;
+
+on *:SOCKREAD:mail: {
+  sockread %mail_initiate
+  if (Done. isin %mail_initiate) { unset %mail_* | unset %ln |  unset %pw | unset %email | unset %channel | .timer 1 3 .unset %mail_initiate }
+}

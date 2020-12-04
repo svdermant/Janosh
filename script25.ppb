@@ -1,0 +1,1 @@
+ON *:TEXT:*Bunt*:#: { msg # $nick ---> Um bunt zu schreiben mache folgendes: | msg # Drücke die Tasten strg und den Buchstaben k zusammen dann erscheint ein quadrat › | msg # Dahinter tippst du eine zahl von 0-15 und gleich danach den text | msg # Beispiel für Rot Schreiben: 4Hallo $nick. Es sind Variationen möglich }

@@ -1,0 +1,116 @@
+on *:load: {
+  mkdir toplist
+  mkdir toplist\wörter
+  mkdir toplist\buchstaben
+  mkdir toplist\smilies
+  mkdir toplist\platz
+}
+on *:text:*:#: {
+  writeini -n $+(toplist\platz\,$chan,.ini) $nick platz $calc($readini($+(toplist\platz\,$chan,.ini),$nick,platz) + $numtok($1-,32))
+  writeini -n $+(toplist\wörter\,$chan,.ini) $nick wörter $calc($readini($+(toplist\wörter\,$chan,.ini),$nick,wörter) + $numtok($1-,32))
+  writeini -n $+(toplist\buchstaben\,$chan,.ini) $nick buchstaben $calc($readini($+(toplist\buchstaben\,$chan,.ini),$nick,buchstaben) + $len($remove($1-,$chr(32)))) 
+  writeini -n $+(toplist\smilies\,$chan,.ini) $nick smilies $calc($readini($+(toplist\smilies\,$chan,.ini),$nick,smilies) + $regex($1-,/(\:|;)(-)?(P|X|D|\/|\\|\[|\])/ig) + $count($1-,: $+ $chr(40),:- $+ $chr(40),: $+ $chr(41),:- $+ $chr(41),; $+ $chr(40),;- $+ $chr(40),; $+ $chr(41),;- $+ $chr(41)))
+  if ($1- = !labbertassen || ($1 = !labbertassen && $2- = wörter)) {
+    msg $chan $toplist($chan,wörter)
+  }
+  elseif ($1 = !labbertassen && $2- = smilies ) {
+    msg $chan $toplist($chan,smilies)
+  }
+  elseif ($1 = !labbertassen && $2- = buchstaben) {
+    msg $chan $toplist($chan,buchstaben)
+  }
+  elseif ($1- = -stat) {
+    msg $chan $statlist($chan,$nick)
+  }
+  elseif ($1 = -stat && $numtok($2-,32) = 1) {
+    msg $chan $statlist($chan,$2-)
+  }
+  elseif ($1- = !platz) {
+    msg $chan $placelist($chan,$nick)
+  }
+  elseif ($1 = !platz && $numtok($2-,32) = 1) {
+    msg $chan $placelist($chan,$2-)
+  }
+  elseif ($1 = !top10 && $2- = help) {
+    notice $nick supported commands; !labbertassen [wörter|buchstaben|smilies], !schreiben [nick], !platz [nick]
+  }
+}
+on *:join:#: {
+  .timer $+ $+($chan,$nick) 0 1 inc % [ $+ [ $chan ] [ $+ . $+ [ $nick ] ] ]
+}
+on *:part:#: {
+  .timer $+ $+($chan,$nick) off
+}
+on *:quit: {
+  var %x = 1
+  while ($comchan($nick,%x)) {
+    .timer $+ $+($ifmatch,$nick) off
+    inc %x
+  }
+}
+on *:kick:#: {
+  .timer $+ $+($chan,$nick) off
+}
+alias toplist {
+  var %.h = $iif($2 = wörter,wörter,$iif($2 = buchstaben,buchstaben,$iif($2 = smilies,smilies))), %.a = $+(toplist\,%.h,\,$1,.ini), %.b = 1, %.c = $readini(%.a,$ini(%.a,%.b),$2), %.d = 1, %.e = $ini(%.a,%.b), %.f = 1
+  :loop
+  while (%.b <= $ini(%.a,0)) {
+    if ($readini(%.a,$ini(%.a,$calc(%.b + 1)),$2) > %.c) {
+      var %.c = $ifmatch, %.e = $ini(%.a,$calc(%.b + 1))
+    }
+    inc %.b
+  }
+  var %.g = $addtok(%.g,7 $+($ord(%.f),4,.,14,$chr(32),%.e,$chr(40),%.c,$chr(41)),32) 
+  writeini -n $+(temp,%.h,.ini) %.e %.h %.c
+  remini %.a %.e
+  if ($ini(%.a,0) > 0 && %.f < 10) {
+    var %.b = 1, %.c = $readini(%.a,$ini(%.a,%.b),$2), %.e = $ini(%.a,%.b)
+    inc %.f    
+    goto loop
+  }
+  while (%.d <= $ini($+(temp,%.h,.ini),0)) {
+    writeini -n %.a $ini($+(temp,%.h,.ini),%.d) %.h $readini($+(temp,%.h,.ini),$ini($+(temp,%.h,.ini),%.d),%.h)
+    inc %.d
+  }
+  .remove $+(temp,%.h,.ini)
+  return 14,1:10::11(14 Spitzenreiter,  11)10::14: 7 $chr(40),$upper($left($2,1)),$lower($right($2,-1)),$chr(41),7:) 14 %.g
+}
+alias placelist {
+  .remove sortnicks.txt
+  var %.a = $+(toplist\platz\,$1,.ini), %.b = 1, %.c = $readini(%.a,$ini(%.a,%.b),platz), %.d = 1, %.e = $ini(%.a,%.b), %.f = 1
+  :loop
+  while (%.b <= $ini(%.a,0)) {
+    if ($readini(%.a,$ini(%.a,$calc(%.b + 1)),platz) > %.c) {
+      var %.c = $readini(%.a,$ini(%.a,$calc(%.b + 1)),platz), %.e = $ini(%.a,$calc(%.b + 1))
+    }
+    inc %.b
+  }
+  write sortnicks.txt %.e
+  writeini -n temp.ini %.e platz %.c
+  remini %.a %.e
+  if ($ini(%.a,0) > 0) {
+    var %.b = 1, %.c = $readini(%.a,$ini(%.a,%.b),platz), %.e = $ini(%.a,%.b)
+    inc %.f    
+    goto loop
+  }
+  while (%.d <= $ini(temp.ini,0)) {
+    writeini -n %.a $ini(temp.ini,%.d) platz $readini(temp.ini,$ini(temp.ini,%.d),platz)
+    inc %.d
+  }
+  .remove temp.ini
+  var %x = 1
+  while (%x <= $lines(sortnicks.txt)) {
+    if ($2 = $read(sortnicks.txt,%x)) {
+      return 14,1:10::11(14 $+ $2 $+ 11)10:14:10:11(14 Belegt den7 $chr(32) $+ $readn $+ $chr(32) 14 Platz Von insgesamt7 $ini(%.a,0) 11)10:14:10:11(14 Nicks die bisher hier den Channel Betreten haben habe. 11)10::14:
+    }
+    inc %x
+  }
+return 13 hmm 4?¿4? 7 wenn ich 4platzen 7soll 13 wer wird dann für euch weiter zählen hier 4?¿4? }
+alias statlist {
+  if ($readini($+(toplist\wörter\,$1,.ini),$2,wörter)) {
+    return 14,1:10::11(14 $+ $2 $+ 11)10:14:10:11(14 Schrieb in meiner gesellschaft 11)10:14:10:11(14 im 7 $chan 11)10:14:10:11(7 $readini($+(toplist\wörter\,$1,.ini),$2,wörter) 14wörter 11)10:14:10:11(7 $readini($+(toplist\buchstaben\,$1,.ini),$2,buchstaben)  14Buchstaben 11)10:14:10:11(7 $readini($+(toplist\smilies\,$1,.ini),$2,smilies) 14smilies 11)10::14:
+  }
+  else {
+    return 13 tztztz 7soviel was ich fur euch am zählen bin 4da komme ich nicht mehr dazu meine schreibsel zu zählen 13*fg 
+  }
+}

@@ -1,0 +1,2 @@
+#on *:text:**:?: { set %o1 $rand(0,$nick(#,0)) | /msg $nick $read Antwort.txt }
+on *:text:!mathe*:#: { msg # $styles(Das ergebnis ist:) $calc($2-) } 

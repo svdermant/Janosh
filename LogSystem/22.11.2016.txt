@@ -1,0 +1,8 @@
+[Tue Nov 22 03:03:37 2016] :: [SYSTEM] Connecting...
+[Tue Nov 22 03:03:41 2016] :: [SYSTEM] Join Protected-Channel
+[Tue Nov 22 03:04:01 2016] :: [SYSTEM] Check Autop/Voice Status
+[Tue Nov 22 03:04:08 2016] :: [SYSTEM] Ready To Work..
+[Tue Nov 22 03:44:52 2016] :: [SYSTEM] Connecting...
+[Tue Nov 22 03:44:56 2016] :: [SYSTEM] Join Protected-Channel
+[Tue Nov 22 03:45:15 2016] :: [SYSTEM] Check Autop/Voice Status
+[Tue Nov 22 03:45:22 2016] :: [SYSTEM] Ready To Work..

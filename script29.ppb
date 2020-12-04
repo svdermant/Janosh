@@ -1,0 +1,70 @@
+f************************************
+* geburtstags-script v1.2
+*
+* ©daGroove
+*
+************************************
+
+on *:text:!addbd *:#:{ if ($2) && ($regex($3,/(\d{2}\.\d{2}\.\d{4})/)) { writeini bday.ini names $2 $regml(1) | msg $chan 14geburtstag von $2 geaddet... } }
+on *:text:!delbd *:#:{
+  if ($nick isop $chan) {
+    if ($2) && ($readini(bday.ini,names,$2)) { remini bday.ini names $2 | msg $chan 14geburtstag von $2 gelöscht... } 
+    else { msg $chan $+(4,$2) befindet sich nicht in der liste! }
+  }
+  else { msg $chan 4löschen können nur OPs! }
+}
+
+on *:text:!bd *:#:{
+  if ($2) && ($readini(bday.ini,names,$2)) { msg $chan $+(9,$2) 10hat am9 $readini(bday.ini,names,$2) 10geburtstag... } 
+  else { msg $chan $+(4,$2) befindet sich nicht in der liste }
+}
+on *:text:!bdall:#: { bd_all $chan }
+
+on *:text:!bdm *:#:{
+  if ($2) { 
+    if ($regex($2,/(\d{1})/)) { bd_m $+(0,$regml(1)) $chan }
+    elseif ($regex($2,/(\d{2})/)) { bd_m $regml(1) $chan } 
+    else { bd_m $replacex($2,januar,01,februar,02,märz,03,april,04,mai,05,juni,06,juli,07,august,08,september,09,oktober,10,november,11,dezember,12,jan,01,feb,02,mär,03,apr,04,mai,05,jun,06,jul,07,aug,08,sep,09,okt,10,nov,11,dez,12) $chan }
+  }
+}
+
+on *:text:!bdhelp:#:{
+  msg $chan 9befehle für geburtstags-liste:
+  msg $chan 9!addbd <nick> <dd.mm.yyyy>10 um einen user zu adden
+  msg $chan 9!delbd <nick>10 um einen user zu löschen (nur ops)
+  msg $chan 9!bd <nick>10 um den geburtstag eines einzelnen users abzufragen
+  msg $chan 9!bdtime <nick>10 zeigt wie lange es noch bis zum nächsten geburtstag dauert
+  msg $chan 9!bdall10 um alle geburtstage in der liste abzufragen
+  msg $chan 9!bdm <monat>10 um alle geburtstage eines monats abzufragen
+  msg $chan 9!bdstatus10 gesamtzahl der eingetragenen nicks
+  msg $chan 9!bdhelp10 um diese hilfe abzufragen
+}
+
+on *:text:!bdstatus:#:{
+  msg $chan 10es $iif($ini(bday.ini,names,0) != 1,befinden,befindet) sich derzeit9 $ini(bday.ini,names,0) $+(10,$iif($ini(bday.ini,names,0) != 1,nicks,nick)) in der liste...
+}
+
+on *:text:!bdtime *:#:{
+  if ($readini(bday.ini,names,$2)) {
+    msg $chan 10noch9 $replacex($duration($calc($ctime($+($gettok($readini(bday.ini,names,$2),1-2,46),.,$iif($left($duration($calc($ctime($+($gettok($readini(bday.ini,names,$2),1-2,46),.,$gettok($date,3,47)) 0:00) - $ctime)),1) != -,$gettok($date,3,47),$calc($gettok($date,3,47) +1))) 0:00) - $ctime)),wks,$chr(32) wochen,wk,$chr(32) woche,days,$chr(32) tage,day,$chr(32) tag,hrs,$chr(32) stunden,hr,$chr(32) stunde,mins,$chr(32) minuten,min,$chr(32) minute,secs,$chr(32) sekunden,sec,$chr(32) sekunde) 10bis9 $2 $calc($iif($left($duration($calc($ctime($+($gettok($readini(bday.ini,names,$2),1-2,46),.,$gettok($date,3,47)) 0:00) - $ctime)),1) != -,$gettok($date,3,47),$calc($gettok($date,3,47) +1)) - $gettok($readini(bday.ini,names,$2),3,46)) jahre 10alt wird! :)
+  }
+}
+
+alias -l bd_all {
+  var %i = 1
+  msg $1 9alle user der geburtstags-liste:
+  while (%i <= $ini(bday.ini,names,0)) {
+    .timerbd. $+ %i 1 %i msg $1 $+(9,$ini(bday.ini,names,%i)) 10hat am9 $readini(bday.ini,names,$ini(bday.ini,names,%i)) 10geburtstag...
+    inc %i 1
+  }
+}
+alias -l bd_m {
+  var %i = 1
+  msg $2 9alle geburtstage des monats $replace($1,01,januar,02,februar,03,märz,04,april,05,mai,06,juni,07,juli,08,august,09,september,10,oktober,11,november,12,dezember) $+ :
+  while (%i <= $ini(bday.ini,names,0)) {
+    if ($regex($readini(bday.ini,names,$ini(bday.ini,names,%i)),/\d{2}\.(\d{2})\.\d{4}/)) && ($regml(1) == $1) { 
+      .timerbd. $+ %i 1 %i msg $2 $+(9,$ini(bday.ini,names,%i)) 10hat am9 $readini(bday.ini,names,$ini(bday.ini,names,%i)) 10geburtstag...
+    }
+    inc %i 1
+  }
+}

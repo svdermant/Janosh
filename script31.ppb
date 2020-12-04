@@ -1,0 +1,31 @@
+**************************
+*
+*bomb-script 2004©daGroove... 
+*
+**************************
+
+on *:text:!bombe*:#: { 
+  if ($2 == $me) { return }
+  set %bomb.color.zahl $rand(0,9) 
+  set %bomb.color $replace(%bomb.color.zahl,1,!rot,2,!grün,3,!blau,4,!weiss,5,!schwarz,6,!rot-weiss,7,!grün-gelb,8,!grün-weiss-gelb,9,!schwarz-weiss-karriert,0,!grün-gelb-blau-karriert) 
+  set %bomb.nick $2 
+  set -u30 %bomb.on 1 
+  .timerbomb 1 30 kick $chan %bomb.nick 9*KAAAAABBUUUUUUUUMMMMMMMMM*14 zu lange gewartet !!!10 
+  .timerbomb2 1 40 unset %bomb*
+  describe $chan 9gibt %bomb.nick eine bombe in die hand!10 %bomb.nick kann die bombe entschärfen indem %bomb.nick den richtigen draht durchschneidet.. wähle 9!rot10, 9!grün10, 9!blau10, 9!weiss10, 9!schwarz10, 9!rot-weiss 
+  describe $chan 9!grün-gelb10, 9!grün-weiss-gelb10, 9!schwarz-weiss-karriert10, 9!grün-gelb-blau-karriert10, 10um ein kabel zu durchtrennen! 9du hast 30 sekunden zeit 10bis die bombe hochgeht! *fg*
+} 
+
+
+on *:text:!*:#:{ 
+  if (%bomb.on != $null) && ($1 == %bomb.color) && ($nick == %bomb.nick) { 
+    .timerbomb off 
+    msg $chan 10 %bomb.nick hatte glück...9 %bomb.color 10war die richtige entscheidung... 
+    unset %bomb* 
+  } 
+  elseif (%bomb.on != $null) && ($1 != %bomb.color) && ($nick == %bomb.nick) {
+    kick $chan %bomb.nick 9*KAAAAABBUUUUUUUUMMMMMMMMM* 14 %bomb.color wäre richtig gewesen !!10 ... 
+    unset %bomb* 
+    .timerbomb off 
+  } 
+} 

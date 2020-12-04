@@ -1,0 +1,2 @@
+[Wed Sep 27 20:43:30 2017] :: [SYSTEM] Spamattack on #Battledome detected.
+[Wed Sep 27 21:19:05 2017] :: [LOGIN] Fyle successfully login. Accountname: Admin

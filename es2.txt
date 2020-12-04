@@ -1,0 +1,4 @@
+MahlZeit
+Lassen Sie es sich schmecken, $nick
+Guten appetit, $nick
+Achten sie auf Ihre Figur , $nick.

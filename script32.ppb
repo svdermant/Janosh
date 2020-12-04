@@ -1,0 +1,60 @@
+on *:text:!granat*:#: { 
+  if ($2 == $null) { 
+    msg # Gebe bitte Folgendes ein um Informationen über den Edelstein zu erfahren:
+    msg # 4<*> 7 !Granat KurzInfo 12 (Eine Kurzbeschreibung des Edelsteins)
+    msg # 4<*> 7 !Granat Var&Mod 12 (Variatäten und MOdifikationen)
+    msg # 4<*> 7 !Granat Bild&Fund 12 (Die Bildung und Fundorte)
+    msg # 4<*> 7 !Granat Schmuck 12 (Schmuckstein)
+    msg # 4<*> 7 !Granat Verwendung 12 (Verwendungszweck)
+    msg # 4<*> 7 !Granat Geschichte 12 (Geschichte)
+  }
+  if ($2 == KurzInfo) {
+    msg # 4<*> 7 Kurzinfo über den Stein 4<*>
+    msg # 5<-> 3 Technische Daten:
+    msg # 12---> 14Chemismus: 10 X³Y²(SiO³)² 
+    msg # 12---> 14Kristallsystem: 10 kubisch
+    msg # 12---> 14Kristallklasse: 10 hexakisoktaedrisch (4/m)
+    msg # 12---> 14Farbe: 10Variabel, häufig rotbraun, gelbgrün, Schwarz
+    msg # 12---> 14Strichfarbe: 10 Weiß
+    msg # 12---> 14Härte: 10 6 bis 7,5
+    msg # 12---> 14Relative Dichte: 10 3,5 bis 4,5
+    msg # 12---> 14Glanz: 10 Glas,Fett,Harzglanz
+    msg # 12---> 14Opazität: 10durchsichtig bis undurchsichtig
+    msg # 12---> 14Bruch: 10Muschelig, Splittrig, Spröd
+    msg # 12---> 14Spaltbarkeit: 10Unvollkommen
+    msg # 12---> 14Habitus: 10Gedrungen
+    msg # 5<-> 3Beschreibung:
+    msg # Granat bezeichnet eine ganze Gruppe von Silikat-Mineralen, deren chemische Zusammensetzung sich durch XII3YIII2(SiO4)3 bezeichnen lässt. XII steht dabei für eines der zweiwertigen Metall-Kationen Kalzium, Magnesium, Eisen(II) oder Mangan, YIII für eines der dreiwertigen Metall-Kationen wie Aluminium, Eisen(III), Titan, Vanadium oder Chrom. Strukturell sind Granate Inselsilikate. Sie kristallisieren im kubischen Kristallsystem
+    msg # ihre Härte liegt je nach Zusammensetzung bei 6 bis 7,5. Die Farbe ist sehr variabel, häufig aber rotbraun, gelbgrün oder schwarz, nie jedoch blau, während die Strichfarbe weiß ist.
+  }
+  if ($2 == Var&Mod) {
+    msg # 4<*> 7 Varietäten und Modifikationen 4<*>
+    msg # Folgende Minerale und ihre Varietäten (mit nachstehend chemischer Formel) zählen zur Granatgruppe:
+    msg # 12---> 14Almandin: 10 Fe³AI²Si³O1²
+    msg # 12---> 14Andradit: 10 Ca³Fe²Si³O1²
+    msg # 12----> 14Demantoid
+    msg # 12----> 14Melanit  
+    msg # 12---> 14Grossular: 10 Ca³AI²Si³O1²
+    msg # 12----> 14Hessonit
+    msg # 12----> 14Tsavorit
+    msg # 12---> 14Pyrop: 10 Mg³AI²Si³O1²
+    msg # 12---> 14Spessartin: 10 Mn³AI²Si³O1²
+    msg # 12---> 14Uwarovit: 10 Ca³Cr²Si³O1² 
+  }
+  if ($2 == Bild&Fund) {
+    msg # 4<*> 7 Bildung und Fundorte 4<*>
+    msg # Granate kommen in massiver Form oder körnig, häufig aber auch als makroskopische Kristalle vor, die bis zu 700 kg schwer werden können. Die genaue chemische Zusammensetzung steht immer mit jener des umgebenden Gesteins im Zusammenhang: So kommt z. B. der magnesiumreiche Pyrop häufig in Peridotiten und Serpentiniten vor, während grüner Uwarovit vor allem in chromhaltigem Serpentinitgestein auftritt. Rohedelstein GranatBesonders häufig findet man Granate in metamorphen Gesteinen wie z. B. Gneis oder Eklogit; daneben treten sie auch als magmatisches Gestein und als Mineralseifen in Flusssedimenten auf. Die meisten natürlich gefundenen Schmuckstein-Granate stammen heute aus den USA und aus Südafrika.
+  }
+  if ($2 == Schmuck) {
+    msg # 4<*> 7 Schmuckstein 4<*>
+    msg # Granate finden in verschiedenen Varianten als Schmucksteine Verwendung. Man unterscheidet u. a. den dunkelroten Pyrop Mg3Al2[SiO4]3 , der auch Kaprubin genannt wird, den rotschwarzen Almandin Fe3Al2[SiO4]3, den smaragdgrünen Uwarowit Ca3Cr2[SiO4]3 , den gelbgrünen Andradit Ca3Fe2[SiO4]3 mit den schwarzen Varianten Schorlomit und Melanit, den transparent-grünlichen Demantoid und den orangeroten Spessartin Mn3Al2[SiO4]3. Daneben gibt es noch Grossular Ca3Al2[SiO4]3, eine nicht-Schmuckstein-Variante des Granat. Die oben genannten Varianten sind die so genannten Endglieder des Granats, d. h. in ihnen werden die in der allgemeinen Formel unbestimmten Positionen X und Y vollständig mit Atomen eines Elementes besetzt. Granate werden auch als Edelsteine des kleinen Mannes bezeichnet.
+  }
+  if ($2 == Verwendung) {
+    msg # 4<*> 7 Die Verwendung 4<*>
+    msg # Neben seinem Wert als Schmuckstein wird insbesondere künstlich hergestellter Granat wegen seiner Härte auch als Schleifmittel und in feinmechanischen Instrumenten eingesetzt. Yttrium-Aluminiumgranat (YAG, Y3Al2[Al O4]3), bei dem etwa ein Prozent der Yttrium3+-Ionen durch Neodym3+-Ionen ersetzt wird, ist ein häufig eingesetzter Laserkristall (Nd:YAG-Laser). Yttrium-Eisen-Granat (YIG) und Verwandte werden als Mikrowellenferrit in der Hochfrequenztechnik eingesetzt.
+  }
+  if ($2 == Geschichte) {
+    msg # 4<*> 7 Die Geschichte 4<*>
+    msg # Schon in der Antike wurden Granate als Schmucksteine genutzt; im Mittelalter waren sie unter dem Namen Karfunkel bekannt - die meisten stammten damals aus Indien. Besonders populär waren sie aber im 19. Jahrhundert, als böhmische Pyrope so begehrt waren, dass sie bis nach Amerika verschifft wurden.
+  }
+}

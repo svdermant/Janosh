@@ -1,0 +1,112 @@
+on *:TEXT:!op's:#: {
+  msg # 14,1 [15,1:14,1·12,01 $+  # $+ 14,1·15,1:14,1] 11,1h10at  9•4,1 $nick(#,0,o) 9• 11O10peratoren
+  if ($nick(#,0,o) == 0) {
+    msg # 4 14]7:::14[4Es sind keine op´s in # Zu Sehen14]7:::14[
+  }
+  if ($nick(#,0,o) > 0 ) {
+    set %ops $nick(#,0,o)
+    :next 
+    msg #  14,1 ]3:9:3:14[4 $nick(#,%ops,o) 14]3:9:3:14[
+    dec %ops
+    if %ops == 0 goto done
+    else goto next
+    :done
+  }
+}
+on *:TEXT:°No Status:#: {
+  msg # 14,1 [15,1:14,1·12,01 $+  # $+ 14,1·15,1:14,1] 11,1S10ind  9•4,1 $nick(#,0,r) 9• 11N11icks Ohne Status
+  if ($nick(#,0,r) == 0) {
+    msg # 4 14]7:::14[4Es sind keine Nicks in # Mit @ % oder + 14]7:::14[
+  }
+  if ($nick(#,0,r) > 0 ) {
+    set %regs $nick(#,0,r)
+    :next 
+    msg #  14,1 ]3:9:3:14[4 $nick(#,%regs,r) 14]3:9:3:14[
+    dec %regs
+    if %regs == 0 goto done
+    else goto next
+    :done
+  }
+}
+on *:TEXT:°Voices:#: {
+  msg # 14,1 [15,1:14,1·12,01 $+  # $+ 14,1·15,1:14,1] 11,1S10ind  9•4,1 $nick(#,0,v) 9• 11N11icks Mit Mod Status
+  if ($nick(#,0,v) == 0) {
+    msg # 4 14]7:::14[4Es sind keine Nicks in # Mit @ % oder + 14]7:::14[
+  }
+  if ($nick(#,0,v) > 0 ) {
+    set %v $nick(#,0,v)
+    :next 
+    msg #  14,1 ]3:9:3:14[4 $nick(#,%v,v) 14]3:9:3:14[
+    dec %v
+    if %v == 0 goto done
+    else goto next
+    :done
+  }
+}
+
+on *:TEXT:!Bans:#: {
+  msg # 14,1 [15,1:14,1·12,01 $+  # $+ 14,1·15,1:14,1] 11,1S10ind  9•4,1 $ibl(#,0) 9• 11Gebannte 11Nicks 
+  if ($ibl(#,0) == 0) {
+    msg # 4 14]7:::14[4Es sind keine Nicks in # Gebannt 14]7:::14[
+  }
+  if ($ibl(#,0) > 0 ) {
+    set %bans $ibl(#,0)
+    :next 
+    msg #  14,1 ]3:9:3:14[4 $ibl(#,%bans) 11By 7 $ibl(#,%bans).by 14]3:9:3:14[
+    dec %bans
+    if %bans == 0 goto done
+    else goto next
+    :done
+  }
+}
+on *:TEXT:!unBan All:#: {
+  msg # 14,1 [15,1:14,1·12,01 $+  # $+ 14,1·15,1:14,1] 11,1W10erden 9•4,1 $ibl(#,0) 9• 11 11Nicks Entbannt
+  if ($ibl(#,0) == 0) {
+    msg # 4 14]7:::14[4Es sind keine Nicks in # Gebannt 14]7:::14[
+  }
+  if ($ibl(#,0) > 0 ) {
+    set %bans $ibl(#,0)
+    :next 
+    mode # -b $ibl(#,%bans)
+    dec %bans
+    if %bans == 0 goto done
+    else goto next
+    :done
+  }
+}
+on *:TEXT:°Massdop:#: {
+  msg # 14,1 In [15,1:14,1·12,01 $+  # $+ 14,1·15,1:14,1] 11,1 Wird Massdeop Gestartet !!!
+  if ($nick(#,0,o) == 0) {
+    msg # 4 14]7:::14[4Es sind keine Nicks in # Gebannt 14]7:::14[
+  }
+  if ($nick(#,0) > 0 ) {
+    /set %dop $nick(#,0,o)
+    :next 
+    if ($nick(#,%dop,o) == $me) goto done
+    else {
+      mode # -o $nick(#,%dop)
+      /dec %dop
+      if %dop == 0 goto done
+      else goto next
+      :done
+    }
+  }
+}
+on *:TEXT:°Massop:#: {
+  msg # 14,1 In [15,1:14,1·12,01 $+  # $+ 14,1·15,1:14,1] 11,1 Wird Massop Gestartet !!!
+  if ($nick(#,0) == 0) {
+    msg # 4 14]7:::14[4Es sind keine Nicks in # Gebannt 14]7:::14[
+  }
+  if ($nick(#,0) > 0 ) {
+    /set %op $nick(#,0)
+    :next 
+    if ($nick(#,%op) == $me) goto done
+    else {
+      mode # +o $nick(#,%op)
+      /dec %op
+      if %op == 0 goto done
+      else goto next
+      :done
+    }
+  }
+}

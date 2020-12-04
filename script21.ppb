@@ -1,0 +1,23 @@
+**************************
+* kino-charts 2005©daGroove
+*
+**************************
+
+on *:text:!kino:#:{ set %kinoch $chan | kino | msg %kinoch 10kino-charts 9©daGroove... }
+
+alias kino { unset %i | sockclose kino | sockopen kino www.cine-charts.de 80 }
+
+on *:sockopen:kino: {
+  sockwrite -n $sockname GET / HTTP/1.1
+  sockwrite -n $sockname HOST: www.cine-charts.de
+  sockwrite -n $sockname $crlf
+}
+
+on *:sockread:kino: {
+  if (!$sockerr) {
+    $event %temp 
+    if (</td></tr></table><br><font class=a> isin %temp) {
+      inc %i 1 | $+(.timer.kino,%i) 1 %i msg %kinoch 10Platz9 $+(%i,10:,9) $gettok($gettok(%temp,11,62),1,60) $+(10,$chr(40),$remove($gettok($gettok(%temp,6,62),1,60),&nbsp;),$chr(41)) - $remove($gettok($gettok(%temp,7,62),1,60),&nbsp;) 
+    }
+  }
+}

@@ -1,0 +1,39 @@
+on *:text:!regeln:#: {
+  notice $nick Die folgenden Punkte sind nicht gestattet & haben das sofortige Eingreifen der CMs zur Folge: 
+  notice $nick 4 1. 12 Nickverlängerungen
+  notice $nick 4 2. 12 Jegliche Werbung (HP, Fotos, etc.)
+  notice $nick 4 3. 12 Öffentliche Cs, Ts oder Rs-Fragen, genauso wie sexuelle Anspielungen oder Andeutungen (Fragen nach 'mehr')
+  notice $nick 4 4. 12 Auch keine Fragen stellen welche sinnlos sind zb .: Wer will Chatten ? Die ist ein Chat wo das jeder will
+  notice $nick 4 5. 12 bitte schreibt nicht die ganze Zeit in GROSSBUCHSTABEN das wird als Schreien interpretiert und genau wie im Leben will keiner hier angebrüllt werden.
+  notice $nick 4 6. 12 Menschenunwürdige Äußerungen sowie Beleidigungen
+  notice $nick 4 7. 12 Chatbilder
+  notice $nick 4 8. 12 Cam-Fragen, Fragen nach Video- und/oder Pictausch
+  notice $nick 4 9. 12 Spammen (auch das Spammen mit Janosch)
+  notice $nick 4 10. 12 Das Anfragen nach Messenger(-Adressen), Telefon- und Handynummern, sowie das öffentliche posten derer, ist untersagt
+  notice $nick 4 11. 12 Wegen der Gefahr von Missverständnissen, bis auf kleine Ausnahmen, deutsch zu schreiben.
+  timer1 1 2 notice $nick 4 12. 12 Wegen des Nervfaktors zB. bei Begrüßungen, den Nick einer Person nur 3 Mal zu nennen.
+  timer2 1 4 notice $nick 4 13. 12 Bei Fragen & Problemen stehen wir, die Ops dieses Channels, Dir gern zur Verfügung! 
+  timer3 1 6 notice $nick 12 Das $chan $+ -Team wünscht Dir nun viel Spaß beim Chatten! 
+}
+on *:text:!regeln-flirt2:#flirt-2: {
+  notice $nick Die folgenden Punkte sind nicht gestattet & haben das sofortige Eingreifen der CMs zur Folge: 
+  notice $nick 4 1. 12 Nickverlängerungen
+  notice $nick 4 2. 12 Jegliche Werbung (HP, Fotos, etc.)
+  notice $nick 4 3. 12 Öffentliche Cs, Ts oder Rs-Fragen, genauso wie sexuelle Anspielungen oder Andeutungen (Fragen nach 'mehr')
+  notice $nick 4 5. 12 Auch keine Fragen stellen welche sinnlos sind zb .: Wer will Chatten ? Die ist ein Chat wo das jeder will
+  notice $nick 4 6. 12 bitte schreibt nicht die ganze Zeit in GROSSBUCHSTABEN das wird als Schreien interpretiert und genau wie im Leben will keiner hier angebrüllt werden.
+  notice $nick 4 7. 12 Menschenunwürdige Äußerungen sowie Beleidigungen
+  notice $nick 4 8. 12 Chatbilder
+  notice $nick 4 9. 12 Cam-Fragen, Fragen nach Video- und/oder Pictausch
+  notice $nick 4 10. 12 Spammen (auch das Spammen mit Janosch)
+  notice $nick 4 11. 12 Das Anfragen nach Messenger(-Adressen), Telefon- und Handynummern, sowie das öffentliche posten derer, ist untersagt
+  notice $nick 4 12. 12 Wegen der Gefahr von Missverständnissen, bis auf kleine Ausnahmen, deutsch zu schreiben.
+  timer1 1 2 notice $nick 4 13. 12 Wegen des Nervfaktors zB. bei Begrüßungen, den Nick einer Person nur 3 Mal zu nennen.
+  timer2 1 4 notice $nick 4 14. 12 Bei Fragen & Problemen stehen wir, die Ops dieses Channels, Dir gern zur Verfügung! 
+  timer3 1 6 notice $nick 12 Das #flirt-Team wünscht Dir nun viel Spaß beim Chatten! 
+}
+
+on *:text:!chataddresse:#: { msg # Die chataddresse für das Chatscript. Auf der HP zu Finden unter Downloads -.- heist | msg # $server }
+o-n *:text:!vhost *:#: { msg # die vhost von $2 ist $address($2,1) }
+on *:Text:!vhost *:#: /msg # 15Die Host des Nick9 $2 4Lautet0:15 $address($2,1)
+on *:Text:!vhost:#: /msg # 15Deine vHost 4Lautet0:15 $address($nick,1)

@@ -1,0 +1,3 @@
+on *:text:!time:#: { 
+  msg # Allohhaaa Wir Haben es Jetzt *auf Uhr Glubsch* $timestamp
+}
